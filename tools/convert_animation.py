@@ -114,7 +114,7 @@ def main():
 
     logger.info("Total frames: %d", len(frames))
 
-    old_matrix: list[list[Pixel]] | None = None
+    old_matrix: list[list[Pixel | None]] | None = None
 
     for frame_index, frame in enumerate(frames):
         logger.info(
@@ -249,6 +249,12 @@ def main():
                 if old_matrix:
                     old = old_matrix[y][x]
 
+                    if old is None:
+                        raise ValueError(
+                            f"Previous pixel matrix is not fully filled at "
+                            f"frame {frame_index} ({x}, {y})"
+                        )
+
                     if old.character == write_char:
                         write_char = None
                     else:
@@ -316,7 +322,7 @@ def main():
             len(output),
         )
 
-        old_matrix = pixel_matrix  # type: ignore
+        old_matrix = pixel_matrix
 
     logger.info("Finished encoding %d frames", len(frames))
 
