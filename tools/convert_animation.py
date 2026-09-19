@@ -8,9 +8,10 @@ LOGGING_LEVEL = logging.INFO
 IN_FORMAT = ".json"
 OUT_FORMAT = ".ska"
 
-HEAD = b"\x01"
-FRAME = b"\x02"
+FRAME = b"\x01"
+ROW_END = b"\x02"
 PIXEL = b"\x03"
+PIXEL_DATA = b"\x04"
 
 DEFAULT_FOREGROUND = "#ffffff"
 
@@ -113,7 +114,7 @@ def main():
 
     logger.info("Total frames: %d", len(frames))
 
-    old_matrix: list[list[Pixel]] | None = None
+    old_matrix: list[list[Pixel | None]] | None = None
 
     for frame_index, frame in enumerate(frames):
         logger.info(
@@ -149,8 +150,8 @@ def main():
         )
 
         pixel_matrix: list[list[Pixel | None]] = [
-            [None for _ in range(canvas_height)]
-            for _ in range(canvas_width)
+            [None for _ in range(canvas_width)]
+            for _ in range(canvas_height)
         ]
 
         if len(lines) < canvas_height:
@@ -204,7 +205,7 @@ def main():
                     None,
                 )
 
-                pixel_matrix[x][y] = Pixel(
+                pixel_matrix[y][x] = Pixel(
                     char,
                     foreground,
                     background,
@@ -217,14 +218,15 @@ def main():
             canvas_height,
         )
 
-        output += HEAD
+        output += FRAME
 
         changed_characters = 0
         changed_foregrounds = 0
         changed_backgrounds = 0
 
-        for x, row in enumerate(pixel_matrix):
-            for y, cell in enumerate(row):
+        for y, row in enumerate(pixel_matrix):
+            row_pixels: list[bytes] = []
+            for x, cell in enumerate(row):
                 if cell is None:
                     logger.error(
                         "Pixel matrix incomplete at frame %d (%d, %d)",
@@ -238,12 +240,20 @@ def main():
                         f"frame {frame_index} ({x}, {y})"
                     )
 
+                pixel = bytearray()
+
                 write_char: str | None = cell.character
                 write_foreground: str | None = cell.foreground
                 write_background: str | None = cell.background
 
                 if old_matrix:
-                    old = old_matrix[x][y]
+                    old = old_matrix[y][x]
+
+                    if old is None:
+                        raise ValueError(
+                            f"Previous pixel matrix is not fully filled at "
+                            f"frame {frame_index} ({x}, {y})"
+                        )
 
                     if old.character == write_char:
                         write_char = None
@@ -266,27 +276,40 @@ def main():
                         if write_background is None:
                             write_background = canvas_background
                 else:
-                    changed_characters += 1
+                    if write_char == " ":
+                        write_char = None
+                    else:
+                        changed_characters += 1
                     if write_foreground is not None:
                         changed_foregrounds += 1
                     if write_background is not None:
                         changed_backgrounds += 1
 
-                if not (x == y and x == 0):
-                    output += FRAME
+                pixel += PIXEL
 
                 if write_char:
-                    output += encode(write_char)
+                    pixel += PIXEL_DATA
+                    pixel += encode(write_char)
 
                 if write_foreground or write_background:
-                    output += PIXEL
+                    pixel += PIXEL_DATA
 
                     if write_foreground:
-                        output += encode(write_foreground[1:])
+                        pixel += encode(write_foreground[1:])
 
                     if write_background:
-                        output += PIXEL
-                        output += encode(write_background[1:])
+                        pixel += PIXEL_DATA
+                        pixel += encode(write_background[1:])
+
+                row_pixels.append(bytes(pixel))
+
+            while row_pixels and row_pixels[-1] == PIXEL:
+                row_pixels.pop()
+
+            for pixel in row_pixels:
+                output += pixel
+
+            output += ROW_END
 
         logger.info(
             "Frame %d encoded: %d character changes, "
@@ -299,7 +322,7 @@ def main():
             len(output),
         )
 
-        old_matrix = pixel_matrix  # type: ignore
+        old_matrix = pixel_matrix
 
     logger.info("Finished encoding %d frames", len(frames))
 
