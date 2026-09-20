@@ -2,8 +2,8 @@
 A Text Adventure with great ASCII Art Animations fully built using Java.
 
 > A truly amazing game
-
-         ,/   *
+```
+        ,/   *
   _,'/_   |
   `(")' ,'/
 _ _,-H-./ /
@@ -13,3 +13,5 @@ __/   H   \__
 \    /|\    /
 `--'|||`--'
   ==^==
+
+```
