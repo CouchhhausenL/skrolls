@@ -18,16 +18,16 @@ def mirror_ascii_art(text: str) -> str:
     if not lines:
         return ""
 
-    # 1. Maximale Zeilenlänge ermitteln
+    # 1. Determine the maximum line length
     max_len = max(len(line) for line in lines)
 
     mirrored_lines = []
 
     for line in lines:
-        # 2. Zeile rechts mit Leerzeichen auffüllen, damit alle gleich lang sind
+        # 2. Pad the line with spaces on the right so that all lines are the same length
         padded_line = line.ljust(max_len)
 
-        # 3. Umkehren und Zeichen spiegeln
+        # 3. Reverse the line and mirror the characters
         mirrored_line = "".join(
             mirror_map.get(char, char) for char in reversed(padded_line)
         )
@@ -35,8 +35,6 @@ def mirror_ascii_art(text: str) -> str:
 
     return "\n".join(mirrored_lines)
 
-
-# Eingabe-Art
 ascii_art = r"""	 .      .
      |\____/|
     (\|----|/)
