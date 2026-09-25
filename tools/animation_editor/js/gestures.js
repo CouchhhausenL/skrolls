@@ -27,6 +27,8 @@
       this.pointer = null;
       this.previous = null;
       this.tool = null;
+      this.lastScreenPos = null; // Für das Panning per Mittelklick
+
       const canvas = view.canvas;
       canvas.addEventListener('contextmenu', event => event.preventDefault());
       canvas.addEventListener('auxclick', event => event.preventDefault());
@@ -56,17 +58,39 @@
     }
 
     apply(event) {
-      const tool = event.buttons & 4 ? 'Picker' : event.buttons & 2 ? 'Eraser' : 'Pencil';
+      // MITTELKLICK (buttons === 4): Zeichenfläche verschieben (Pan)
+      if (event.buttons & 4) {
+        this.tool = 'Pan';
+        $('active-tool').textContent = 'Pan';
+
+        if (this.lastScreenPos) {
+          const dx = event.clientX - this.lastScreenPos.x;
+          const dy = event.clientY - this.lastScreenPos.y;
+
+          // Viewport entgegengesetzt zur Mausbewegung scrollen
+          this.view.viewport.scrollLeft -= dx;
+          this.view.viewport.scrollTop -= dy;
+        }
+
+        this.lastScreenPos = { x: event.clientX, y: event.clientY };
+        this.previous = null;
+        return;
+      }
+
+      // Falls kein Mittelklick aktiv ist, Position zurücksetzen
+      this.lastScreenPos = null;
+
+      // Linksklick = Pencil, Rechtsklick = Eraser (Picker entfällt auf Mittelklick)
+      const tool = event.buttons & 2 ? 'Eraser' : 'Pencil';
       if (tool !== this.tool) this.previous = null;
       this.tool = tool;
       $('active-tool').textContent = tool;
+
       const position = this.view.position(event);
       if (!position) { this.previous = null; return; }
-      if (tool === 'Picker') this.model.pick(position.index, event.ctrlKey || event.metaKey);
-      else {
-        const cells = lineCells(this.previous ?? position, position, this.model.doc.width);
-        this.model.paint(cells, tool === 'Eraser');
-      }
+
+      const cells = lineCells(this.previous ?? position, position, this.model.doc.width);
+      this.model.paint(cells, tool === 'Eraser');
       this.previous = position;
     }
 
@@ -75,7 +99,11 @@
       this.pointer = null;
       this.previous = null;
       this.tool = null;
-      if (pointer !== null && this.view.canvas.hasPointerCapture(pointer)) this.view.canvas.releasePointerCapture(pointer);
+      this.lastScreenPos = null; // Position nach dem Loslassen leeren
+
+      if (pointer !== null && this.view.canvas.hasPointerCapture(pointer)) {
+        this.view.canvas.releasePointerCapture(pointer);
+      }
       this.model.commit();
       $('active-tool').textContent = 'Idle';
     }

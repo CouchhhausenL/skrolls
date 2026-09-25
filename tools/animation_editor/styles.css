@@ -102,3 +102,89 @@ kbd { font: 10px Consolas, monospace; padding: 1px 4px; border: 1px solid var(--
 /* Smaller windows */
 @media (max-width: 1120px) { .layout { grid-template-columns: 224px minmax(340px, 1fr) 196px; } .sidebar section, .symbol-panel section { padding: 14px 12px; } .brand small, #document-state { display: none; } .timeline-toolbar { flex-wrap: wrap; } .symbol-grid { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 820px) { .layout { grid-template-columns: 210px minmax(340px, 1fr); } .symbol-panel { grid-column: 1 / -1; flex-direction: row; overflow: visible; border-top: 1px solid var(--line); } .symbol-panel section { flex: 1; min-width: 0; } .symbol-grid { grid-template-columns: repeat(8, 1fr); max-height: 180px; } .shortcut-section { margin-top: 0; } .topbar { min-width: 550px; padding: 0 12px; } .layout { min-width: 550px; } }
+
+.current-color-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.color-preview-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+  transition: background 0.1s ease;
+}
+
+/* Roter Strich bei Deaktivierung ("none") */
+.color-preview-swatch.none {
+  background: linear-gradient(to top right, transparent 45%, #ff4d4d 45%, #ff4d4d 55%, transparent 55%) !important;
+}
+
+#current-color-label {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+/* Custom Brightness Range Slider */
+input[type="range"]#brightness {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 14px;
+  border-radius: 7px;
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  /* Der Verlaufs-Hintergrund wird dynamisch aus colors.js via style.background gesetzt */
+  transition: background 0.1s linear;
+}
+
+/* Regler-Knopf (Thumb) - WebKit (Chrome, Safari, Edge) */
+input[type="range"]#brightness::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #111;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+input[type="range"]#brightness::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Regler-Knopf (Thumb) - Firefox */
+input[type="range"]#brightness::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #111;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+input[type="range"]#brightness::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Firefox Track Reset */
+input[type="range"]#brightness::-moz-range-track {
+  background: transparent;
+  border: none;
+}

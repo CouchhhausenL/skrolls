@@ -65,9 +65,16 @@
         <div class="wheel-wrap"><canvas id="color-wheel" width="180" height="180" tabindex="0" role="slider" aria-label="Color wheel: hue; use arrow keys" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0"></canvas></div>
         <label class="field">Brightness<input id="brightness" type="range" min="0" max="100" value="100"></label>
         <div class="hex-row"><label class="field">Hex color<input id="hex-color" value="#ffffff" maxlength="7" spellcheck="false"></label><button id="favorite-color" title="Add selected color to favorites" aria-label="Favorite selected color">☆</button></div>
+        <div class="current-color-box">
+  <div id="current-color-preview" class="color-preview-swatch"></div>
+  <span id="current-color-label">#FFFFFF</span>
+</div>
         <div class="section-heading"><h3>Favorite colors</h3><small class="muted">Right-click to remove</small></div>
         <div id="palette" class="palette" aria-label="Favorite colors"></div>
         <button id="fill-frame" class="wide primary-subtle">Fill frame with brush</button>
+        <button id="replace-color" class="wide" style="margin-top: 4px;">
+  Gleiche Farben ersetzen
+</button>
       </section>
     </aside>
 

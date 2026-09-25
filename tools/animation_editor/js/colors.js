@@ -61,12 +61,7 @@
         [this.remembered.fg, this.remembered.bg] = [this.remembered.bg, this.remembered.fg];
         this.model.emit('brush');
       };
-      $('reset-colors').onclick = () => {
-        this.model.brush.fg = SKA.DEFAULT_FG;
-        this.model.brush.bg = this.model.doc.background;
-        this.model.emit('brush');
-      };
-      $('hex-color').onchange = event => {
+      $('reset-colors').onclick = () => {         this.model.brush.fg = SKA.DEFAULT_FG;         this.model.brush.bg = this.model.doc.background;         this.model.emit('brush');       };$('hex-color').onchange = event => {
         const hex = '#' + event.target.value.replace(/^#/, '').toLowerCase();
         if (!SKA.HEX.test(hex)) { this.report('Use a six-digit hex color, for example #a8e6b0.', true); this.sync(); return; }
         this.choose(hex);
@@ -107,6 +102,10 @@
         this.favorites.push(color);
         this.savePalette();
       };
+      const replaceBtn = $('replace-color');
+      if (replaceBtn) {
+        replaceBtn.onclick = () => this.replaceColor();
+      }
     }
 
     chooseHsv() {
@@ -130,11 +129,42 @@
         $(`select-${key}`).classList.toggle('selected', key === this.target);
         $(`select-${key}`).setAttribute('aria-pressed', String(key === this.target));
       }
-      const color = this.model.brush[this.target] ?? this.remembered[this.target];
-      if (!this.preserveHsv) this.hsv = hexToHsv(color);
-      $('hex-color').value = color;
+      const currentColor = this.model.brush[this.target];
+      const activeHex = currentColor ?? this.remembered[this.target];
+
+      if (!this.preserveHsv) this.hsv = hexToHsv(activeHex);
+      $('hex-color').value = activeHex;
       $('brightness').value = Math.round(this.hsv.v * 100);
+      
+      this.updateBrightnessSliderTrack();
+      this.updateCurrentColorPreview(currentColor, activeHex);
       this.drawWheel();
+    }
+
+    // Erzeugt den Inkscape-Style Farbverlauf auf der Slider-Schiene
+    updateBrightnessSliderTrack() {
+      const slider = $('brightness');
+      if (!slider) return;
+      const minHex = hsvToHex(this.hsv.h, this.hsv.s, 0);   // Schwarz
+      const maxHex = hsvToHex(this.hsv.h, this.hsv.s, 1);   // Maximale Helligkeit bei aktuellem Farbton
+      slider.style.background = `linear-gradient(to right, ${minHex} 0%, ${maxHex} 100%)`;
+    }
+
+    // Aktualisiert die große Vorschau-Box unter dem Farbrad
+    updateCurrentColorPreview(currentColor, activeHex) {
+      const preview = $('current-color-preview');
+      const label = $('current-color-label');
+      if (!preview) return;
+
+      if (currentColor === null) {
+        preview.style.background = 'transparent';
+        preview.classList.add('none');
+        if (label) label.textContent = 'None';
+      } else {
+        preview.style.background = activeHex;
+        preview.classList.remove('none');
+        if (label) label.textContent = activeHex.toUpperCase();
+      }
     }
 
     drawWheel() {
@@ -187,6 +217,27 @@
         return button;
       }));
     }
+
+ // In der ColorControls-Klasse ersetzen:
+replaceColor() {
+  const char = this.model.brush.char;
+  if (!char) {
+    if (this.report) this.report('Bitte wähle zuerst ein Zeichen aus.', true);
+    return;
+  }
+
+  const targetKey = this.target; // 'fg' oder 'bg'
+  const newColor = this.model.brush[targetKey];
+
+  const fgArg = targetKey === 'fg' ? newColor : null;
+  const bgArg = targetKey === 'bg' ? newColor : null;
+
+  const count = this.model.replaceColor(char, fgArg, bgArg);
+
+  if (this.report) {
+    this.report(`${count}x "${char}" auf neue ${targetKey.toUpperCase()}-Farbe geändert.`);
+  }
+}
   }
 
   globalThis.ColorControls = ColorControls;

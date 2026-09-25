@@ -170,6 +170,35 @@
       validateHeader({ ...this.doc, fps });
       if (fps !== this.doc.fps) this.mutate(() => { this.doc.fps = fps; });
     }
+
+    // Innerhalb der EditorModel-Klasse hinzufügen:
+replaceColor(char, fg = null, bg = null) {
+  if (fg === null && bg === null) return 0;
+
+  let count = 0;
+  this.mutate(() => {
+    this.doc.frames = this.doc.frames.map(frame => {
+      let frameChanged = false;
+      const newFrame = frame.map(cell => {
+        if (cell.char === char) {
+          const nextFg = fg !== null ? fg : cell.fg;
+          const nextBg = bg !== null ? bg : cell.bg;
+          if (nextFg !== cell.fg || nextBg !== cell.bg) {
+            frameChanged = true;
+            count++;
+            return { ...cell, fg: nextFg, bg: nextBg };
+          }
+        }
+        return cell;
+      });
+      return frameChanged ? newFrame : frame;
+    });
+  });
+
+  return count;
+}
+
+
   }
 
   globalThis.EditorModel = EditorModel;
