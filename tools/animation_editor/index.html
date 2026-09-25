@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14171d">
+  <title>SKA · Animation editor</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="js/ska.js"></script>
+  <script defer src="js/model.js"></script>
+  <script defer src="js/renderer.js"></script>
+  <script defer src="js/colors.js"></script>
+  <script defer src="js/symbols.js"></script>
+  <script defer src="js/timeline.js"></script>
+  <script defer src="js/gestures.js"></script>
+  <script defer src="js/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="SKA animation editor">S<span>K</span>A <small>ANIMATION EDITOR</small></a>
+    <span id="document-state" class="muted">Untitled</span>
+    <div class="spacer"></div>
+    <button id="new-file">New</button>
+    <button id="open-file">Open .ska</button>
+    <button id="save-file" class="primary">Save .ska <span id="dirty-dot" hidden>●</span></button>
+    <input id="file-input" type="file" accept=".ska" hidden>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section>
+        <h2>Document</h2>
+        <label class="field">File name<input id="file-name" value="untitled" maxlength="120" spellcheck="false"></label>
+        <div class="two-columns">
+          <label class="field">Width<input id="canvas-width" type="number" min="1" max="300" value="40"></label>
+          <label class="field">Height<input id="canvas-height" type="number" min="1" max="200" value="20"></label>
+        </div>
+        <button id="resize-canvas" class="wide">Apply size</button>
+        <div class="two-columns settings-row">
+          <label class="field">Canvas background<input id="canvas-background" type="color" value="#171a21"></label>
+          <label class="field">FPS<input id="fps" type="number" min="0.1" max="240" step="0.1" value="12"></label>
+        </div>
+        <label class="check"><input id="grid-toggle" type="checkbox" checked> Show grid <kbd>#</kbd></label>
+      </section>
+
+      <section>
+        <div class="section-heading"><h2>Brush settings</h2><span id="active-tool" class="badge" aria-live="polite">Idle</span></div>
+        <p class="note">None leaves that part of a cell untouched.</p>
+        <div class="character-setting">
+          <label class="field">Character<input id="character-input" value="█" autocomplete="off" spellcheck="false" aria-label="Brush character"></label>
+          <label class="check"><input id="char-none" type="checkbox"> None</label>
+        </div>
+        <div class="color-setting">
+          <button id="select-fg" class="color-target selected" aria-pressed="true"><span id="fg-swatch" class="swatch"></span>Foreground</button>
+          <label class="check"><input id="fg-none" type="checkbox"> None</label>
+        </div>
+        <div class="color-setting">
+          <button id="select-bg" class="color-target" aria-pressed="false"><span id="bg-swatch" class="swatch"></span>Background</button>
+          <label class="check"><input id="bg-none" type="checkbox" checked> None</label>
+        </div>
+        <div class="two-columns settings-row">
+          <button id="swap-colors" title="Swap foreground and background, including None">⇄ Swap</button>
+          <button id="reset-colors">Reset colors</button>
+        </div>
+        <div class="wheel-wrap"><canvas id="color-wheel" width="180" height="180" tabindex="0" role="slider" aria-label="Color wheel: hue; use arrow keys" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0"></canvas></div>
+        <label class="field">Brightness<input id="brightness" type="range" min="0" max="100" value="100"></label>
+        <div class="hex-row"><label class="field">Hex color<input id="hex-color" value="#ffffff" maxlength="7" spellcheck="false"></label><button id="favorite-color" title="Add selected color to favorites" aria-label="Favorite selected color">☆</button></div>
+        <div class="section-heading"><h3>Favorite colors</h3><small class="muted">Right-click to remove</small></div>
+        <div id="palette" class="palette" aria-label="Favorite colors"></div>
+        <button id="fill-frame" class="wide primary-subtle">Fill frame with brush</button>
+      </section>
+    </aside>
+
+    <section class="workspace" aria-label="Animation workspace">
+      <div class="canvas-toolbar">
+        <button id="undo" title="Undo (Ctrl+Z)">↶ Undo</button>
+        <button id="redo" title="Redo (Ctrl+Y)">↷ Redo</button>
+        <div class="spacer"></div>
+        <span id="cell-position" class="muted">—, —</span>
+        <button id="zoom-out" aria-label="Zoom out">−</button>
+        <button id="zoom-reset" title="Reset zoom">100%</button>
+        <button id="zoom-in" aria-label="Zoom in">+</button>
+        <button id="zoom-fit">Fit</button>
+      </div>
+      <div id="viewport" tabindex="0" aria-label="Drawing area. Left button draws, right erases, middle picks. Scroll to zoom.">
+        <div id="canvas-stage"><canvas id="art-canvas" aria-label="Current animation frame"></canvas></div>
+      </div>
+      <div class="workspace-status"><span id="status" role="status">Ready. Draw something.</span><span id="canvas-info" class="muted"></span></div>
+      <section class="timeline-section" aria-label="Frame timeline">
+        <div class="timeline-toolbar">
+          <button id="previous-frame" title="Previous frame (A / ←)">←</button>
+          <button id="play" class="primary" title="Play / stop (Space)">▶ Play</button>
+          <button id="next-frame" title="Next frame (D / →)">→</button>
+          <span id="frame-label" class="frame-label">Frame 1 / 1</span>
+          <div class="spacer"></div>
+          <button id="add-frame" title="Insert a blank frame after the current frame">+ Blank</button>
+          <button id="duplicate-frame" title="Duplicate the current frame">Duplicate</button>
+          <button id="delete-frame" title="Delete the current frame">Delete</button>
+        </div>
+        <div id="timeline" role="list" aria-label="Frames"></div>
+      </section>
+    </section>
+
+    <aside class="symbol-panel">
+      <section>
+        <h2>Character library</h2>
+        <input id="symbol-search" type="search" placeholder="Search symbols or U+ code…" aria-label="Search characters">
+        <div class="tabs" role="tablist" aria-label="Character collections">
+          <button id="symbols-common" class="selected" role="tab" aria-selected="true" aria-controls="symbol-grid">Essentials</button>
+          <button id="symbols-used" role="tab" aria-selected="false" aria-controls="symbol-grid">In animation</button>
+        </div>
+        <div id="symbol-grid" class="symbol-grid" role="tabpanel"></div>
+      </section>
+      <section class="shortcut-section">
+        <h2>At your fingertips</h2>
+        <dl class="shortcuts">
+          <dt>Left mouse</dt><dd>Pencil</dd>
+          <dt>Right mouse</dt><dd>Eraser</dd>
+          <dt>Middle mouse</dt><dd>Picker</dd>
+          <dt>Ctrl + middle</dt><dd>Pick colors only</dd>
+          <dt>Ctrl + Z / Y</dt><dd>Undo / redo</dd>
+          <dt>A / ← · D / →</dt><dd>Previous / next</dd>
+          <dt>Space</dt><dd>Play / stop</dd>
+          <dt>#</dt><dd>Toggle grid</dd>
+          <dt>Scroll</dt><dd>Zoom</dd>
+        </dl>
+        <p class="note">Edits affect the selected frame only. Frames after it keep their appearance.</p>
+      </section>
+    </aside>
+  </main>
+</body>
+</html>

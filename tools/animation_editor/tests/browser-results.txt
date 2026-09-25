@@ -1,0 +1,11 @@
+PASS: Pencil drag interpolation, active-tool indicator, right-button eraser, SKA download
+PASS: Middle-button picker and Ctrl+middle color-only picker
+PASS: Partial fill respects None; Ctrl+Z and Ctrl+Y restore cells
+PASS: Independent duplicate frames, A/arrow navigation, playback, grid shortcut, wheel zoom
+PASS: Used-symbol search, input-safe shortcuts, undoable resize, FPS, export metadata
+PASS: Favorites add/remove, color swap/reset, interactive color wheel
+PASS: Malformed import rejected without replacing the document
+PASS: Real asset import and export: axe_rogue.ska
+PASS: Real asset import and export: blade_brute.ska
+PASS: Real asset import and export: fire_sprite.ska
+PASS: Direct file:// launch; no JavaScript errors; screenshot saved
