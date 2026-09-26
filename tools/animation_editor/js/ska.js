@@ -2,7 +2,7 @@
   'use strict';
   const FRAME = '\x01', ROW = '\x02', PIXEL = '\x03', DATA = '\x04';
   const DEFAULT_FG = '#ffffff';
-  const LIMITS = { width: 300, height: 200, frames: 2000, cells: 2000000, bytes: 32000000 };
+  const LIMITS = { width: 500, height: 300, frames: 2000, cells: 20000000, bytes: 320000000 };
   const HEX = /^#[0-9a-f]{6}$/i;
   const COLOR_DATA = /^[0-9a-f]{6}$/i;
 

@@ -6,6 +6,7 @@
     constructor() {
       super();
       this.brush = { char: '█', fg: DEFAULT_FG, bg: null };
+      this.selection = null;
       this.load(this.createDocument());
     }
 
@@ -24,6 +25,7 @@
       this.redoStack = [];
       this.pending = null;
       this.saved = doc;
+      this.selection = null;
       this.emit('load');
     }
 
@@ -171,34 +173,176 @@
       if (fps !== this.doc.fps) this.mutate(() => { this.doc.fps = fps; });
     }
 
-    // Innerhalb der EditorModel-Klasse hinzufügen:
-replaceColor(char, fg = null, bg = null) {
-  if (fg === null && bg === null) return 0;
+    replaceColor(char, fg = null, bg = null) {
+      if (fg === null && bg === null) return 0;
 
-  let count = 0;
-  this.mutate(() => {
-    this.doc.frames = this.doc.frames.map(frame => {
-      let frameChanged = false;
-      const newFrame = frame.map(cell => {
-        if (cell.char === char) {
-          const nextFg = fg !== null ? fg : cell.fg;
-          const nextBg = bg !== null ? bg : cell.bg;
-          if (nextFg !== cell.fg || nextBg !== cell.bg) {
-            frameChanged = true;
-            count++;
-            return { ...cell, fg: nextFg, bg: nextBg };
+      let count = 0;
+      this.mutate(() => {
+        this.doc.frames = this.doc.frames.map(frame => {
+          let frameChanged = false;
+          const newFrame = frame.map(cell => {
+            if (cell.char === char) {
+              const nextFg = fg !== null ? fg : cell.fg;
+              const nextBg = bg !== null ? bg : cell.bg;
+              if (nextFg !== cell.fg || nextBg !== cell.bg) {
+                frameChanged = true;
+                count++;
+                return { ...cell, fg: nextFg, bg: nextBg };
+              }
+            }
+            return cell;
+          });
+          return frameChanged ? newFrame : frame;
+        });
+      });
+
+      return count;
+    }
+
+    // --- NEUE METHODEN FÜR DAS ÜBERTRAGEN VON FARBEN AUF ANDERE FRAMES ---
+
+    /**
+     * Überträgt die Farbpalette (fg und bg) des AKTUELLEN Frames auf ALLE anderen Frames.
+     * Die Zeichen (char) der anderen Frames bleiben unverändert.
+     */
+    applyColorsToAllFrames() {
+      if (this.doc.frames.length <= 1) return 0;
+
+      const currentFrame = this.frame;
+      let updatedFramesCount = 0;
+
+      this.mutate(() => {
+        this.doc.frames = this.doc.frames.map((frame, idx) => {
+          if (idx === this.index) return frame; // Aktuellen Frame überspringen
+
+          updatedFramesCount++;
+          return frame.map((cell, i) => ({
+            ...cell,
+            fg: currentFrame[i].fg,
+            bg: currentFrame[i].bg
+          }));
+        });
+      });
+
+      return updatedFramesCount;
+    }
+
+    /**
+     * Überträgt die Farben des aktuellen Frames NUR auf FOLGENDE Frames (vom aktuellen Index bis zum Ende).
+     */
+    applyColorsToNextFrames() {
+      if (this.index >= this.doc.frames.length - 1) return 0;
+
+      const currentFrame = this.frame;
+      let updatedFramesCount = 0;
+
+      this.mutate(() => {
+        this.doc.frames = this.doc.frames.map((frame, idx) => {
+          if (idx <= this.index) return frame; // Vorherige und aktuellen Frame überspringen
+
+          updatedFramesCount++;
+          return frame.map((cell, i) => ({
+            ...cell,
+            fg: currentFrame[i].fg,
+            bg: currentFrame[i].bg
+          }));
+        });
+      });
+
+      return updatedFramesCount;
+    }
+
+    // --- RECHTECK-AUSWAHL & VERSCHIEBUNG ---
+
+    selectRect(x1, y1, x2, y2) {
+      this.commit();
+      
+      const x = Math.max(0, Math.min(x1, x2));
+      const y = Math.max(0, Math.min(y1, y2));
+      const w = Math.min(this.doc.width - x, Math.abs(x2 - x1) + 1);
+      const h = Math.min(this.doc.height - y, Math.abs(y2 - y1) + 1);
+
+      if (w <= 0 || h <= 0) return;
+
+      const pixels = [];
+      const emptyCell = { char: ' ', fg: DEFAULT_FG, bg: this.doc.background };
+
+      this.mutate(() => {
+        const newFrame = this.frame.slice();
+
+        for (let row = 0; row < h; row++) {
+          for (let col = 0; col < w; col++) {
+            const index = (y + row) * this.doc.width + (x + col);
+            pixels.push({ ...newFrame[index] });
+            newFrame[index] = { ...emptyCell };
           }
         }
-        return cell;
+
+        this.doc.frames[this.index] = newFrame;
       });
-      return frameChanged ? newFrame : frame;
-    });
-  });
 
-  return count;
-}
+      this.selection = { x, y, width: w, height: h, pixels, currentX: x, currentY: y };
+      this.emit('select-rect');
+    }
 
+    moveSelection(dx, dy) {
+      if (!this.selection) return;
 
+      this.selection.currentX = Math.max(0, Math.min(this.doc.width - this.selection.width, this.selection.x + dx));
+      this.selection.currentY = Math.max(0, Math.min(this.doc.height - this.selection.height, this.selection.y + dy));
+      
+      this.emit('move-rect');
+    }
+
+    commitSelection() {
+      if (!this.selection) return;
+
+      const { currentX, currentY, width, height, pixels } = this.selection;
+
+      this.mutate(() => {
+        const newFrame = this.frame.slice();
+
+        for (let row = 0; row < height; row++) {
+          for (let col = 0; col < width; col++) {
+            const targetX = currentX + col;
+            const targetY = currentY + row;
+
+            if (targetX >= 0 && targetX < this.doc.width && targetY >= 0 && targetY < this.doc.height) {
+              const targetIndex = targetY * this.doc.width + targetX;
+              const sourceIndex = row * width + col;
+              newFrame[targetIndex] = pixels[sourceIndex];
+            }
+          }
+        }
+
+        this.doc.frames[this.index] = newFrame;
+      });
+
+      this.selection = null;
+      this.emit('commit-rect');
+    }
+
+    cancelSelection() {
+      if (!this.selection) return;
+
+      const { x, y, width, height, pixels } = this.selection;
+
+      this.mutate(() => {
+        const newFrame = this.frame.slice();
+
+        for (let row = 0; row < height; row++) {
+          for (let col = 0; col < width; col++) {
+            const index = (y + row) * this.doc.width + (x + col);
+            newFrame[index] = pixels[row * width + col];
+          }
+        }
+
+        this.doc.frames[this.index] = newFrame;
+      });
+
+      this.selection = null;
+      this.emit('cancel-rect');
+    }
   }
 
   globalThis.EditorModel = EditorModel;

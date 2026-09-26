@@ -131,4 +131,18 @@
   window.addEventListener('resize', () => view.schedule());
   syncDocument();
   requestAnimationFrame(() => view.fit());
+
+  document.querySelector('#apply-colors-all')?.addEventListener('click', () => {
+  const updated = model.applyColorsToAllFrames();
+  showStatus(`${updated} Frame(s) mit neuen Farben aktualisiert.`);
+});
+
+document.querySelector('#apply-colors-next')?.addEventListener('click', () => {
+  console.log("HEy")
+  const updated = model.applyColorsToNextFrames();
+  showStatus(`${updated} nachfolgende(r) Frame(s) aktualisiert.`);
+});
+
+
+
 })();
