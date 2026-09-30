@@ -571,6 +571,40 @@
       return sharedClipboard;
     }
 
+    // Mirror selection horizontally (left ↔ right), swapping directional chars
+    mirrorSelectionH() {
+      if (!this.selection) return;
+      // Must be floating so the chars live in pixels (not in the frame)
+      this.liftSelection();
+      const MIRROR_H = {
+        '/': '\\', '\\': '/',
+        '(': ')', ')': '(',
+        '[': ']', ']': '[',
+        '{': '}', '}': '{',
+        '<': '>', '>': '<',
+        '`': "'", "'": '`',
+      };
+      const w = this.selection.bounds.width;
+      this.selection.pixels = this.selection.pixels.map(p => {
+        const newRelX = w - 1 - p.relX;
+        const newChar = MIRROR_H[p.char] ?? p.char;
+        return { ...p, relX: newRelX, char: newChar };
+      });
+      this.emit('paint');
+    }
+
+    // Mirror selection vertically (top ↔ bottom)
+    mirrorSelectionV() {
+      if (!this.selection) return;
+      this.liftSelection();
+      const h = this.selection.bounds.height;
+      this.selection.pixels = this.selection.pixels.map(p => {
+        const newRelY = h - 1 - p.relY;
+        return { ...p, relY: newRelY };
+      });
+      this.emit('paint');
+    }
+
     adjustSelection(dirX, dirY) {
       if (!this.selection) return false;
       if (this.selection.floating) {

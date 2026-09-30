@@ -120,6 +120,24 @@
     }
   });
 
+  $('btn-sel-mirror-h')?.addEventListener('click', () => {
+    if (model.selection) {
+      model.mirrorSelectionH();
+      report('Mirrored horizontally.');
+    } else {
+      report('No active selection to mirror.', true);
+    }
+  });
+
+  $('btn-sel-mirror-v')?.addEventListener('click', () => {
+    if (model.selection) {
+      model.mirrorSelectionV();
+      report('Mirrored vertically.');
+    } else {
+      report('No active selection to mirror.', true);
+    }
+  });
+
   $('btn-sel-commit')?.addEventListener('click', () => {
     if (model.selection) {
       model.commitSelection();
