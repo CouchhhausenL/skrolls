@@ -1,42 +1,62 @@
-# SKA animation editor
+# JavE · SKA animation editor
 
 Open **index.html** in a current Chrome, Edge, or Firefox browser. There is no installation, build step, server, or network dependency. All animation data stays in your browser; **Save .ska** downloads a file rather than overwriting the source file.
 
-Try **Open .ska → examples/comet.ska**, then press **Space**. The initial document is a blank 40 × 20 animation.
+## JavE 5.0 Features & Editing Tools
 
-## Editing
+The editor has been adapted to function like **JavE 5.0 (Java Ascii Versatile Editor)** with comprehensive ASCII-art and animation capabilities:
 
-- **Left mouse:** pencil. Drag to draw a continuous stroke.
-- **Right mouse:** eraser. Writes a space, white foreground, and the document's background.
-- **Middle mouse:** picker. Copies the character and both colors. **Ctrl + middle mouse** copies only the colors.
-- Each brush component has a **None** checkbox. None means leave the current cell component unchanged, not transparent or reset. Picking or choosing a value enables that component again.
-- **Fill frame** applies the brush to every cell, respecting all three None settings.
-- Click **Foreground** or **Background** to choose which color the wheel edits. Use the brightness slider or enter a six-digit hex value. **Swap** exchanges both color settings, including their None states. **Reset colors** enables white foreground and the document background; it does not change the character.
-- **☆** saves the current wheel color to favorites. Click a favorite to use it; right-click to remove it. Favorites persist through browser storage when available. They are not embedded in the SKA file.
-- Type one character directly, or choose one from **Essentials** or **In animation**. Search by character, category (such as `arrows`, `blocks`, `space`), or code point (`U+2588`). Unicode symbols are supported; font coverage varies. A cell holds one Unicode code point, not a multi-code-point emoji sequence.
+### Tool Palette
+- **Selection Tools:**
+  - **Rectangle Selection (⛶):** Drag to select a rectangular area. Drag the selection to move it, press `Ctrl+C` to copy, `Ctrl+X` to cut, `Ctrl+V` to paste, `Del` to clear.
+  - **Lasso Selection (⚿):** Freehand outline a custom boundary polygon to select cells inside it via ray-casting.
+- **Direct Text Editing (🗛):** Click anywhere on the canvas to place a text cursor. Type directly with your keyboard, navigate with arrow keys, and use Backspace/Enter.
+- **Freehand Drawing:**
+  - **Freehand Generic (✎):** Draw freehand strokes with customizable **Thickness** (1–15) and **Opacity** (10%–100% color blending).
+  - **Freehand Algorithmic (ᛘ):** Draw freehand lines automatically converted by the JavE structural algorithm into directional ASCII art (`-`, `|`, `/`, `\`, and corners `+` or box characters `┌─┐│└─┘`).
+- **Lines:**
+  - **Line Generic (╱):** Straight lines with thickness and opacity.
+  - **Line Algorithmic (✛):** Structural ASCII lines calculated using JavE angle detection and stepped Bresenham paths.
+- **Rectangles:**
+  - **Rectangle Generic (▭):** Outlined rectangles with brush character, thickness, and opacity.
+  - **Rectangle Algorithmic (⊞):** Structural ASCII rectangles with corners (`+` or `┌┐└┘`) and edges (`-`, `|`).
+- **Ellipses:**
+  - **Ellipse Generic (◯):** Ellipses with brush character, thickness, and opacity.
+  - **Ellipse Algorithmic (⨁):** Structural curved ASCII ellipses with quadrant-specific curve glyphs.
+- **Bézier Pen:**
+  - **Bézier Generic (∿):** Interactive 3-point Bézier curve (Start, End, Control handle) with thickness and opacity.
+  - **Bézier Algorithmic (⟿):** Structural ASCII Bézier curves with tangent-derived directional glyphs.
+- **Pattern Brush (▦):** Paints using custom repeating 1D or 2D ASCII art patterns (Diagonals, Shading Blocks, Bricks, Crosses, Dots, Waves, or freely user-defined patterns).
+- **Eraser (⌫):** Clears cells to spaces and canvas background with configurable thickness.
+- **Colorize / Einfärben (🎨):** Paints colors (`fg` and/or `bg`) without touching existing characters.
+- **Pipette / Eyedropper (🗲):** Copies character and colors from clicked cell.
+- **Pan Tool (✋):** Pan the canvas viewport (also available via Middle Mouse Button).
 
-## Timeline and document settings
+### Reference Tracing Image
+- Load background images (`.png`, `.jpg`, `.webp`, `.svg`, etc.) with variable **Opacity (0%–100%)**.
+- Choose between **Contain**, **Stretch / Fill**, or **Original 1:1** fit modes.
+- Toggle visibility on and off to easily trace real images into ASCII art!
 
-Click any thumbnail to inspect that frame's fully reconstructed state. **+ Blank** inserts a default-filled frame after the current frame; **Duplicate** copies it. **Delete** removes it, keeping at least one frame. Playback loops at the document FPS and stops when drawing or modifying the document.
-
-Edits affect **only the selected frame**. Later frames retain their visual state; the exporter recalculates their deltas. A mouse stroke, fill, frame operation, resize, FPS change, or background change is one undo step. Brush selection, zoom, favorites, grid visibility, and the download filename are not document history.
-
-- **Apply size** resizes every frame, anchored at the top-left. New cells use defaults; cropped cells can be recovered with Undo.
-- **Canvas background** changes the header and all cells matching the previous canvas background. Custom backgrounds remain unchanged. SKA stores color values, so explicitly painting a color equal to the old default is indistinguishable from using that default.
-- **File name** controls the exported filename. `.ska` is appended automatically.
-- Scroll over the workspace to zoom around the pointer. Use the viewport scrollbars to move around a large canvas, or click **Fit**.
-- Unsaved changes trigger a warning before replacing the animation or closing the page. There is no automatic animation backup: download your work regularly.
+### Timeline & Frame Reordering
+- **Drag & Drop:** Reorder frames directly by dragging cards along the timeline.
+- **Move Controls:** Use **◀ Move** and **Move ▶** to shift frames left or right.
+- **Animation Controls:** Play/Pause (`Space`), `+ Blank` frame, `Duplicate`, `Delete`. Edits are frame-independent with full undo/redo.
 
 ### Shortcuts
 
 | Shortcut | Action |
 | --- | --- |
 | Ctrl + Z | Undo |
-| Ctrl + Y | Redo |
+| Ctrl + Y / Ctrl + Shift + Z | Redo |
+| Ctrl + C / X / V | Copy / Cut / Paste selection |
+| Delete / Backspace | Clear selection (or erase in text mode) |
+| Escape | Deselect / Exit text mode / Cancel Bézier |
+| Enter | Commit floating selection / Newline in text mode |
 | A / Left arrow | Previous frame |
 | D / Right arrow | Next frame |
 | Space | Play / stop |
 | # | Toggle grid |
+| Middle mouse | Pan viewport |
 | Mouse wheel | Zoom |
 
 Text fields retain their normal typing and editing shortcuts. Ctrl + Shift + Z also redoes; Command is accepted in place of Ctrl. The color wheel supports arrow keys: left/right change hue, up/down change saturation.

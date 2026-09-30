@@ -2,10 +2,29 @@
   'use strict';
   const { blankFrame, DEFAULT_FG, validateHeader, validateSize } = SKA;
 
+  // Hex color blending helper
+  function blendColor(baseHex, brushHex, alpha) {
+    if (!brushHex || alpha >= 1) return brushHex || baseHex;
+    if (alpha <= 0) return baseHex;
+    try {
+      const r1 = parseInt(baseHex.slice(1, 3), 16), g1 = parseInt(baseHex.slice(3, 5), 16), b1 = parseInt(baseHex.slice(5, 7), 16);
+      const r2 = parseInt(brushHex.slice(1, 3), 16), g2 = parseInt(brushHex.slice(3, 5), 16), b2 = parseInt(brushHex.slice(5, 7), 16);
+      const r = Math.max(0, Math.min(255, Math.round(r1 * (1 - alpha) + r2 * alpha))).toString(16).padStart(2, '0');
+      const g = Math.max(0, Math.min(255, Math.round(g1 * (1 - alpha) + g2 * alpha))).toString(16).padStart(2, '0');
+      const b = Math.max(0, Math.min(255, Math.round(b1 * (1 - alpha) + b2 * alpha))).toString(16).padStart(2, '0');
+      return `#${r}${g}${b}`;
+    } catch {
+      return brushHex;
+    }
+  }
+
+  // Internal clipboard shared across model instances
+  let sharedClipboard = null;
+
   class EditorModel extends EventTarget {
     constructor() {
       super();
-      this.brush = { char: '█', fg: DEFAULT_FG, bg: null };
+      this.brush = { char: '@', fg: DEFAULT_FG, bg: null };
       this.selection = null;
       this.load(this.createDocument());
     }
@@ -72,6 +91,7 @@
       }
     }
 
+    // Classic paint method preserving backwards compatibility
     paint(indices, erase = false) {
       this.begin();
       const brush = erase ? { char: ' ', fg: DEFAULT_FG, bg: this.doc.background } : this.brush;
@@ -89,6 +109,91 @@
         changed = true;
       }
       if (changed) { this.changed = true; this.emit('paint'); }
+    }
+
+    // Extended paint method supporting opacity, custom character per cell, eraser, and colorize
+    paintCells(cells, options = {}) {
+      if (!cells || cells.length === 0) return;
+      this.begin();
+
+      const {
+        opacity = 1.0,
+        isEraser = false,
+        isColorize = false
+      } = options;
+
+      let changed = false;
+      const width = this.doc.width, height = this.doc.height;
+
+      for (const item of cells) {
+        let x, y, char, fg, bg;
+        if (typeof item === 'number') {
+          x = item % width;
+          y = Math.floor(item / width);
+          char = this.brush.char;
+          fg = this.brush.fg;
+          bg = this.brush.bg;
+        } else {
+          x = item.x !== undefined ? item.x : (item.index % width);
+          y = item.y !== undefined ? item.y : Math.floor(item.index / width);
+          char = item.char !== undefined ? item.char : this.brush.char;
+          fg = item.fg !== undefined ? item.fg : this.brush.fg;
+          bg = item.bg !== undefined ? item.bg : this.brush.bg;
+        }
+
+        if (x < 0 || x >= width || y < 0 || y >= height) continue;
+        const idx = y * width + x;
+        const old = this.frame[idx];
+        if (!old) continue;
+
+        let next;
+        if (isEraser) {
+          next = { char: ' ', fg: DEFAULT_FG, bg: this.doc.background };
+        } else if (isColorize) {
+          // Colorize only changes fg and bg, never char!
+          const nextFg = fg ? blendColor(old.fg, fg, opacity) : old.fg;
+          const nextBg = bg ? blendColor(old.bg, bg, opacity) : old.bg;
+          next = { char: old.char, fg: nextFg, bg: nextBg };
+        } else {
+          // Standard / algorithmic painting with opacity blending
+          const nextChar = char ?? old.char;
+          const cellOpacity = item.opacity !== undefined ? item.opacity : opacity;
+          const nextFg = fg ? blendColor(old.fg, fg, cellOpacity) : old.fg;
+          const nextBg = bg ? blendColor(old.bg, bg, cellOpacity) : old.bg;
+          next = { char: nextChar, fg: nextFg, bg: nextBg };
+        }
+
+        if (next.char === old.char && next.fg === old.fg && next.bg === old.bg) continue;
+
+        if (!this.copiedFrame) {
+          this.doc.frames[this.index] = this.frame.slice();
+          this.copiedFrame = true;
+        }
+        this.frame[idx] = next;
+        changed = true;
+      }
+
+      if (changed) {
+        this.changed = true;
+        this.emit('paint');
+      }
+    }
+
+    // Type a single character at (x, y) like a text editor
+    typeCharacter(x, y, char) {
+      if (x < 0 || x >= this.doc.width || y < 0 || y >= this.doc.height) return;
+      this.mutate(() => {
+        const idx = y * this.doc.width + x;
+        const old = this.frame[idx];
+        const next = {
+          char: char,
+          fg: this.brush.fg ?? old.fg,
+          bg: this.brush.bg ?? old.bg
+        };
+        const newFrame = this.frame.slice();
+        newFrame[idx] = next;
+        this.doc.frames[this.index] = newFrame;
+      });
     }
 
     fill() {
@@ -121,6 +226,7 @@
       to.push({ doc: this.doc, index: this.index });
       this.doc = snapshot.doc;
       this.index = snapshot.index;
+      this.selection = null;
       this.emit('history');
     }
 
@@ -138,6 +244,26 @@
         this.doc.frames.splice(this.index, 1);
         this.index = Math.min(this.index, this.doc.frames.length - 1);
       });
+    }
+
+    // Reorder frame fromIndex to toIndex (Timeline drag and drop / move)
+    reorderFrame(fromIndex, toIndex) {
+      if (fromIndex === toIndex) return;
+      if (fromIndex < 0 || fromIndex >= this.doc.frames.length) return;
+      if (toIndex < 0 || toIndex >= this.doc.frames.length) return;
+
+      this.mutate(() => {
+        const [moved] = this.doc.frames.splice(fromIndex, 1);
+        this.doc.frames.splice(toIndex, 0, moved);
+        this.index = toIndex;
+      });
+    }
+
+    moveFrame(direction) {
+      const target = this.index + direction;
+      if (target >= 0 && target < this.doc.frames.length) {
+        this.reorderFrame(this.index, target);
+      }
     }
 
     resize(width, height) {
@@ -175,7 +301,6 @@
 
     replaceColor(char, fg = null, bg = null) {
       if (fg === null && bg === null) return 0;
-
       let count = 0;
       this.mutate(() => {
         this.doc.frames = this.doc.frames.map(frame => {
@@ -195,26 +320,16 @@
           return frameChanged ? newFrame : frame;
         });
       });
-
       return count;
     }
 
-    // --- NEUE METHODEN FÜR DAS ÜBERTRAGEN VON FARBEN AUF ANDERE FRAMES ---
-
-    /**
-     * Überträgt die Farbpalette (fg und bg) des AKTUELLEN Frames auf ALLE anderen Frames.
-     * Die Zeichen (char) der anderen Frames bleiben unverändert.
-     */
     applyColorsToAllFrames() {
       if (this.doc.frames.length <= 1) return 0;
-
       const currentFrame = this.frame;
       let updatedFramesCount = 0;
-
       this.mutate(() => {
         this.doc.frames = this.doc.frames.map((frame, idx) => {
-          if (idx === this.index) return frame; // Aktuellen Frame überspringen
-
+          if (idx === this.index) return frame;
           updatedFramesCount++;
           return frame.map((cell, i) => ({
             ...cell,
@@ -223,23 +338,16 @@
           }));
         });
       });
-
       return updatedFramesCount;
     }
 
-    /**
-     * Überträgt die Farben des aktuellen Frames NUR auf FOLGENDE Frames (vom aktuellen Index bis zum Ende).
-     */
     applyColorsToNextFrames() {
       if (this.index >= this.doc.frames.length - 1) return 0;
-
       const currentFrame = this.frame;
       let updatedFramesCount = 0;
-
       this.mutate(() => {
         this.doc.frames = this.doc.frames.map((frame, idx) => {
-          if (idx <= this.index) return frame; // Vorherige und aktuellen Frame überspringen
-
+          if (idx <= this.index) return frame;
           updatedFramesCount++;
           return frame.map((cell, i) => ({
             ...cell,
@@ -248,102 +356,300 @@
           }));
         });
       });
-
       return updatedFramesCount;
     }
 
-    // --- RECHTECK-AUSWAHL & VERSCHIEBUNG ---
+    // --- SELECTION ENGINE (RECTANGLE & LASSO, MOVE, COPY, PASTE, CUT) ---
 
-    selectRect(x1, y1, x2, y2) {
+    // Set active selection
+    setSelection(type, cells, bounds) {
       this.commit();
-      
-      const x = Math.max(0, Math.min(x1, x2));
-      const y = Math.max(0, Math.min(y1, y2));
-      const w = Math.min(this.doc.width - x, Math.abs(x2 - x1) + 1);
-      const h = Math.min(this.doc.height - y, Math.abs(y2 - y1) + 1);
-
-      if (w <= 0 || h <= 0) return;
-
+      const points = new Set();
       const pixels = [];
+
+      for (const c of cells) {
+        points.add(`${c.x},${c.y}`);
+        const idx = c.y * this.doc.width + c.x;
+        const cellData = this.frame[idx] || { char: ' ', fg: DEFAULT_FG, bg: this.doc.background };
+        pixels.push({
+          relX: c.x - bounds.minX,
+          relY: c.y - bounds.minY,
+          x: c.x,
+          y: c.y,
+          char: cellData.char,
+          fg: cellData.fg,
+          bg: cellData.bg
+        });
+      }
+
+      this.selection = {
+        type, // 'rect' or 'lasso'
+        bounds, // { minX, minY, maxX, maxY, width, height }
+        points, // Set of 'x,y'
+        pixels, // Array of { relX, relY, char, fg, bg }
+        floating: false,
+        liftedOriginals: null,
+        offsetX: 0,
+        offsetY: 0
+      };
+
+      this.emit('selection-changed');
+    }
+
+    // Lift selection to float so it can be moved around
+    liftSelection() {
+      if (!this.selection || this.selection.floating) return;
+      this.begin();
+
+      const newFrame = this.frame.slice();
+      const liftedOriginals = [];
       const emptyCell = { char: ' ', fg: DEFAULT_FG, bg: this.doc.background };
 
-      this.mutate(() => {
-        const newFrame = this.frame.slice();
+      for (const p of this.selection.pixels) {
+        const idx = p.y * this.doc.width + p.x;
+        liftedOriginals.push({ idx, cell: newFrame[idx] });
+        newFrame[idx] = { ...emptyCell };
+      }
 
-        for (let row = 0; row < h; row++) {
-          for (let col = 0; col < w; col++) {
-            const index = (y + row) * this.doc.width + (x + col);
-            pixels.push({ ...newFrame[index] });
-            newFrame[index] = { ...emptyCell };
-          }
-        }
-
-        this.doc.frames[this.index] = newFrame;
-      });
-
-      this.selection = { x, y, width: w, height: h, pixels, currentX: x, currentY: y };
-      this.emit('select-rect');
+      this.doc.frames[this.index] = newFrame;
+      this.copiedFrame = true;
+      this.changed = true;
+      this.selection.floating = true;
+      this.selection.liftedOriginals = liftedOriginals;
+      this.emit('selection-lifted');
     }
 
+    // Move floating selection offset
     moveSelection(dx, dy) {
       if (!this.selection) return;
-
-      this.selection.currentX = Math.max(0, Math.min(this.doc.width - this.selection.width, this.selection.x + dx));
-      this.selection.currentY = Math.max(0, Math.min(this.doc.height - this.selection.height, this.selection.y + dy));
-      
-      this.emit('move-rect');
+      if (!this.selection.floating) {
+        this.liftSelection();
+      }
+      this.selection.offsetX = dx;
+      this.selection.offsetY = dy;
+      this.emit('selection-moved');
     }
 
+    // Commit floating selection into current frame
     commitSelection() {
       if (!this.selection) return;
 
-      const { currentX, currentY, width, height, pixels } = this.selection;
+      if (this.selection.floating) {
+        this.mutate(() => {
+          const newFrame = this.frame.slice();
+          const targetStartX = this.selection.bounds.minX + this.selection.offsetX;
+          const targetStartY = this.selection.bounds.minY + this.selection.offsetY;
 
-      this.mutate(() => {
-        const newFrame = this.frame.slice();
-
-        for (let row = 0; row < height; row++) {
-          for (let col = 0; col < width; col++) {
-            const targetX = currentX + col;
-            const targetY = currentY + row;
-
-            if (targetX >= 0 && targetX < this.doc.width && targetY >= 0 && targetY < this.doc.height) {
-              const targetIndex = targetY * this.doc.width + targetX;
-              const sourceIndex = row * width + col;
-              newFrame[targetIndex] = pixels[sourceIndex];
+          for (const p of this.selection.pixels) {
+            const tx = targetStartX + p.relX;
+            const ty = targetStartY + p.relY;
+            if (tx >= 0 && tx < this.doc.width && ty >= 0 && ty < this.doc.height) {
+              const idx = ty * this.doc.width + tx;
+              newFrame[idx] = { char: p.char, fg: p.fg, bg: p.bg };
             }
           }
-        }
-
-        this.doc.frames[this.index] = newFrame;
-      });
+          this.doc.frames[this.index] = newFrame;
+        });
+      }
 
       this.selection = null;
-      this.emit('commit-rect');
+      this.emit('selection-committed');
     }
 
+    // Cancel selection without dropping floating pixels
     cancelSelection() {
       if (!this.selection) return;
 
-      const { x, y, width, height, pixels } = this.selection;
-
-      this.mutate(() => {
-        const newFrame = this.frame.slice();
-
-        for (let row = 0; row < height; row++) {
-          for (let col = 0; col < width; col++) {
-            const index = (y + row) * this.doc.width + (x + col);
-            newFrame[index] = pixels[row * width + col];
+      if (this.selection.floating && this.selection.liftedOriginals) {
+        this.mutate(() => {
+          const newFrame = this.frame.slice();
+          for (const item of this.selection.liftedOriginals) {
+            newFrame[item.idx] = item.cell;
           }
-        }
-
-        this.doc.frames[this.index] = newFrame;
-      });
+          this.doc.frames[this.index] = newFrame;
+        });
+      }
 
       this.selection = null;
-      this.emit('cancel-rect');
+      this.emit('selection-cancelled');
+    }
+
+    // Delete selected cells
+    deleteSelection() {
+      if (!this.selection) return;
+
+      if (!this.selection.floating) {
+        this.mutate(() => {
+          const newFrame = this.frame.slice();
+          const emptyCell = { char: ' ', fg: DEFAULT_FG, bg: this.doc.background };
+          for (const p of this.selection.pixels) {
+            const idx = p.y * this.doc.width + p.x;
+            newFrame[idx] = { ...emptyCell };
+          }
+          this.doc.frames[this.index] = newFrame;
+        });
+      }
+
+      this.selection = null;
+      this.emit('selection-deleted');
+    }
+
+    // Copy selection to clipboard
+    copySelection() {
+      if (!this.selection) return null;
+      const clip = {
+        width: this.selection.bounds.width,
+        height: this.selection.bounds.height,
+        pixels: this.selection.pixels.map(p => ({ ...p }))
+      };
+      sharedClipboard = clip;
+
+      // Also generate plain ASCII text for OS clipboard
+      try {
+        const grid = Array.from({ length: clip.height }, () => Array(clip.width).fill(' '));
+        for (const p of clip.pixels) {
+          if (p.relY >= 0 && p.relY < clip.height && p.relX >= 0 && p.relX < clip.width) {
+            grid[p.relY][p.relX] = p.char;
+          }
+        }
+        const text = grid.map(row => row.join('')).join('\n');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).catch(() => {});
+        }
+      } catch { /* Clipboard access optional */ }
+
+      return clip;
+    }
+
+    // Cut selection
+    cutSelection() {
+      if (!this.selection) return;
+      this.copySelection();
+      this.deleteSelection();
+    }
+
+    // Paste clipboard into current frame as floating selection
+    pasteClipboard(targetX = 0, targetY = 0) {
+      if (!sharedClipboard) return false;
+      this.commitSelection(); // Commit any previous selection first
+
+      const bounds = {
+        minX: targetX,
+        minY: targetY,
+        maxX: targetX + sharedClipboard.width - 1,
+        maxY: targetY + sharedClipboard.height - 1,
+        width: sharedClipboard.width,
+        height: sharedClipboard.height
+      };
+
+      const points = new Set();
+      const pixels = sharedClipboard.pixels.map(p => {
+        points.add(`${targetX + p.relX},${targetY + p.relY}`);
+        return {
+          ...p,
+          x: targetX + p.relX,
+          y: targetY + p.relY
+        };
+      });
+
+      this.selection = {
+        type: 'rect',
+        bounds,
+        points,
+        pixels,
+        floating: true,
+        liftedOriginals: [],
+        offsetX: 0,
+        offsetY: 0
+      };
+
+      this.emit('selection-pasted');
+      return true;
+    }
+
+    getClipboard() {
+      return sharedClipboard;
+    }
+
+    adjustSelection(dirX, dirY) {
+      if (!this.selection) return false;
+      if (this.selection.floating) {
+        this.selection.offsetX += dirX;
+        this.selection.offsetY += dirY;
+        this.emit('selection-moved');
+        return true;
+      }
+
+      const doc = this.doc;
+      const b = this.selection.bounds;
+      
+      if (this.selection.anchorX === undefined) {
+        this.selection.anchorX = b.minX;
+        this.selection.activeEndX = b.maxX;
+      }
+      if (this.selection.anchorY === undefined) {
+        this.selection.anchorY = b.minY;
+        this.selection.activeEndY = b.maxY;
+      }
+
+      if (dirX !== 0) {
+        let target = this.selection.activeEndX + dirX;
+        target = Math.max(0, Math.min(doc.width - 1, target));
+        this.selection.activeEndX = target;
+      }
+
+      if (dirY !== 0) {
+        let target = this.selection.activeEndY + dirY;
+        target = Math.max(0, Math.min(doc.height - 1, target));
+        this.selection.activeEndY = target;
+      }
+
+      const minX = Math.min(this.selection.anchorX, this.selection.activeEndX);
+      const maxX = Math.max(this.selection.anchorX, this.selection.activeEndX);
+      const minY = Math.min(this.selection.anchorY, this.selection.activeEndY);
+      const maxY = Math.max(this.selection.anchorY, this.selection.activeEndY);
+      const width = maxX - minX + 1;
+      const height = maxY - minY + 1;
+
+      const cells = [];
+      for (let y = minY; y <= maxY; y++) {
+        for (let x = minX; x <= maxX; x++) {
+          cells.push({ x, y });
+        }
+      }
+
+      const savedAnchorX = this.selection.anchorX;
+      const savedAnchorY = this.selection.anchorY;
+      const savedActiveEndX = this.selection.activeEndX;
+      const savedActiveEndY = this.selection.activeEndY;
+
+      this.setSelection('rect', cells, { minX, minY, maxX, maxY, width, height });
+      this.selection.anchorX = savedAnchorX;
+      this.selection.anchorY = savedAnchorY;
+      this.selection.activeEndX = savedActiveEndX;
+      this.selection.activeEndY = savedActiveEndY;
+      return true;
+    }
+
+    // Backward-compatible selectRect for older tests/handlers
+    selectRect(x1, y1, x2, y2) {
+      const minX = Math.max(0, Math.min(x1, x2));
+      const minY = Math.max(0, Math.min(y1, y2));
+      const maxX = Math.min(this.doc.width - 1, Math.max(x1, x2));
+      const maxY = Math.min(this.doc.height - 1, Math.max(y1, y2));
+      const w = maxX - minX + 1, h = maxY - minY + 1;
+      if (w <= 0 || h <= 0) return;
+
+      const cells = [];
+      for (let y = minY; y <= maxY; y++) {
+        for (let x = minX; x <= maxX; x++) {
+          cells.push({ x, y });
+        }
+      }
+      this.setSelection('rect', cells, { minX, minY, maxX, maxY, width: w, height: h });
     }
   }
 
   globalThis.EditorModel = EditorModel;
+  globalThis.sharedClipboard = sharedClipboard;
 })();
