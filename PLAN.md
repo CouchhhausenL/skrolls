@@ -16,10 +16,10 @@
 - Scroll
 - Staff
 - Armor
-- Amulet
+- Artifact
 
 # Damage Types
-# Damage Types
+
 
 | Attacking ↓ / Defending → | »Kinetic | ✦Elemental |*Purity| ΩAbyssal | ✞Necrotic | ^Dragonic | ⚝Arcane | ※Chaos | ∞Infinity |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|

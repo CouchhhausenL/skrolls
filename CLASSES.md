@@ -1,0 +1,19 @@
+# Classes
+- Charakter
+    - Monster
+    - Player
+- Battle
+    - Bossbattle
+- Story
+- Scene
+- Map
+- Console
+    - ASCII
+
+- Item
+    - Staff
+    - Scroll
+    - Armor
+    - Artifact
+    - Equipable 
+- Inventory

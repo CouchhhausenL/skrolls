@@ -89,14 +89,18 @@
   }
 
   function encodePixel(cell, old) {
-    if (!validChar(cell.char) || !HEX.test(cell.fg) || !HEX.test(cell.bg)) throw new Error('Invalid cell character or color.');
-    const char = cell.char !== old.char ? cell.char : '';
-    const fg = cell.fg.toLowerCase() !== old.fg.toLowerCase() ? cell.fg.slice(1).toLowerCase() : '';
-    const bg = cell.bg.toLowerCase() !== old.bg.toLowerCase() ? cell.bg.slice(1).toLowerCase() : '';
+    // Sanitize: fall back to the previous cell's known-valid values rather than crashing
+    const char  = validChar(cell.char)  ? cell.char  : old.char;
+    const fg    = HEX.test(cell.fg)     ? cell.fg    : old.fg;
+    const bg    = HEX.test(cell.bg)     ? cell.bg    : old.bg;
+
+    const diffChar = char !== old.char ? char : '';
+    const diffFg   = fg.toLowerCase() !== old.fg.toLowerCase() ? fg.slice(1).toLowerCase() : '';
+    const diffBg   = bg.toLowerCase() !== old.bg.toLowerCase() ? bg.slice(1).toLowerCase() : '';
     let pixel = PIXEL;
-    if (char) pixel += DATA + char;
-    if (fg || bg) pixel += DATA + fg;
-    if (bg) pixel += DATA + bg;
+    if (diffChar) pixel += DATA + diffChar;
+    if (diffFg || diffBg) pixel += DATA + diffFg;
+    if (diffBg) pixel += DATA + diffBg;
     return pixel;
   }
 
