@@ -14,7 +14,12 @@
   }
 
   function run(action) {
-    try { action(); }
+    try {
+      const result = action();
+      if (result && typeof result.catch === 'function') {
+        result.catch(error => { report(error.message, true); syncDocument(); });
+      }
+    }
     catch (error) { report(error.message, true); syncDocument(); }
   }
 
@@ -95,19 +100,42 @@
     }
   });
 
-  $('btn-sel-paste')?.addEventListener('click', () => {
+  $('btn-sel-paste')?.addEventListener('click', async () => {
     const target = gestures.currentMouseCell || view.getVisibleCenterCell();
     const clip = model.getClipboard();
     let tx = target.x, ty = target.y;
-    if (clip) {
-      tx = Math.max(0, Math.min(model.doc.width - clip.width, target.x - Math.floor(clip.width / 2)));
-      ty = Math.max(0, Math.min(model.doc.height - clip.height, target.y - Math.floor(clip.height / 2)));
-    }
-    const success = model.pasteClipboard(tx, ty);
-    if (success) {
-      report('Pasted from clipboard at cursor. Drag selection to position, press Enter to commit.');
+
+    // Try OS clipboard first
+    let osText = null;
+    try {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        osText = await navigator.clipboard.readText();
+      }
+    } catch { /* permission denied */ }
+
+    if (osText && osText.trim()) {
+      const lines = osText.split('\n');
+      const h = lines.length;
+      const w = Math.max(...lines.map(l => [...l].length));
+      tx = Math.max(0, Math.min(model.doc.width - w, target.x - Math.floor(w / 2)));
+      ty = Math.max(0, Math.min(model.doc.height - h, target.y - Math.floor(h / 2)));
+      const success = model.pasteFromText(osText, tx, ty);
+      if (success) {
+        report('OS-Clipboard eingefügt. Selektion verschieben, Enter zum Bestätigen.');
+      } else {
+        report('Clipboard-Text konnte nicht eingefügt werden.', true);
+      }
     } else {
-      report('Clipboard is empty. Select and copy something first.', true);
+      if (clip) {
+        tx = Math.max(0, Math.min(model.doc.width - clip.width, target.x - Math.floor(clip.width / 2)));
+        ty = Math.max(0, Math.min(model.doc.height - clip.height, target.y - Math.floor(clip.height / 2)));
+      }
+      const success = model.pasteClipboard(tx, ty);
+      if (success) {
+        report('Pasted from clipboard at cursor. Drag selection to position, press Enter to commit.');
+      } else {
+        report('Clipboard is empty. Select and copy something first.', true);
+      }
     }
   });
 

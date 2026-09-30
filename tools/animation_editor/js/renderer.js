@@ -211,21 +211,22 @@
         const startY = sel.bounds.minY + sel.offsetY;
 
         for (const p of sel.pixels) {
+          // Space / empty pixels are transparent – don't overdraw the canvas beneath
+          if (!p.char || p.char === ' ') continue;
+
           const px = (startX + p.relX) * CELL_W;
           const py = (startY + p.relY) * CELL_H;
 
           ctx.fillStyle = p.bg || doc.background;
           ctx.fillRect(px, py, CELL_W, CELL_H);
 
-          if (p.char !== ' ') {
-            ctx.save();
-            ctx.beginPath();
-            ctx.rect(px, py, CELL_W, CELL_H);
-            ctx.clip();
-            ctx.fillStyle = p.fg || SKA.DEFAULT_FG;
-            ctx.fillText(p.char, px + CELL_W / 2, py + CELL_H / 2 + 1);
-            ctx.restore();
-          }
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(px, py, CELL_W, CELL_H);
+          ctx.clip();
+          ctx.fillStyle = p.fg || SKA.DEFAULT_FG;
+          ctx.fillText(p.char, px + CELL_W / 2, py + CELL_H / 2 + 1);
+          ctx.restore();
         }
 
         // Draw floating selection border

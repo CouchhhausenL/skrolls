@@ -853,15 +853,35 @@
         if (key === 'y') action = () => { this.timeline.stop(); this.model.travel(true); };
         if (key === 'c') action = () => { this.model.copySelection(); };
         if (key === 'x') action = () => { this.model.cutSelection(); };
-        if (key === 'v') action = () => {
+        if (key === 'v') action = async () => {
           const target = this.currentMouseCell || this.view.getVisibleCenterCell();
           const clip = this.model.getClipboard();
           let tx = target.x, ty = target.y;
-          if (clip) {
-            tx = Math.max(0, Math.min(this.model.doc.width - clip.width, target.x - Math.floor(clip.width / 2)));
-            ty = Math.max(0, Math.min(this.model.doc.height - clip.height, target.y - Math.floor(clip.height / 2)));
+
+          // Try OS clipboard first
+          let osText = null;
+          try {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+              osText = await navigator.clipboard.readText();
+            }
+          } catch { /* permission denied or not available */ }
+
+          if (osText && osText.trim()) {
+            // Use OS clipboard text – center it around the cursor like an internal paste
+            const lines = osText.split('\n');
+            const h = lines.length;
+            const w = Math.max(...lines.map(l => [...l].length));
+            tx = Math.max(0, Math.min(this.model.doc.width - w, target.x - Math.floor(w / 2)));
+            ty = Math.max(0, Math.min(this.model.doc.height - h, target.y - Math.floor(h / 2)));
+            this.model.pasteFromText(osText, tx, ty);
+          } else {
+            // Fall back to internal clipboard
+            if (clip) {
+              tx = Math.max(0, Math.min(this.model.doc.width - clip.width, target.x - Math.floor(clip.width / 2)));
+              ty = Math.max(0, Math.min(this.model.doc.height - clip.height, target.y - Math.floor(clip.height / 2)));
+            }
+            this.model.pasteClipboard(tx, ty);
           }
-          this.model.pasteClipboard(tx, ty);
         };
       } else if (event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey) {
         if (this.model.selection) {

@@ -441,11 +441,17 @@
           const targetStartY = this.selection.bounds.minY + this.selection.offsetY;
 
           for (const p of this.selection.pixels) {
+            // Skip blank/space pixels – they are transparent and don't overwrite the canvas
+            if (!p.char || p.char === ' ') continue;
             const tx = targetStartX + p.relX;
             const ty = targetStartY + p.relY;
             if (tx >= 0 && tx < this.doc.width && ty >= 0 && ty < this.doc.height) {
               const idx = ty * this.doc.width + tx;
-              newFrame[idx] = { char: p.char, fg: p.fg, bg: p.bg };
+              newFrame[idx] = {
+                char: p.char,
+                fg: p.fg ?? DEFAULT_FG,
+                bg: p.bg ?? this.doc.background
+              };
             }
           }
           this.doc.frames[this.index] = newFrame;
@@ -569,6 +575,37 @@
 
     getClipboard() {
       return sharedClipboard;
+    }
+
+    // Load plain text (e.g. from OS clipboard) into the internal clipboard and paste it
+    pasteFromText(text, targetX = 0, targetY = 0) {
+      if (!text || typeof text !== 'string') return false;
+      const lines = text.split('\n').map(l => l.replace(/\r$/, ''));
+      if (!lines.length) return false;
+
+      const height = lines.length;
+      const width = Math.max(...lines.map(l => [...l].length)); // handle multi-byte chars
+      if (width === 0 || height === 0) return false;
+
+      const pixels = [];
+      for (let row = 0; row < lines.length; row++) {
+        const chars = [...lines[row]]; // spread to handle emoji / multi-byte
+        for (let col = 0; col < chars.length; col++) {
+          const ch = chars[col];
+          if (ch && ch !== ' ') {
+            pixels.push({
+              relX: col,
+              relY: row,
+              char: ch,
+              fg: this.brush.fg ?? DEFAULT_FG,
+              bg: this.brush.bg ?? this.doc.background
+            });
+          }
+        }
+      }
+
+      sharedClipboard = { width, height, pixels };
+      return this.pasteClipboard(targetX, targetY);
     }
 
     // Mirror selection horizontally (left ↔ right), swapping directional chars
