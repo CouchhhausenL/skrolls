@@ -1,6 +1,6 @@
 package main.java;
 
-public enum DamageType {
+public enum MagicType {
     KINETIC("»", "Kinetic", 0xc9c9c9),
     ELEMENTAL("▲", "Elemental", 0xfa6234),
     PURITY("*", "Purity", 0xfff78d),
@@ -15,7 +15,7 @@ public enum DamageType {
     private final String name;
     private final int color;
 
-    DamageType(String symbol, String name, int color) {
+    MagicType(String symbol, String name, int color) {
         this.symbol = symbol;
         this.name = name;
         this.color = color;
