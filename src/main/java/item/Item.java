@@ -8,6 +8,4 @@ public abstract class Item {
         this.name = name;
         this.description = description;
     }
-
-    public abstract void use();
 }

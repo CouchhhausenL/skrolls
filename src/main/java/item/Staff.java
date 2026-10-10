@@ -12,11 +12,6 @@ public class Staff extends Item {
        this.power = power;
     }
 
-    @Override
-    public void use() {
-
-    }
-
     public MagicType getDamageType() {
         return damageType;
     }

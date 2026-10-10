@@ -12,11 +12,6 @@ public class Armor extends Item implements Equipable {
         this.protectionType = protectionType;
     }
 
-    @Override
-    public void use() {
-
-    }
-
     public int getProtection() {
         return protection;
     }

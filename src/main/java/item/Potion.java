@@ -10,11 +10,6 @@ public class Potion extends Item {
         this.potionType = potionType;
     }
 
-    @Override
-    public void use() {
-
-    }
-
     public MagicType getPotionType() {
         return potionType;
     }
