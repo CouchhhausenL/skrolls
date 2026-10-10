@@ -8,11 +8,11 @@ import java.io.PrintWriter;
 import java.io.Reader;
 
 public class Console {
-    private Terminal terminal;
+    private final Terminal terminal;
     private int width;
     private int height;
-    private CellBuffer front;
-    private CellBuffer back;
+    private final CellBuffer front;
+    private final CellBuffer back;
 
     public Console() throws IOException {
         terminal = TerminalBuilder.terminal();
