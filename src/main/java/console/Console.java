@@ -32,8 +32,8 @@ public class Console implements AutoCloseable {
             terminal.trackMouse(Terminal.MouseTracking.Any);
     }
 
-    public void loop() {
-        //TODO: Add looping functionality
+    public void render() {
+        //TODO: Add render loop
     }
 
     private boolean areDimensionsDirty() {
