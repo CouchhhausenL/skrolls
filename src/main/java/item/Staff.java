@@ -3,8 +3,8 @@ package main.java.item;
 import main.java.MagicType;
 
 public class Staff extends Item {
-    private MagicType damageType;
-    private int power;
+    private final MagicType damageType;
+    private final int power;
 
     public Staff(String name, String description, MagicType damageType, int power) {
         super(name,description);
@@ -15,5 +15,13 @@ public class Staff extends Item {
     @Override
     public void use() {
 
+    }
+
+    public MagicType getDamageType() {
+        return damageType;
+    }
+
+    public int getPower() {
+        return power;
     }
 }
