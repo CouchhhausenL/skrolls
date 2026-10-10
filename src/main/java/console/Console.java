@@ -16,9 +16,9 @@ public class Console {
 
     public Console() throws IOException {
         terminal = TerminalBuilder.terminal();
-        updateDimensions();
         front = new CellBuffer(width, height);
         back = new CellBuffer(width, height);
+        updateDimensions();
 
         terminal.enterRawMode();
         terminal.trackMouse(Terminal.MouseTracking.Any);
