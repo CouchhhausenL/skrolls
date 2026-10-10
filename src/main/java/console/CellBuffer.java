@@ -1,28 +1,82 @@
 package main.java.console;
 
 public class CellBuffer {
+    public static final int TRANSPARENT_BACKGROUND = -1;
+    public static final char EMPTY_CELL = '\0';
+
     private int width;
     private int height;
-    private Cell[][] cells;
+
+    // Avoid Cell object to prevent instantiation on render path
+    private char[][] characters;
+    private int[][] foregrounds;
+    private int[][] backgrounds;
 
     public CellBuffer(int width, int height) {
         this.width = width;
         this.height = height;
-        cells = new Cell[height][width];
+        characters = new char[height][width];
+        foregrounds = new int[height][width];
+        backgrounds = new int[height][width];
+    }
+
+    public void clear() {
+        characters = new char[height][width];
+        foregrounds = new int[height][width];
+        backgrounds = new int[height][width];
     }
 
     public void resize(int width, int height) {
         this.width = width;
         this.height = height;
-        cells = new Cell[height][width];
+        clear();
     }
 
-    public void set(int x, int y, Cell cell) {
-        cells[y][x] = cell;
+    public boolean set(int x, int y, char character, int foreground, int background) {
+        if (foreground < 0)
+            throw new IllegalArgumentException("Foreground color cannot be negative");
+        if (background < -1)
+            throw new IllegalArgumentException("Background color cannot be negative");
+
+        if (x < 0 || x > width - 1 || y < 0 || y > height -1) return false;
+
+        characters[y][x] = character;
+        foregrounds[y][x] = foreground;
+        backgrounds[y][x] = background;
+
+        return true;
     }
 
-    public Cell get(int x, int y) {
-        return cells[y][x];
+    public char getChar(int x, int y) {
+        return characters[y][x];
+    }
+    public int getForeground(int x, int y) {
+        return foregrounds[y][x];
+    }
+    public int getBackground(int x, int y) {
+        return backgrounds[y][x];
+    }
+
+    public void overlay(int rootX, int rootY, CellBuffer overlay) {
+        for (int x = 0; x < overlay.width; x++) {
+            for (int y = 0; y < overlay.height; y++) {
+                int shiftedX = x + rootX;
+                int shiftedY = y + rootY;
+
+                char newChar = overlay.getChar(x, y);
+                int newForeground = overlay.getForeground(x, y);
+                int newBackground = overlay.getBackground(x, y);
+
+                set(
+                        shiftedX,
+                        shiftedY,
+                        newChar,
+                        newForeground,
+                        // Only overwrite when new is not transparent
+                        newBackground == TRANSPARENT_BACKGROUND ? getBackground(shiftedX, shiftedY) : newBackground
+                );
+            }
+        }
     }
 
 }
