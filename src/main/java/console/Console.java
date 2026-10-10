@@ -2,15 +2,19 @@ package main.java.console;
 
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.NonBlockingReader;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
 
-public class Console {
+public class Console implements AutoCloseable {
     private final Terminal terminal;
     private int width;
     private int height;
+
+    private final PrintWriter writer;
+    private final NonBlockingReader reader;
+
     private final CellBuffer front;
     private final CellBuffer back;
 
@@ -20,8 +24,12 @@ public class Console {
         back = new CellBuffer(width, height);
         updateDimensions();
 
+        writer = terminal.writer();
+        reader = terminal.reader();
+
         terminal.enterRawMode();
-        terminal.trackMouse(Terminal.MouseTracking.Any);
+        if (terminal.hasMouseSupport())
+            terminal.trackMouse(Terminal.MouseTracking.Any);
     }
 
     public void loop() {
@@ -47,19 +55,8 @@ public class Console {
         return height;
     }
 
-    public void writeString(String content) {
-        writer().println(content);
-    }
-
-    public PrintWriter writer() {
-        return terminal.writer();
-    }
-
-    public Reader reader() {
-        return terminal.reader();
-    }
-
-    public void flush() {
-        terminal.flush();
+    @Override
+    public void close() throws IOException {
+        terminal.close();
     }
 }
