@@ -5,7 +5,7 @@ import main.java.console.Console;
 import java.io.IOException;
 
 public class Main {
-    static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
         Console console = new Console();
 
         console.writer().println("Test");
