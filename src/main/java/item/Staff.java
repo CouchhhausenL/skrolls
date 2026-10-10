@@ -2,7 +2,7 @@ package main.java.item;
 
 import main.java.MagicType;
 
-public class Staff extends Item {
+public class Staff extends Item implements Equipable {
     private final MagicType damageType;
     private final int power;
 
@@ -18,5 +18,10 @@ public class Staff extends Item {
 
     public int getPower() {
         return power;
+    }
+
+    @Override
+    public EquipmentType getEquipmentType() {
+        return EquipmentType.STAFF;
     }
 }

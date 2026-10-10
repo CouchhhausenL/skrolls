@@ -19,4 +19,9 @@ public class Armor extends Item implements Equipable {
     public MagicType getProtectionType() {
         return protectionType;
     }
+
+    @Override
+    public EquipmentType getEquipmentType() {
+        return EquipmentType.ARMOR;
+    }
 }
