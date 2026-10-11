@@ -1,27 +1,21 @@
 package main.java.item;
 
+import main.java.Effect;
 import main.java.MagicType;
 
-public class Staff extends Item implements Equipable {
-    private final MagicType damageType;
-    private final int power;
+import java.util.List;
 
-    public Staff(String name, String description, MagicType damageType, int power) {
-        super(name,description);
-        this.damageType = damageType;
-       this.power = power;
-    }
+public class Staff extends MagicItem implements Useable{
 
-    public MagicType getDamageType() {
-        return damageType;
-    }
+    public Staff(String name, String description, Quality quality, MagicType magicType, List<Effect> effects){
+        super(name,description, quality, magicType, effects);
 
-    public int getPower() {
-        return power;
     }
 
     @Override
-    public EquipmentType getEquipmentType() {
-        return EquipmentType.STAFF;
+    public void use() {
+
     }
+
+
 }

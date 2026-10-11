@@ -1,16 +1,22 @@
 package main.java.item;
 
+import main.java.Effect;
 import main.java.MagicType;
 
-public class Potion extends Item {
-    private final MagicType potionType;
+import java.util.List;
 
-    public Potion(String name, String description, MagicType potionType) {
-        super(name, description);
-        this.potionType = potionType;
+public class Potion extends MagicItem implements Useable{
+    public final int duration;
+
+
+
+    public Potion(String name, String description, Quality quality, MagicType magicType, List<Effect> effects, int duration){
+        super(name,description,quality, magicType, effects);
+        this.duration = duration;
     }
 
-    public MagicType getPotionType() {
-        return potionType;
+    @Override
+    public void use() {
+
     }
 }
