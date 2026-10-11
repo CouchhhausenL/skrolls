@@ -1,0 +1,44 @@
+package main.java.console.factory;
+
+import main.java.console.TerminalType;
+import main.java.util.ANSI;
+import org.jline.terminal.Terminal;
+import org.jline.utils.InfoCmp;
+
+import java.io.IOException;
+
+public final class CommonTerminalFactory {
+    private CommonTerminalFactory() {}
+
+    public static TerminalHolder create(TerminalType type) throws IOException {
+        return switch (type) {
+            case CONSOLE -> ConsoleTerminalFactory.create();
+            case WINDOW -> WindowTerminalFactory.create();
+        };
+    }
+
+    public static void commonInit(Terminal terminal) {
+        terminal.puts(InfoCmp.Capability.cursor_invisible);
+        terminal.puts(InfoCmp.Capability.clear_screen);
+        terminal.puts(InfoCmp.Capability.cursor_home);
+        terminal.puts(InfoCmp.Capability.enter_ca_mode); // Alternate screen mode
+
+        terminal.enterRawMode();
+        if (terminal.hasMouseSupport()) {
+            terminal.trackMouse(Terminal.MouseTracking.Any);
+            terminal.writer().write(ANSI.ENABLE_SGR);
+        }
+
+        terminal.flush();
+    }
+
+    public static void commonBeforeClose(Terminal terminal) {
+        terminal.trackMouse(Terminal.MouseTracking.Off);
+        terminal.writer().write(ANSI.DISABLE_SGR);
+
+        terminal.puts(InfoCmp.Capability.exit_ca_mode);
+        terminal.puts(InfoCmp.Capability.cursor_visible);
+
+        terminal.flush();
+    }
+}

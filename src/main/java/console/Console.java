@@ -1,5 +1,6 @@
 package main.java.console;
 
+import main.java.console.factory.TerminalHolder;
 import main.java.console.input.InputEvent;
 import main.java.console.input.InputParser;
 import main.java.util.ANSI;
@@ -26,7 +27,7 @@ public class Console implements AutoCloseableByCloser {
     private final CellBuffer back;
 
     public Console(TerminalType terminalType) throws ConsoleConstructionException {
-        TerminalType.Holder holder;
+        TerminalHolder holder;
         try {
             holder = terminalType.create();
         } catch (IOException e) {
