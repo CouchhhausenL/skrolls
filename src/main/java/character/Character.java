@@ -1,7 +1,7 @@
-package main.java.characters;
+package main.java.character;
 
 public abstract class Character {
-    private String name;
+    private final String name;
     private int health;
     private int maxHealth;
     private int speed;
@@ -15,28 +15,31 @@ public abstract class Character {
         this.inventory = inventory;
     }
 
-
     public boolean takeDamage(int amount) {
         if (amount < 0) {
             return false;
         }
         health = health - amount;
 
-       return (health > 0);
+        return (health > 0);
     }
 
     public void heal(int amount) {
-        if(amount < 0){
+        if (amount < 0) {
             return;
         }
-        health = health + amount;
-        if(health > maxHealth){
+
+        health += amount;
+
+        if (health > maxHealth) {
             health = maxHealth;
         }
     }
+
     public int getSpeed(){
         return speed;
     }
+
     public Inventory getInventory(){
         return inventory;
     }
@@ -46,7 +49,4 @@ public abstract class Character {
     }
 
     public abstract void attack();
-
-
-
 }

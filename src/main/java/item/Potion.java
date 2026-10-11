@@ -5,10 +5,8 @@ import main.java.MagicType;
 
 import java.util.List;
 
-public class Potion extends MagicItem implements Useable{
+public class Potion extends MagicItem implements Usable {
     public final int duration;
-
-
 
     public Potion(String name, String description, Quality quality, MagicType magicType, List<Effect> effects, int duration){
         super(name,description,quality, magicType, effects);

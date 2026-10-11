@@ -1,4 +1,4 @@
-package main.java.characters;
+package main.java.character;
 
 import main.java.item.Armor;
 import main.java.item.Artifact;
@@ -29,6 +29,7 @@ public class Inventory {
         this.staff = staff;
         return  "You've equipped '" + staff.getName() + "' and stashed '" +  oldStaff.getName() + "' in your backpack.";
     }
+
     public String equipArmor(Armor armor){
         Armor oldArmor = this.armor;
         backpack.remove(armor);
@@ -36,6 +37,7 @@ public class Inventory {
         this.armor = armor;
         return  "You've equipped '" + armor.getName() + "' and stashed '" +  oldArmor.getName() + "' in your backpack.";
     }
+
     public String equipArtifact(Artifact artifact){
         if(artifacts.size() >= 10){
         return "The artifact '" + artifact.getName() + "' can't be equipped, because you have already have 10 artifacts equipped.";
@@ -46,14 +48,8 @@ public class Inventory {
         }
     }
 
-
-
-
-
-
-
     public List<Item> getBackpackItems(){
-        return backpack;
+        return List.copyOf(backpack);
     }
     public Staff getStaff(){
         return staff;
@@ -62,12 +58,7 @@ public class Inventory {
         return armor;
     }
     public List<Artifact> getArtifacts(){
-        return artifacts;
+        return List.copyOf(artifacts);
     }
-
-
-
-
-
 
 }

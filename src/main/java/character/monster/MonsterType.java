@@ -1,4 +1,4 @@
-package main.java.characters.monster;
+package main.java.character.monster;
 
 import main.java.MagicType;
 
@@ -21,11 +21,7 @@ public enum MonsterType {
     SKELETON (() -> new Monster ("Skeleton", "This leader of an skeleton regiment that rattles with every step.", 130, 100, null, MagicType.KINETIC)),
     TONGUE_CRAWLER(() -> new Monster ("Tongue Crawler", "Blind on both eyes it relies solely on his tongue for navigation.", 160, 100, null, MagicType.ABYSSAL)),
     ZOMBIE (() -> new Monster("Zombie", "Frankenstein's Monster is an abomination that feeds on brains and yet is pretty dumb", 120, 80, null, MagicType.NECROTIC)),
-    FROST_JACKALOPE(()-> new Monster("Frost Jackalope", "Don't underestimate this bunny like, he can turn you into an cube of ice", 100, 160, null, MagicType.ELEMENTAL))
-
-    ;
-
-
+    FROST_JACKALOPE(()-> new Monster("Frost Jackalope", "Don't underestimate this bunny like, he can turn you into an cube of ice", 100, 160, null, MagicType.ELEMENTAL));
 
     private final Supplier<Monster> supplier;
     MonsterType(Supplier<Monster> supplier) {

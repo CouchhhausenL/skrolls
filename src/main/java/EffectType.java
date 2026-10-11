@@ -1,7 +1,5 @@
 package main.java;
 
-import main.java.item.Quality;
-
 public enum EffectType {
 
     //general stat boosts
@@ -35,8 +33,6 @@ public enum EffectType {
     ROUGH, // resists all effects like curse or burn
     ARCANE_FOCUS, // Reduces Mana costs, increases damage boost
     PURE_CHAOS, // deals fluctuating damage sometimes critical
-    INFINITE, // No mana Costs
-
-    ;
+    INFINITE // No mana Costs
 
 }

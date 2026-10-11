@@ -1,8 +1,8 @@
-package main.java.characters.monster;
+package main.java.character.monster;
 
 import main.java.MagicType;
-import main.java.characters.Character;
-import main.java.characters.Inventory;
+import main.java.character.Character;
+import main.java.character.Inventory;
 
 public class Monster extends Character {
     private final String description;
@@ -12,12 +12,9 @@ public class Monster extends Character {
         super(name, maxHealth, speed, inventory);
         this.description = description;
         this.magicType = magicType;
-
-
     }
 
+    public void attack() {
 
-
-
-    public void attack(){};
+    }
 }
