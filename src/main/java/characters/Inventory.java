@@ -1,4 +1,4 @@
-package main.java.characters.player;
+package main.java.characters;
 
 import main.java.item.Armor;
 import main.java.item.Artifact;
