@@ -1,202 +1,66 @@
-Reticulating Splines
-Gathering Goblins
-Lifting Weights
-Pushing Pixels
-Formulating Plan
-Taking Break
-Herding Ducks
-Feeding Developers
-Fishing for Change
-Searching for Dancers
-Waking Up Gnomes
-Playing Chess
-Building Igloos
-Converting Celsius
-Scanning Power Level
-Delivering Presents
-Finding Dragon Balls
-Firing Lasers
-Party Rocking
-Walking up to the club
-Righting wrongs
-Building Lego
-Assembling Avengers
-Turning Down for What
-Reaching 88mph
-Pondering Existence
-Battling Robots
-Smashing Pots
-Stomping Goombas
-Doing Donuts
-Entering Danger Zone
-Talking to Mom
-Chasing Squirrels
-Setting Phasers to Stun
-Doing Macarena
-Dropping Bass
-Removing Biebers
-Performing Magic
-Autotuning Kanye
-Waxing Legs
-Invading Space
-Levelling Up
-Generating Map
-Conquering France
-Piloting Tardis
-Destroying Deathstar
-Typing Letters
-Making Code
-Running Marathon
-Shooting Pucks
-Kicking Field Goals
-Fighting Bad Guys
-Driving Batmobile
-Warming Up Kryptonite
-Popping Popcorn
-Creating Hashes
-Spawning Boss
-Evaluating Life Choices
-Eating Ramen
-Re-heating Leftovers
-Petting Kittens
-Walking Puppies
-Catching Z’s
-Jumping Rope
-Declaring Variables
-Yessing Doge
-Recycling Memes
-Tipping Fedora
-Walking Runway
-Counting to Ten
-Booting Native Client
-Launching App
-Drawing Icons
-Reading Instructions
-Finding Screws
-Completing Puzzles
-Generating Volume Slider
-Brightening Orange
-Ordering Pizza
-You Look Good Today
-Clearing Screen
-Stirring Pot
-Mashing Potatoes
-Banishing Evil
-Taking Selfies
-Accelerating Disks
-Benching Network
-Rocking Out
-Grinding Mage
-Studying Calculus
-Playing N64
-Racing GoKarts
-Defeating Creepers
-Blowing Game Cartridge
-Choosing Pikachu
-Postponing Half Life 3
-Rushing Zergs
-Rescuing Hostages
-Typing Konami Code
-Building Snowman
-Letting it Snow
-Burning HDMI Cords
-Applying Filters
-Taking Screenshot
-Shaving Mustache
-Growing Beard
-Baking Muffins
-Iterating Javascript
-Attracting Venture Capital
-Disrupting Industry
-Tweeting Hashtags
-Encrypting Lines
-Obfuscating C
-Enhancing License Plate
-Running Diagnostic
-Warming Hyperdrive
-Calibrating Positions
-Calculating Percentages
-Revoking Licenses
-Shedding Core
-Dampening Gravity
-Increasing Power
-Checking Sensors
-Indexing RSS
-Programming PCI
-Determining USB Position
-Connecting to Bus
-Inverting Ports
-Bypassing Capacitor
-Reversing Bandwidth Throttle
-Testing AI
-Virtualizing Microchip
-Emulating Playstation
-Synthesizing Drivers
-Structuring Chlorophyll
-Watering Plants
-Ingesting Caffeine
-Chugging Redbull
-Parsing System
-Navigating Arrays
-Searching Google
-Overflowing Stack
-Compiling Binaries
-Answering Emails
-Migrating CSS
-Backing Up Primaries
-Rendering Dialogs
-Reading RSS
-Compressing Data
-Rejecting Cloud
-Evaluating Weissman Score
-Purging Local Storage
-Leaking Memory
-Scripting Python
-Grunting Ruby
-Benching RAM
-Determining Auxiliaries
-Jiggling Internet
-Ejecting Floppy
-Fluctuating Objects
-Spiking Reactor Core
-Firing Bosons
-Testing Processor
-Debugging Prompts
-Connecting Floats
-Rounding Integers
-Pronouncing Gigawatt
-Inverting Transponders
-Bypassing Silicon
-Raising Funds
-Caching Logs
-Dithering Broadband
-Eating Poutine
-Rolling Rims to Win
-Begging for Change
-Chasing Waterfalls
-Pumping Gas
-Emptying Pipes
-Hitting Piñata
-Unleashing Freedom
-Airbrushing Actors
-FIling Taxes
-Powering Mitochondria
-Calculating Qi charge
-Completing Geometry
-Turning in Algebra
-Solving for X
-Benching Wattage
-Kludging Playback Bar
-Stringifying Json
-Consuming Spaghetti Code
-Deleting Comments
-Transitioning to Django
-Learning to Code
-Battling Feature Creep
-Losing Flappy Bird
-Celebrating Good Times
-Sharpening Pencils
-Automating Processes
-Attacking Godzilla
-Carbonating Soda
-Thinking of Witty Text
+You're dead!
+You choked on a fortune cookie.
+You hit the floating eye and froze forever.
+You were killed by a kitten while carrying the Amulet of Yendor.
+You kicked the wall and broke your foot. Pain causes you to faint into the lava.
+Died of dehydration after getting stuck in a tree while escaping a carp.
+Suffocated in a cloud of boiling vomit.
+Dear Diary, today I died. I was killed by... my own tears.
+I leave all my trash to my cat, Guppy.
+It is pitch black. You are likely to be eaten by a grue.
+You have been eaten by a grue.
+You have died of dysentery.
+You tried to ford the river. Your wagon tipped over, losing 4 oxen, 300 bullets, and your life.
+Stanley decided to go into the broom closet. Stanley died of starvation in the broom closet because he thought it was a brilliant strategic move.
+You slipped on a banana peel, tripped into a pit of spikes, and landed on your own dagger. Impressive form, though.
+You attempted to read an uncursed scroll of light while blindfolded. Nothing happened, but a passing goblin felt bad for you and took your life anyway.
+You stepped on a trap. It didn't kill you, but the humiliation caused a fatal heart attack.
+You tried to cast Fireball in a 5x5 closet. The math did not favor you.	
+You decided to inspect the active volcano up close. Turns out lava is hot.
+You survived three dragons, two armies, and a necromancer, only to choke on a piece of dry bread.
+You stared into the abyss. The abyss threw a rock at your head.
+You went to sleep with 1 HP. You did not wake up.
+You tried to talk your way out of a fight with a wild boar. It lacked an understanding of human syntax.
+You died of embarrassment after missing a stationary target three times in a row.
+Your journey ends here. The rats celebrate your departure.
+You are very, very dead.
+Cause of death: Hubris (and a heavy club to the face).
+You failed the skill check. Magnificently.
+Game Over. Please clean up your remains before leaving. 
+You died. The world keeps turning, completely unaffected.
+Your adventure has ended. Your inventory was sold at a discount.
+You are dead. On the bright side, you no longer have to worry about your quest.
+You didn't make it. But hey, it was a valiant attempt!
+You died. A nearby crow squawked in mild amusement.
+Your heroic journey ends here. Well... semi-heroic.
+Thank you for playing. Next time, try surviving a bit longer!
+You have met an untimely demise. The narrator sighs heavily.
+You died! The game developers send their sincere condolences (and a slight smirk).
+That's it for you! Would you like to consult a guide before trying again?
+You died. Even the game engine is surprised by how fast that went.
+You have passed away. Your tombstone simply reads: 'He/She tried.'
+You died. Somewhere in another timeline, you made a smarter choice.
+Your life bar is empty. Your stupidity bar, however, is overflowing.
+You are no longer among the living. The void greets you with a warm 'Told you so'.
+You perished! The universe rolled a 1 on your survival check.
+You have exited the mortal realm. Mind the step on your way out.
+You died. Fate shrugged and moved on to someone else.
+Your light has gone out. The dark is surprisingly comfortable, though.
+You are dead. Your story ends here, right in the middle of a sentence.
+You are dead.
+You died!
+Game Over.
+R.I.P.
+Dead. Totally dead.
+That's all, folks!
+Wasted
+You lost.
+Game over, man!
+Fatal Error: Player expired.
+You lost.
+Game Over. The narrator is taking a lunch break.
+You died. The game engine sighs in disappointment.
+You died. The darkness is cozy, at least.
+Your life bar has left the chat.
+You didn't make it. Nobody is surprised.
+Your journey ended before it even got interesting.
