@@ -6,8 +6,7 @@ import org.jline.terminal.Size;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -53,6 +52,98 @@ public final class WindowTerminalFactory {
             }
         });
 
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int button = e.getWheelRotation() < 0 ? 64 : 65;
+                sendSgrMouse(button, 'M', e.getX(), e.getY());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                sendSgrMouse(buttonCode(e.getButton()), 'm', e.getX(), e.getY());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sendSgrMouse(buttonCode(e.getButton()), 'M', e.getX(), e.getY());
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                sendSgrMouse(35, 'M', e.getX(), e.getY());
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                sendSgrMouse(32 | buttonCode(e.getModifiersEx()), 'M', e.getX(), e.getY());
+            }
+
+            private void sendSgrMouse(int button, char terminator, int pixelX, int pixelY) {
+                if (cellWidth <= 0 || cellHeight <= 0) {
+                    return;
+                }
+
+                int x = pixelX / cellWidth + 1;
+                int y = pixelY / cellHeight + 1;
+
+                String sequence = "\033[<" + button + ";" + x + ";" + y + terminator;
+                try {
+                    terminal.processInputBytes(
+                            sequence.getBytes(java.nio.charset.StandardCharsets.US_ASCII)
+                    );
+                } catch (IOException ignored) {}
+            }
+
+            private int buttonCode(int button) {
+                return switch (button) {
+                    case MouseEvent.BUTTON1 -> 0;
+                    case MouseEvent.BUTTON2 -> 1;
+                    case MouseEvent.BUTTON3 -> 2;
+                    default -> 3;
+                };
+            }
+        };
+
+        component.addMouseListener(mouseAdapter);
+        component.addMouseMotionListener(mouseAdapter);
+        component.addMouseWheelListener(mouseAdapter);
+
+        component.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+
+                if (Character.isISOControl(c)) {
+                    send(c);
+                    return;
+                }
+
+                if (e.isAltDown()) {
+                    send('\033'); // Escape
+                    return;
+                }
+
+                if (e.isControlDown()) {
+                    if (c >= 'a' && c <= 'z') {
+                        send((char) (c - 'a' + 1));
+                    } else if (c >= 'A' && c <= 'Z') {
+                        send((char) (c - 'A' + 1));
+                    }
+                }
+            }
+
+            private void send(char c) {
+                try {
+                    terminal.processInputBytes(
+                            new byte[]{(byte) c}
+                    );
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
         JFrame frame = terminal.createFrame("Terminal");
         frame.setVisible(true);
 
@@ -63,6 +154,8 @@ public final class WindowTerminalFactory {
             frame.dispose();
         });
     }
+
+
 
     // Uses java reflection to hide blinking cursor in swing emulator
     private static void setCursorInvisible(SwingTerminal.TerminalComponent component) throws NoSuchFieldException, IllegalAccessException {
