@@ -125,8 +125,8 @@ public class InputParser {
                 String[] split = builder.toString().split(SGR_MOUSE_SPLITTER);
 
                 int button = Integer.parseInt(split[0]);
-                int x = Integer.parseInt(split[1]);
-                int y = Integer.parseInt(split[2]);
+                int x = Integer.parseInt(split[1]) - 1; // SGR mouse events are
+                int y = Integer.parseInt(split[2]) - 1; // 1-based
                 boolean down = key == SGR_MOUSE_PRESS_CODE;
 
                 eventQueue.add(new MouseInputEvent(
