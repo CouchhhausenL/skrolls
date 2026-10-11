@@ -2,6 +2,7 @@ package main.java;
 
 import main.java.console.Console;
 import main.java.console.TerminalType;
+import main.java.console.input.InputEvent;
 import main.java.util.Color;
 
 import java.util.List;
@@ -13,11 +14,15 @@ public class Main {
 
         Console console = new Console(guiFlag ? TerminalType.WINDOW : TerminalType.CONSOLE);
 
+        InputEvent event = null;
         while (true) {
             if (console.areDimensionsDirty()) console.updateDimensions();
-            console.writeString(2, 1, console.getWidth() + " x " + console.getHeight() + "   ", Color.RED);
+
+            InputEvent newEvent = console.drainEvent();
+            if (newEvent != null) event = newEvent;
+
+            console.writeString(2, 1, console.getWidth() + " x " + console.getHeight() + " " + (event == null ? "" : event.toString()) + "                                                                                                                                                  ", Color.RED);
             console.render();
-            Thread.sleep(1);
         }
 
         //console.close();

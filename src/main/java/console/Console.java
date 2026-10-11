@@ -1,12 +1,13 @@
 package main.java.console;
 
+import main.java.console.input.InputEvent;
+import main.java.console.input.InputParser;
 import main.java.util.ANSI;
 import main.java.util.Color;
 import main.java.util.closer.AutoCloseableByCloser;
 import main.java.util.closer.Closer;
 import org.jline.terminal.Terminal;
 import org.jline.utils.InfoCmp;
-import org.jline.utils.NonBlockingReader;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,7 +20,7 @@ public class Console implements AutoCloseableByCloser {
     private int height;
 
     private final PrintWriter writer;
-    private final NonBlockingReader reader;
+    private final InputParser input;
 
     private final CellBuffer front;
     private final CellBuffer back;
@@ -36,19 +37,17 @@ public class Console implements AutoCloseableByCloser {
         closer = holder.closer();
 
         writer = terminal.writer();
-        reader = terminal.reader();
+        input = new InputParser(terminal);
 
         front = new CellBuffer(0, 0);
         back = new CellBuffer(0, 0);
         updateDimensions();
 
-        terminal.enterRawMode();
-        if (terminal.hasMouseSupport())
-            terminal.trackMouse(Terminal.MouseTracking.Any);
-
         if (width == 0 || height == 0) {
             throw new ConsoleConstructionException("Terminal emulator is not supported");
         }
+
+        input.start();
     }
 
     public void render() {
@@ -113,6 +112,10 @@ public class Console implements AutoCloseableByCloser {
         writeString(x, y, string, Color.WHITE);
     }
 
+    public InputEvent drainEvent() {
+        return input.drainEvent();
+    }
+
     private void setCursor(int x, int y) {
         terminal.puts(InfoCmp.Capability.cursor_address, y, x);
     }
@@ -160,6 +163,7 @@ public class Console implements AutoCloseableByCloser {
 
     @Override
     public void closeSelf() throws Exception {
+        input.stop();
         terminal.close();
     }
 }

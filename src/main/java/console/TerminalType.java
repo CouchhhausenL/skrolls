@@ -1,5 +1,6 @@
 package main.java.console;
 
+import main.java.util.ANSI;
 import main.java.util.closer.Closer;
 import org.jline.builtins.SwingTerminal;
 import org.jline.terminal.Size;
@@ -27,20 +28,44 @@ public enum TerminalType {
         };
     }
 
-    private static Holder createNormalTerminal() throws IOException {
-        Terminal terminal = TerminalBuilder.terminal();
-
+    private static void commonTerminalInit(Terminal terminal) {
         terminal.puts(InfoCmp.Capability.cursor_invisible);
         terminal.puts(InfoCmp.Capability.clear_screen);
         terminal.puts(InfoCmp.Capability.cursor_home);
         terminal.puts(InfoCmp.Capability.enter_ca_mode); // Alternate screen mode
-        terminal.flush();
 
-        return new Holder(terminal, () -> {});
+        terminal.enterRawMode();
+        if (terminal.hasMouseSupport()) {
+            terminal.trackMouse(Terminal.MouseTracking.Any);
+            terminal.writer().write(ANSI.ENABLE_SGR);
+        }
+
+        terminal.flush();
+    }
+
+    private static void commonTerminalBeforeClose(Terminal terminal) {
+        terminal.trackMouse(Terminal.MouseTracking.Off);
+        terminal.writer().write(ANSI.DISABLE_SGR);
+
+        terminal.puts(InfoCmp.Capability.exit_ca_mode);
+        terminal.puts(InfoCmp.Capability.cursor_visible);
+
+        terminal.flush();
+    }
+
+    private static Holder createNormalTerminal() throws IOException {
+        Terminal terminal = TerminalBuilder.terminal();
+
+        commonTerminalInit(terminal);
+
+        return new Holder(terminal, () -> {
+            commonTerminalBeforeClose(terminal);
+        });
     }
 
     private static Holder createSwingTerminal() throws IOException {
         SwingTerminal terminal = new SwingTerminal();
+        commonTerminalInit(terminal);
 
         SwingTerminal.TerminalComponent component = terminal.getComponent();
 
@@ -80,6 +105,7 @@ public enum TerminalType {
 
         component.repaint();
         return new Holder(terminal, () -> {
+            commonTerminalBeforeClose(terminal);
             component.dispose();
             frame.dispose();
         });
