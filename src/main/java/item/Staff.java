@@ -1,20 +1,21 @@
 package main.java.item;
 
+import main.java.Effect;
 import main.java.MagicType;
 
-public class Staff extends Item  {
-    private MagicType damageType;
-    private int power;
+import java.util.List;
 
-    public Staff(String name, String description, MagicType damageType, int power){
-        super(name,description);
-        this.damageType = damageType;
-       this.power = power;
+public class Staff extends MagicItem implements Useable{
+
+    public Staff(String name, String description, Quality quality, MagicType magicType, List<Effect> effects){
+        super(name,description, quality, magicType, effects);
+
     }
-
 
     @Override
     public void use() {
 
     }
+
+
 }
