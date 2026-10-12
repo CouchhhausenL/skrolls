@@ -97,6 +97,9 @@ public final class KeyInputEvent implements InputEvent {
                 code == ord + 1;       // ctrl + ...
     }
 
+    public Character asChar() {
+        return code != NO_CODE ? (char) code : null;
+    }
     public boolean isChar() {
         return type == Type.CHARACTER;
     }
