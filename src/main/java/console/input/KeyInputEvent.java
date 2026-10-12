@@ -64,16 +64,16 @@ public final class KeyInputEvent implements InputEvent {
     public static KeyInputEvent alt(int code) {
         return new KeyInputEvent(Type.ALT, code);
     }
-    public static KeyInputEvent arrow_up() {
+    public static KeyInputEvent arrowUp() {
         return new KeyInputEvent(Type.ARROW_UP, NO_CODE);
     }
-    public static KeyInputEvent arrow_down() {
+    public static KeyInputEvent arrowDown() {
         return new KeyInputEvent(Type.ARROW_DOWN, NO_CODE);
     }
-    public static KeyInputEvent arrow_right() {
+    public static KeyInputEvent arrowRight() {
         return new KeyInputEvent(Type.ARROW_RIGHT, NO_CODE);
     }
-    public static KeyInputEvent arrow_left() {
+    public static KeyInputEvent arrowLeft() {
         return new KeyInputEvent(Type.ARROW_LEFT, NO_CODE);
     }
     public static KeyInputEvent tab() {
@@ -89,7 +89,7 @@ public final class KeyInputEvent implements InputEvent {
         return new KeyInputEvent(Type.DELETE, 126);
     }
 
-    private boolean is_letter(Letter letter) {
+    private boolean isLetter(Letter letter) {
         int ord = letter.ordinal();
         return
                 code == ('a' + ord) || // lowercase
@@ -97,28 +97,28 @@ public final class KeyInputEvent implements InputEvent {
                 code == ord + 1;       // ctrl + ...
     }
 
-    public boolean is_char() {
+    public boolean isChar() {
         return type == Type.CHARACTER;
     }
-    public boolean is_char(Letter letter) {
-        return is_char() && is_letter(letter);
+    public boolean isChar(Letter letter) {
+        return isChar() && isLetter(letter);
     }
-    public boolean is_escape() {
+    public boolean isEscape() {
         return type == Type.ESCAPE;
     }
-    public boolean is_ctrl() {
+    public boolean isCtrl() {
         return type == Type.CONTROL;
     }
-    public boolean is_ctrl(Letter letter) {
-        return is_ctrl() && is_letter(letter);
+    public boolean isCtrl(Letter letter) {
+        return isCtrl() && isLetter(letter);
     }
-    public boolean is_alt() {
+    public boolean isAlt() {
         return type == Type.ALT;
     }
-    public boolean is_alt(Letter letter) {
-        return is_alt() && is_letter(letter);
+    public boolean isAlt(Letter letter) {
+        return isAlt() && isLetter(letter);
     }
-    public Direction get_arrow_direction() {
+    public Direction getArrowDirection() {
         return switch (type) {
             case ARROW_UP -> Direction.UP;
             case ARROW_DOWN -> Direction.DOWN;
@@ -127,22 +127,22 @@ public final class KeyInputEvent implements InputEvent {
             default -> null;
         };
     }
-    public boolean is_arrow() {
-        return get_arrow_direction() != null;
+    public boolean isArrow() {
+        return getArrowDirection() != null;
     }
-    public boolean is_arrow(Direction direction) {
-        return get_arrow_direction() == direction;
+    public boolean isArrow(Direction direction) {
+        return getArrowDirection() == direction;
     }
-    public boolean is_tab() {
+    public boolean isTab() {
         return type == Type.TAB;
     }
-    public boolean is_backspace() {
+    public boolean isBackspace() {
         return type == Type.BACKSPACE;
     }
-    public boolean is_enter() {
+    public boolean isEnter() {
         return type == Type.ENTER;
     }
-    public boolean is_delete() {
+    public boolean isDelete() {
         return type == Type.DELETE;
     }
 

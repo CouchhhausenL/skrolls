@@ -98,10 +98,10 @@ public class InputParser {
 
         if (mode == ParserMode.CSI || mode == ParserMode.SS3) {
             KeyInputEvent event = switch (key) {
-                case 65 -> KeyInputEvent.arrow_up();    // A
-                case 66 -> KeyInputEvent.arrow_down();  // B
-                case 67 -> KeyInputEvent.arrow_right(); // C
-                case 68 -> KeyInputEvent.arrow_left();  // D
+                case 65 -> KeyInputEvent.arrowUp();    // A
+                case 66 -> KeyInputEvent.arrowDown();  // B
+                case 67 -> KeyInputEvent.arrowRight(); // C
+                case 68 -> KeyInputEvent.arrowLeft();  // D
                 default -> null;
             };
 
