@@ -37,24 +37,35 @@ public class InputParser {
     private void readLoop() {
         List<Integer> parserBuffer = new ArrayList<>();
 
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
+        try {
+            while (running && !Thread.currentThread().isInterrupted()) {
                 parserBuffer.clear();
                 ParserMode mode = ParserMode.NORMAL;
 
-                int key = reader.read(0); // 0 -> wait forever
-                if (key >= 0) {
-                    while (key >= 0) {
-                        mode = readKey(mode, key, parserBuffer);
-                        key = reader.read(10);
+                try {
+                    int key = reader.read(0);
+
+                    if (key >= 0) {
+                        while (running && key >= 0) {
+                            mode = readKey(mode, key, parserBuffer);
+                            key = reader.read(10);
+                        }
+
+                        if (running) {
+                            readKey(mode, -1, parserBuffer);
+                        }
                     }
-                    readKey(mode, -1, parserBuffer);
+                } catch (java.io.InterruptedIOException e) {
+                    Thread.currentThread().interrupt();
+                    break;
                 }
-
-
-            } catch (IOException e) {
+            }
+        } catch (IOException e) {
+            if (running) {
                 throw new UncheckedIOException(e);
             }
+        } finally {
+            running = false;
         }
     }
 

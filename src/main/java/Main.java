@@ -2,8 +2,7 @@ package main.java;
 
 import main.java.console.Console;
 import main.java.console.TerminalType;
-import main.java.console.input.InputEvent;
-import main.java.util.Color;
+import main.java.screen.impl.TestScreen;
 
 import java.util.List;
 
@@ -13,18 +12,11 @@ public class Main {
         boolean guiFlag = argsList.contains("window");
 
         Console console = new Console(guiFlag ? TerminalType.WINDOW : TerminalType.CONSOLE);
+        Game game = new Game(console);
 
-        InputEvent event = null;
-        while (true) {
-            if (console.areDimensionsDirty()) console.updateDimensions();
+        game.setScreen(new TestScreen());
+        game.run();
 
-            InputEvent newEvent = console.drainEvent();
-            if (newEvent != null) event = newEvent;
-
-            console.writeString(2, 1, console.getWidth() + " x " + console.getHeight() + " " + (event == null ? "" : event.toString()) + "                                                                                                                                                  ", Color.RED);
-            console.render();
-        }
-
-        //console.close();
+        console.close();
     }
 }

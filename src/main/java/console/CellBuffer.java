@@ -32,6 +32,13 @@ public class CellBuffer {
         clear();
     }
 
+    public int getWidth() {
+        return width;
+    }
+    public int getHeight() {
+        return height;
+    }
+
     public boolean set(int x, int y, char character, int foreground, int background) {
         if (foreground < 0)
             throw new IllegalArgumentException("Foreground color cannot be negative");
@@ -45,6 +52,12 @@ public class CellBuffer {
         backgrounds[y][x] = background;
 
         return true;
+    }
+    public boolean setTransparent(int x, int y, char character, int foreground, int background) {
+        if (background == TRANSPARENT_BACKGROUND)
+            background = getBackground(x, y);
+
+        return set(x, y, character, foreground, background);
     }
 
     public char getChar(int x, int y) {
@@ -64,16 +77,16 @@ public class CellBuffer {
                 int shiftedY = y + rootY;
 
                 char newChar = overlay.getChar(x, y);
+                if (newChar == EMPTY_CELL) continue;
                 int newForeground = overlay.getForeground(x, y);
                 int newBackground = overlay.getBackground(x, y);
 
-                set(
+                setTransparent(
                         shiftedX,
                         shiftedY,
                         newChar,
                         newForeground,
-                        // Only overwrite when new is not transparent
-                        newBackground == TRANSPARENT_BACKGROUND ? getBackground(shiftedX, shiftedY) : newBackground
+                        newBackground
                 );
             }
         }
