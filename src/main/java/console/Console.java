@@ -100,19 +100,6 @@ public class Console implements AutoCloseableByCloser {
         back.set(x, y, character, foreground, background);
     }
 
-    public void writeString(int x, int y, String string, int foreground, int background) {
-        for (char character : string.toCharArray()) {
-            writeCell(x, y, character, foreground, background);
-            x++;
-        }
-    }
-    public void writeString(int x, int y, String string, int foreground) {
-        writeString(x, y, string, foreground, Color.BLACK);
-    }
-    public void writeString(int x, int y, String string) {
-        writeString(x, y, string, Color.WHITE);
-    }
-
     public void writeBuffer(CellBuffer buffer) {
         if (buffer.getWidth() != width || buffer.getHeight() != height)
             throw new IllegalArgumentException("Buffer dimensions do not match");
