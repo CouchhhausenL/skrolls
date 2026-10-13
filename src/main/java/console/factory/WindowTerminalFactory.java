@@ -114,11 +114,6 @@ public final class WindowTerminalFactory {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
 
-                if (Character.isISOControl(c)) {
-                    send(c);
-                    return;
-                }
-
                 if (e.isAltDown()) {
                     send('\033'); // Escape
                     return;
