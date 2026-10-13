@@ -172,7 +172,7 @@ public final class WindowTerminalFactory {
     }
 
     private static Font loadTerminalFont() throws IOException {
-        try (InputStream in = TerminalType.class.getResourceAsStream(
+        try (InputStream in = WindowTerminalFactory.class.getResourceAsStream(
                 "/assets/font/JetBrainsMono-Regular.ttf")) {
 
             if (in == null) {
