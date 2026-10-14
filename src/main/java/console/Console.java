@@ -4,7 +4,6 @@ import main.java.console.factory.TerminalHolder;
 import main.java.console.input.InputEvent;
 import main.java.console.input.InputParser;
 import main.java.util.ANSI;
-import main.java.util.Color;
 import main.java.util.closer.AutoCloseableByCloser;
 import main.java.util.closer.Closer;
 import org.jline.terminal.Terminal;
@@ -58,11 +57,11 @@ public class Console implements AutoCloseableByCloser {
             int lastWrittenBackground = -1;
 
             for (int x = 0; x < width; x++) {
-                final char frontChar = front.getChar(x, y);
+                final char frontChar = front.getCharacter(x, y);
                 final int frontForeground = front.getForeground(x, y);
                 final int frontBackground = front.getBackground(x, y);
 
-                final char backChar = back.getChar(x, y);
+                final char backChar = back.getCharacter(x, y);
                 final int backForeground = back.getForeground(x, y);
                 final int backBackground = back.getBackground(x, y);
 

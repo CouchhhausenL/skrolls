@@ -88,6 +88,20 @@ public class DrawContext implements DrawContextView {
     }
 
     @Override
+    public void drawBuffer(int rootX, int rootY, CellBuffer buffer) {
+        for (int x = 0; x < buffer.getWidth(); x++) {
+            for (int y = 0; y < buffer.getHeight(); y++) {
+                char character = buffer.getCharacter(x, y);
+                if (character == CellBuffer.EMPTY_CELL) continue;
+                int foreground = buffer.getForeground(x, y);
+                int background = buffer.getBackground(x, y);
+
+                cell(x + rootX, y + rootY, character, foreground, background);
+            }
+        }
+    }
+
+    @Override
     public void pushScissor(int x1, int y1, int x2, int y2) {
         scissorStack.push(x1 + offsetX, y1 + offsetY, x2 + offsetX, y2 + offsetY);
     }

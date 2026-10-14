@@ -40,7 +40,7 @@ public final class SkaParser {
         int fps = Integer.parseInt(content.substring(c3 + 1, fpsEnd));
         String code = content.substring(fpsEnd);
 
-        Animation.Builder builder = new Animation.Builder(width, height);
+        Animation.Builder builder = new Animation.Builder(width, height, canvas_background, fps);
         AnimationFrame.Builder frameBuilder = null;
         StringBuilder pixelBuffer = new StringBuilder();
         int x = -1; // Because PIXEL a starting delimiter instead of a splitter
