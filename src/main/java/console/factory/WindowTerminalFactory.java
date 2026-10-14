@@ -1,6 +1,5 @@
 package main.java.console.factory;
 
-import main.java.console.TerminalType;
 import org.jline.builtins.SwingTerminal;
 import org.jline.terminal.Size;
 
