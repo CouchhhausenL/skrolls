@@ -22,7 +22,7 @@ public class LabelWidget extends Widget {
     }
 
     @Override
-    public void draw(DrawContextView context) {
+    public void onDraw(DrawContextView context) {
         context.drawString(0, 0, content, isHovered() ? Color.RED : Color.WHITE);
     }
 

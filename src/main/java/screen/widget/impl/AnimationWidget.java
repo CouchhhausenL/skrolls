@@ -16,7 +16,7 @@ public class AnimationWidget extends Widget {
     }
 
     @Override
-    public void draw(DrawContextView context) {
+    public void onDraw(DrawContextView context) {
         player.update();
         context.drawBuffer(0, 0, player.getCurrentBuffer());
     }

@@ -36,7 +36,7 @@ public class TextFieldWidget extends Widget {
     }
 
     @Override
-    public void draw(DrawContextView context) {
+    public void onDraw(DrawContextView context) {
         if (content.isEmpty()) {
             context.drawString(0, 0, placeholder, 0x909090);
         } else {

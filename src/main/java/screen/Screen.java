@@ -40,48 +40,53 @@ public abstract class Screen {
     public final void draw(DrawContext context) {
         onPreDraw(context);
         for (Widget widget : widgets) {
-            try {
-                context.setLimits(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
-                widget.draw(context);
-                context.throwIfScissorStackInvalid();
-            } finally {
-                context.clearLimits();
-            }
+            widget.draw(context);
         }
+        context.throwIfScissorStackInvalid();
         onPostDraw(context);
     }
     public void onInputEvent(InputEvent event) {
-        // Iterate in reverse order to make checking for topmost hovered widget easier
+        if (event instanceof KeyInputEvent keyInputEvent) distributeKeyInputEvent(keyInputEvent, widgets);
+        if (event instanceof MouseInputEvent mouseInputEvent) distributeMouseInputEvent(mouseInputEvent, widgets);
+    }
 
+    public static void distributeKeyInputEvent(KeyInputEvent event, List<Widget> widgets) {
+        for (Widget widget : widgets) {
+            widget.onKeyInput(event);
+        }
+    }
+
+    public static void distributeMouseInputEvent(MouseInputEvent event, List<Widget> widgets) {
+        MouseInputEvent.Type type = event.type();
+        int x = event.x();
+        int y = event.y();
+        int button = event.button();
+
+        // Iterate in reverse order to make checking for topmost hovered widget easier
         boolean hoveredFound = false;
         for (int i = widgets.size() - 1; i >= 0; i--) {
             Widget widget = widgets.get(i);
-            if (event instanceof MouseInputEvent(MouseInputEvent.Type type, int x, int y, int button)) {
-                if (!(
-                        x >= widget.getX() && x < widget.getX() + widget.getWidth() &&
-                        y >= widget.getY() && y < widget.getY() + widget.getHeight()
-                )) {
-                    widget.setHovered(false);
-                    continue;
-                }
-
-                if (!hoveredFound) {
-                    hoveredFound = true;
-                    widget.setHovered(true);
-                } else {
-                    widget.setHovered(false);
-                }
-
-                widget.onMouseInput(new MouseInputEvent(
-                        type,
-                        x - widget.getX(),
-                        y - widget.getY(),
-                        button)
-                );
+            if (!(
+                    x >= widget.getX() && x < widget.getX() + widget.getWidth() &&
+                            y >= widget.getY() && y < widget.getY() + widget.getHeight()
+            )) {
+                widget.setHovered(false);
                 continue;
             }
-            if (event instanceof KeyInputEvent keyInputEvent)
-                widget.onKeyInput(keyInputEvent);
+
+            if (!hoveredFound) {
+                hoveredFound = true;
+                widget.setHovered(true);
+            } else {
+                widget.setHovered(false);
+            }
+
+            widget.onMouseInput(new MouseInputEvent(
+                    type,
+                    x - widget.getX(),
+                    y - widget.getY(),
+                    button)
+            );
         }
     }
 

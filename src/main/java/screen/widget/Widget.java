@@ -2,6 +2,7 @@ package main.java.screen.widget;
 
 import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
+import main.java.screen.DrawContext;
 import main.java.screen.DrawContextView;
 
 public abstract class Widget {
@@ -35,11 +36,9 @@ public abstract class Widget {
     }
 
     public void setX(int x) {
-        if (x < 0) throw new IllegalArgumentException("x out of range");
         this.x = x;
     }
     public void setY(int y) {
-        if (y < 0) throw new IllegalArgumentException("y out of range");
         this.y = y;
     }
     public void setWidth(int width) {
@@ -62,7 +61,16 @@ public abstract class Widget {
         setY(y);
     }
 
-    public abstract void draw(DrawContextView context);
+    public void draw(DrawContext context) {
+        try {
+            context.setLimits(getX(), getY(), getWidth(), getHeight());
+            onDraw(context);
+        } finally {
+            context.clearLimits();
+        }
+    }
+
+    protected abstract void onDraw(DrawContextView context);
     public abstract void onKeyInput(KeyInputEvent event);
     public abstract void onMouseInput(MouseInputEvent event);
 

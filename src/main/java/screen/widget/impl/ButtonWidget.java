@@ -28,7 +28,7 @@ public class ButtonWidget extends Widget {
 
 
     @Override
-    public void draw(DrawContextView context) {
+    public void onDraw(DrawContextView context) {
         context.fill(0, 0, getWidth(), getHeight(), isHovered() ? 0xFFFFFF : 0xB0B0B0);
         context.drawString(0, getHeight() / 2, text, 0);
     }
