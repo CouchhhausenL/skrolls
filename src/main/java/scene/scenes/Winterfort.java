@@ -12,12 +12,14 @@ public class Winterfort extends Scene {
 
     @Override
     protected void setupExits() {
+        /*
         exits.addExit(Direction.NW, gameContext -> new GopherByway());
         exits.addExit(Direction.E, gameContext -> new Lumberway());
         exits.addExit(Direction.N, gameContext -> new WinterfortCastle());
         exits.addExit(Direction.NE, gameContext -> new GuildedApproach());
         exits.addExit(Direction.SW, gameContext -> new MerchantAvenue());
         exits.addExit(Direction.SE, gameContext -> new WinterLane());
+        */
 
     }
 
