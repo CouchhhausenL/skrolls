@@ -6,9 +6,11 @@ import main.java.scene.SceneResolver;
 
 public abstract class AbstractSceneExit {
     private final SceneResolver resolver;
+    private final String displayName;
 
-    public AbstractSceneExit(SceneResolver resolver) {
+    public AbstractSceneExit(SceneResolver resolver, String displayName) {
         this.resolver = resolver;
+        this.displayName = displayName;
     }
 
     public Scene resolve(GameContext context) {

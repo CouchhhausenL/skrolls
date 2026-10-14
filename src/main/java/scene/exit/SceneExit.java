@@ -5,8 +5,8 @@ import main.java.scene.SceneResolver;
 public class SceneExit extends AbstractSceneExit {
     private final String id;
 
-    public SceneExit(String id, SceneResolver resolver) {
-        super(resolver);
+    public SceneExit(String id, String displayName, SceneResolver resolver) {
+        super(resolver, displayName);
         this.id = id;
     }
 
