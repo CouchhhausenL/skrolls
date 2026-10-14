@@ -1,4 +1,4 @@
-package main.java.character.player;
+package main.java;
 
 public enum DifficultyLevel {
     NONE,

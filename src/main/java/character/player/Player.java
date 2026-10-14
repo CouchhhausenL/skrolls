@@ -1,5 +1,6 @@
 package main.java.character.player;
 
+import main.java.DifficultyLevel;
 import main.java.character.Character;
 import main.java.character.Inventory;
 
