@@ -1,12 +1,16 @@
 package main.java.scene;
 
 public enum Direction {
-    N,
-    NW,
-    W,
-    SW,
-    S,
-    SE,
-    E,
-    NE,
+    NORTH,
+    NORTH_WEST,
+    WEST,
+    SOUTH_WEST,
+    SOUTH,
+    SOUTH_EAST,
+    EAST,
+    NORTH_EAST;
+
+    public String getId() {
+        return name().toLowerCase();
+    }
 }

@@ -1,19 +1,23 @@
 package main.java.scene;
 
 import main.java.DifficultyLevel;
-
-import java.util.List;
+import main.java.GameContext;
+import main.java.scene.exit.SceneExits;
 
 public abstract class Scene {
     protected final SceneExits exits = new SceneExits();
-    protected final DifficultyLevel difficulty;
+    protected GameContext gameContext;
 
-    protected  Scene(DifficultyLevel difficulty){
-        this.difficulty = difficulty;
+    protected Scene(GameContext gameContext){
         setupExits();
+        this.gameContext = gameContext;
     }
 
     protected abstract void setupExits();
+
+    public abstract DifficultyLevel getDifficulty();
     public abstract String getName();
-    public SceneExits getExits(){return exits;}
+    public SceneExits getExits() {
+        return exits;
+    }
 }
