@@ -20,6 +20,9 @@ public class Animation {
     public int getHeight() {
         return height;
     }
+    public int getFrameCount() {
+        return frames.length;
+    }
     public AnimationFrame getFrame(int frame) {
         return frames[frame];
     }

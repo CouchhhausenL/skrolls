@@ -28,15 +28,17 @@ public final class SkaParser {
             content = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         }
 
-        String[] headerSplit = content.split(",", 4);
-        int width = Integer.parseInt(headerSplit[0]);
-        int height = Integer.parseInt(headerSplit[1]);
-        int canvas_background = Integer.parseInt(headerSplit[2].replaceFirst("^#", ""), 16);
+        int c1 = content.indexOf(',');
+        int c2 = content.indexOf(',', c1 + 1);
+        int c3 = content.indexOf(',', c2 + 1);
+        int width = Integer.parseInt(content.substring(0, c1));
+        int height = Integer.parseInt(content.substring(c1 + 1, c2));
+        int canvas_background = Integer.parseInt(content.substring(c2 + 1, c3).replaceFirst("^#", ""), 16);
 
-        String other = headerSplit[3];
-        String[] otherSplit = other.split("\\D+", 2);
-        int fps = Integer.parseInt(otherSplit[0]);
-        String code = FRAME + otherSplit[1];
+        int fpsEnd = c3 + 1;
+        while (fpsEnd < content.length() && Character.isDigit(content.charAt(fpsEnd))) fpsEnd++;
+        int fps = Integer.parseInt(content.substring(c3 + 1, fpsEnd));
+        String code = content.substring(fpsEnd);
 
         Animation.Builder builder = new Animation.Builder(width, height);
         AnimationFrame.Builder frameBuilder = null;
@@ -68,6 +70,7 @@ public final class SkaParser {
                 AnimationChange change = changeFromFields(fields);
                 assert frameBuilder != null;
                 frameBuilder.set(x, y, change);
+                pixelBuffer.setLength(0);
             }
             if (c == ROW_END) {
                 y++;

@@ -1,5 +1,6 @@
 package main.java.screen.impl;
 
+import main.java.animation.Animation;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.ButtonWidget;
@@ -24,7 +25,8 @@ public class TestScreen extends Screen {
 
         addChild(new ButtonWidget(2, 8, 10, 5, "Click me!").onClick(() -> {
             try {
-                SkaParser.parse("title_screen.ska");
+                Animation animation = SkaParser.parse("title_screen.ska");
+                animation.getFrame(0).toString();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
