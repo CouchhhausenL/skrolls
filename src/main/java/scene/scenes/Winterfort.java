@@ -3,9 +3,11 @@ package main.java.scene.scenes;
 import main.java.DifficultyLevel;
 import main.java.GameContext;
 import main.java.scene.Direction;
+import main.java.scene.LocationScene;
 import main.java.scene.Scene;
+import main.java.scene.SettlementScene;
 
-public class Winterfort extends Scene {
+public class Winterfort extends SettlementScene {
 
     protected Winterfort(GameContext gameContext) {
         super(gameContext);
@@ -14,16 +16,13 @@ public class Winterfort extends Scene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.NORTH, Winterfort::new);
+        exits.addExit(Direction.NORTH_EAST, "Gopher Byway",GopherByway::new);
+        exits.addExit(Direction.EAST, "Lumberway",Lumberway::new);
+        exits.addExit(Direction.SOUTH_EAST, "Winter Lane", WinterLane::new);
+        exits.addExit(Direction.SOUTH_WEST, "Merchant Avenue", MerchantAvenue::new);
+        exits.addExit(Direction.NORTH_WEST, "Gilded Approach", GildedApproach::new);
+        exits.addExit("WinterfortCastle", "Enter Winterfort Castle", WinterfortCastle::new);
 
-        /*
-        exits.addExit(Direction.NW, gameContext -> new GopherByway());
-        exits.addExit(Direction.E, gameContext -> new Lumberway());
-        exits.addExit(Direction.N, gameContext -> new WinterfortCastle());
-        exits.addExit(Direction.NE, gameContext -> new GuildedApproach());
-        exits.addExit(Direction.SW, gameContext -> new MerchantAvenue());
-        exits.addExit(Direction.SE, gameContext -> new WinterLane());
-        */
 
     }
 
