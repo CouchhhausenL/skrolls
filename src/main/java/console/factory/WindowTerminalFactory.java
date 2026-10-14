@@ -120,7 +120,9 @@ public final class WindowTerminalFactory {
                 }
 
                 if (e.isControlDown()) {
-                    if (c >= 'a' && c <= 'z') {
+                    if ((int) c < 27) {
+                        send(c);
+                    } else if (c >= 'a' && c <= 'z') {
                         send((char) (c - 'a' + 1));
                     } else if (c >= 'A' && c <= 'Z') {
                         send((char) (c - 'A' + 1));
