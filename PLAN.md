@@ -34,7 +34,7 @@
 | **∞Infinity** | 2× | 2× | 2× | 2× | 2× | 2× | 2× | 2× | 2× |
 
 
-**Dark + Light => side effects** 
+**Dark + Light => side itemEffects** 
 
 # Verb sytem
 
