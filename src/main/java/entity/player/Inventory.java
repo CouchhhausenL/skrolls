@@ -1,9 +1,12 @@
-package main.java.character;
+package main.java.entity.player;
 
-import main.java.item.Armor;
-import main.java.item.Artifact;
+import main.java.item.effects.ItemEffectType;
+import main.java.item.MagicItem;
+import main.java.item.Quality;
+import main.java.item.items.Armor;
+import main.java.item.items.Artifact;
 import main.java.item.Item;
-import main.java.item.Staff;
+import main.java.item.items.Staff;
 
 import java.util.List;
 
@@ -60,5 +63,43 @@ public class Inventory {
     public List<Artifact> getArtifacts(){
         return List.copyOf(artifacts);
     }
+
+    public double getCombinedEffect(ItemEffectType itemEffectType){
+        double combinedEffect = 0;
+        for (Artifact artifact : artifacts) {
+           combinedEffect = combinedEffect + artifact.getItemEffectStrength(itemEffectType);
+        }
+        return combinedEffect;
+    }
+
+    private int checkItemQuality(Item item, int currentHighest) {
+        if (item instanceof MagicItem magicItem) {
+            int ordinal = magicItem.getQuality().ordinal();
+            if (ordinal > currentHighest) {
+                return ordinal;
+            }
+        }
+        return currentHighest;
+    }
+    public Quality getHighestQualityItem(){
+
+
+
+
+        int highestOrdinal = -1; // Oder dein bisheriger Initialwert
+
+        for (Item item : backpack) {
+            highestOrdinal = checkItemQuality(item, highestOrdinal);
+        }
+
+        for (Item item : artifacts) {
+            highestOrdinal = checkItemQuality(item, highestOrdinal);
+        }
+
+        highestOrdinal = checkItemQuality(armour, highestOrdinal);
+        highestOrdinal = checkItemQuality(staff, highestOrdinal);
+        return Quality.values()[highestOrdinal];
+    }
+
 
 }

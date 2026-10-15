@@ -1,6 +1,6 @@
 package main.java.scene;
 import main.java.GameContext;
-import main.java.character.monster.MonsterType;
+import main.java.entity.monster.MonsterType;
 
 
 

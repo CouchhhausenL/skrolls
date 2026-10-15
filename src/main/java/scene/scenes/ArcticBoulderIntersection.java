@@ -2,7 +2,7 @@ package main.java.scene.scenes;
 
 import main.java.DifficultyLevel;
 import main.java.GameContext;
-import main.java.character.monster.MonsterType;
+import main.java.entity.monster.MonsterType;
 import main.java.scene.Direction;
 import main.java.scene.PathScene;
 

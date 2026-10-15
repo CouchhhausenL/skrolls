@@ -6,5 +6,7 @@ public enum Quality {
     RARE,
     EPIC,
     LEGENDARY,
-    MYTHIC
+    MYTHIC;
+
+
 }

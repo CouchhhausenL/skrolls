@@ -1,4 +1,4 @@
-package main.java.character.monster;
+package main.java.entity.monster;
 
 import main.java.MagicType;
 
