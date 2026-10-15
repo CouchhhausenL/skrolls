@@ -3,8 +3,6 @@ package main.java.scene.scenes;
 import main.java.DifficultyLevel;
 import main.java.GameContext;
 import main.java.scene.Direction;
-import main.java.scene.LocationScene;
-import main.java.scene.Scene;
 import main.java.scene.SettlementScene;
 
 public class Winterfort extends SettlementScene {

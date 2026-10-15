@@ -1,11 +1,11 @@
 package main.java.entity.player;
 
-import main.java.item.effects.ItemEffectType;
+import main.java.item.Item;
 import main.java.item.MagicItem;
 import main.java.item.Quality;
+import main.java.item.effects.ItemEffectType;
 import main.java.item.items.Armor;
 import main.java.item.items.Artifact;
-import main.java.item.Item;
 import main.java.item.items.Staff;
 
 import java.util.List;

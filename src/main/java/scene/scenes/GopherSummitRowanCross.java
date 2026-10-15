@@ -4,7 +4,6 @@ import main.java.DifficultyLevel;
 import main.java.GameContext;
 import main.java.scene.CrossroadScene;
 import main.java.scene.Direction;
-import main.java.scene.LocationScene;
 
 public class GopherSummitRowanCross extends CrossroadScene {
 

@@ -2,7 +2,6 @@ package main.java.scene.scenes;
 
 import main.java.DifficultyLevel;
 import main.java.GameContext;
-import main.java.scene.Direction;
 import main.java.scene.LocationScene;
 
 public class WinterfortCastle extends LocationScene {

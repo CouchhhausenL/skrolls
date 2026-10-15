@@ -2,8 +2,6 @@ package main.java.spell;
 
 import main.java.GameContext;
 import main.java.MagicType;
-import main.java.battle.Battle;
-import main.java.battle.BattleContext;
 
 public abstract class Spell {
     private final String name;

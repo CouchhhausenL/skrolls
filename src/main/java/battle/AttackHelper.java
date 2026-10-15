@@ -1,28 +1,17 @@
 package main.java.battle;
 
-import main.java.entity.Entity;
-import main.java.entity.player.Player;
-import main.java.spell.Spell;
-
 public final class AttackHelper {
 
-    public static void damageAttack(){
-
-
-
-
+    public static void damageAttack() {
 
     }
 
 
-
-
-
-    public static int calculateBaseDamage(int baseDamage, double combinedItemFactor){
+    public static int calculateBaseDamage(int baseDamage, double combinedItemFactor) {
         return (int) Math.floor(baseDamage * combinedItemFactor);
     }
 
-    public static double convertStatToDouble(int stat){
+    public static double convertStatToDouble(int stat) {
         return switch (stat) {
             case -6 -> 2.0 / 8.0; // 0.25
             case -5 -> 2.0 / 7.0; // ~0.285
@@ -42,26 +31,25 @@ public final class AttackHelper {
     }
 
 
-    public static int calculateAttackValue(int attackStat, int attackStatStage,  double combinedItemFactor) {
+    public static int calculateAttackValue(int attackStat, int attackStatStage, double combinedItemFactor) {
         double sv = convertStatToDouble(attackStatStage);
 
         return (int) Math.floor(attackStat * sv * combinedItemFactor);
 
     }
 
-    public static int calculateDefenseValue(int defenseStat, int defenseStatStage){
+    public static int calculateDefenseValue(int defenseStat, int defenseStatStage) {
         double sv = convertStatToDouble(defenseStatStage);
         return (int) Math.floor(defenseStat * sv);
     }
 
 
-
-    public static int calculateDamage(int level, int baseDamage, int attack, int defense, double stab, int critLevel, double typeEffectiveness){
+    public static int calculateDamage(int level, int baseDamage, int attack, int defense, double stab, int critLevel, double typeEffectiveness) {
         double crit = 0;
         double requiredCritRandomness = 99;
-        switch (critLevel){
+        switch (critLevel) {
             case 0:
-                requiredCritRandomness= 99 - 6.25;
+                requiredCritRandomness = 99 - 6.25;
             case 1:
                 requiredCritRandomness = 99 - 12.5;
             case 2:
@@ -71,11 +59,11 @@ public final class AttackHelper {
             case 4:
                 requiredCritRandomness = 99 - 50;
             default:
-                requiredCritRandomness = 99 -6.25;
+                requiredCritRandomness = 99 - 6.25;
         }
 
         int critRandomness = (int) (Math.random() * 99) + 1;
-        if(critRandomness >= requiredCritRandomness){
+        if (critRandomness >= requiredCritRandomness) {
             crit = 0.5;
         }
         int zRandomness = (int) (Math.random() * 15);

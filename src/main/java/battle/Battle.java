@@ -7,30 +7,30 @@ import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
 
-public class Battle implements BattleContext{
+public class Battle implements BattleContext {
     private Player player;
     private Monster enemy;
     private int round;
 
 
-    public void fight(){
+    public void fight() {
         player.resetVolatileEffects();
         player.resetStatStages();
 
     }
 
 
-    public Entity getPlayer(){
+    public Entity getPlayer() {
         return player;
     }
-    public Entity getEnemy(){
+
+    public Entity getEnemy() {
         return enemy;
     }
 
 
-
-    public void damageEnemy(int attackBaseDamage, MagicType attackType){
-        double baseDamageItemFactor =  player.getBaseDamageItemFactor();
+    public void damageEnemy(int attackBaseDamage, MagicType attackType) {
+        double baseDamageItemFactor = player.getBaseDamageItemFactor();
         int baseDamage = AttackHelper.calculateBaseDamage(attackBaseDamage, baseDamageItemFactor);
 
         int attackStat = player.getAttackStat();
@@ -43,9 +43,9 @@ public class Battle implements BattleContext{
         int defenseStatStage = enemy.getStatStage(Stat.DEFENSE);
         int defenseValue = AttackHelper.calculateDefenseValue(defenseStat, defenseStatStage);
 
-        int level = DifficultyLevel.values()[ player.getInventory().getStaff().getQuality().ordinal()].getLevel();
+        int level = DifficultyLevel.values()[player.getInventory().getStaff().getQuality().ordinal()].getLevel();
         double stab = 1.0;
-        if(player.getInventory().getStaff().getMagicType() == attackType){
+        if (player.getInventory().getStaff().getMagicType() == attackType) {
             stab = 1.5;
         }
         int critLevel = 1;
@@ -58,13 +58,9 @@ public class Battle implements BattleContext{
 
     }
 
-    public MagicType getEnemyMagicType(){
+    public MagicType getEnemyMagicType() {
         return enemy.getDefendingMagicType();
     }
-
-
-
-
 
 
 }
