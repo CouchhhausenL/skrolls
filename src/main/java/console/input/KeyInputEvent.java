@@ -122,6 +122,13 @@ public final class KeyInputEvent implements InputEvent {
         return isChar() && isLetter(letter);
     }
 
+    public boolean isChar(char character) {
+        if (!isChar()) return false;
+        Character ch = asChar();
+        if (ch == null) return false;
+        return ch == character;
+    }
+
     public boolean isEscape() {
         return type == Type.ESCAPE;
     }

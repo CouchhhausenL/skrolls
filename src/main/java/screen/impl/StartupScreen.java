@@ -16,12 +16,12 @@ public class StartupScreen extends Screen {
     @Override
     protected void init(GameContext context) {
         endStartup = () -> {
-            context.setScreen(new TestScreen());
+            context.setScreen(new MapScreen());
         };
 
         Animation animation = SkaParser.parse("title_screen.ska");
         animationWidget = new AnimationWidget(0, 0, animation.getWidth(), animation.getHeight(), animation);
-        animationWidget.onDone((AnimationWidget.OnDone) endStartup);
+        animationWidget.onDone(endStartup);
 
         skipHintWidget = new LabelWidget(0, 0, "Press [F] to skip");
 
