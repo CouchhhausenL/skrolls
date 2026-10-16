@@ -31,7 +31,7 @@ public abstract class Screen {
         return height;
     }
 
-    public void tryInit(GameContext context) {
+    public final void tryInit(GameContext context) {
         if (initialized) return;
         initialized = true;
         init(context);
