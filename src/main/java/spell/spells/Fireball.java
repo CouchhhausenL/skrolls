@@ -1,6 +1,6 @@
 package main.java.spell.spells;
 
-import main.java.GameContext;
+import main.java.game.GameContext;
 import main.java.MagicType;
 import main.java.battle.BattleContext;
 import main.java.spell.Spell;

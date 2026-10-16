@@ -1,7 +1,7 @@
 package main.java.scene.scenes;
 
 import main.java.DifficultyLevel;
-import main.java.GameContext;
+import main.java.game.GameContext;
 import main.java.scene.LocationScene;
 
 public class SoulObelisk extends LocationScene {

@@ -1,6 +1,6 @@
 package main.java.scene.exit;
 
-import main.java.GameContext;
+import main.java.game.GameContext;
 import main.java.scene.Scene;
 import main.java.scene.SceneResolver;
 

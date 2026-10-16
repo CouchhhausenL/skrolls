@@ -1,12 +1,13 @@
-package main.java;
+package main.java.game;
 
+import main.java.battle.BattleContext;
 import main.java.console.Console;
 import main.java.console.input.InputEvent;
 import main.java.console.input.KeyInputEvent;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 
-public class Game {
+public class Game implements GameContext {
     private final Console console;
     private Screen screen = null;
     private final DrawContext drawContext;
@@ -59,4 +60,8 @@ public class Game {
         }
     }
 
+    @Override
+    public BattleContext getCurrentBattle() {
+        return null;
+    }
 }

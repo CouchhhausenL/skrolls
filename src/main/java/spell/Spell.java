@@ -1,6 +1,6 @@
 package main.java.spell;
 
-import main.java.GameContext;
+import main.java.game.GameContext;
 import main.java.MagicType;
 
 public abstract class Spell {

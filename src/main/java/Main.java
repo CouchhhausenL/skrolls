@@ -2,6 +2,7 @@ package main.java;
 
 import main.java.console.Console;
 import main.java.console.TerminalType;
+import main.java.game.Game;
 import main.java.screen.impl.TestScreen;
 
 import java.util.List;

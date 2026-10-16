@@ -1,6 +1,6 @@
 package main.java.scene;
 
-import main.java.GameContext;
+import main.java.game.GameContext;
 
 public abstract class SettlementScene extends Scene {
 
