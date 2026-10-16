@@ -5,6 +5,7 @@ import main.java.animation.AnimationChange;
 import main.java.animation.AnimationFrame;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public final class SkaParser {
     private static final char PIXEL = '\u0003';
     private static final char PIXEL_DATA = '\u0004';
 
-    public static Animation parse(String path) throws IOException {
+    public static Animation parse(String path) {
         String content;
         try (var stream = SkaParser.class.getResourceAsStream("/assets/animation/" + path)) {
             if (stream == null) {
@@ -27,6 +28,8 @@ public final class SkaParser {
             }
 
             content = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
 
         int c1 = content.indexOf(',');
