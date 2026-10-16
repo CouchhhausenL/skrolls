@@ -6,8 +6,12 @@ import main.java.console.input.InputEvent;
 import main.java.console.input.KeyInputEvent;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
+import main.java.util.Color;
 
 public class Game implements GameContext {
+    public static final int MIN_WIDTH = 80;
+    public static final int MIN_HEIGHT = 30;
+
     private final Console console;
     private Screen screen = null;
     private final DrawContext drawContext;
@@ -35,7 +39,11 @@ public class Game implements GameContext {
                 }
             }
 
-            if (screen != null) {
+            final boolean isWidthTooLow = console.getWidth() < MIN_WIDTH;
+            final boolean isHeightTooLow = console.getHeight() < MIN_HEIGHT;
+            final boolean isTooSmall = isWidthTooLow || isHeightTooLow;
+
+            if (screen != null && !isTooSmall) {
                 while (true) {
                     InputEvent event = console.drainEvent();
                     if (event == null) break;
@@ -46,6 +54,12 @@ public class Game implements GameContext {
                     screen.onInputEvent(event);
                 }
                 screen.draw(drawContext);
+            }
+
+            if (isTooSmall) {
+                drawContext.drawString(1, 1, "Terminal is too small!", Color.WHITE);
+                drawContext.drawString(1, 3, "x: " + console.getWidth() + " / " + MIN_WIDTH, isWidthTooLow ? Color.RED : Color.GREEN);
+                drawContext.drawString(1, 4, "y: " + console.getHeight() + " / " + MIN_HEIGHT, isHeightTooLow ? Color.RED : Color.GREEN);
             }
 
             console.writeFill(0);

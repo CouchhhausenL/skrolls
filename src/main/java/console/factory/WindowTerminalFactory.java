@@ -1,5 +1,6 @@
 package main.java.console.factory;
 
+import main.java.game.Game;
 import org.jline.builtins.SwingTerminal;
 import org.jline.terminal.Size;
 
@@ -16,7 +17,7 @@ public final class WindowTerminalFactory {
     }
 
     public static TerminalHolder create() throws IOException {
-        SwingTerminal terminal = new SwingTerminal();
+        SwingTerminal terminal = new SwingTerminal(Game.MIN_WIDTH, Game.MIN_HEIGHT);
         CommonTerminalFactory.commonInit(terminal);
 
         SwingTerminal.TerminalComponent component = terminal.getComponent();
