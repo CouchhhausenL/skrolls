@@ -55,10 +55,19 @@ public abstract class Screen {
         onPostDraw(context);
     }
 
-    public void onInputEvent(InputEvent event) {
-        if (event instanceof KeyInputEvent keyInputEvent) distributeKeyInputEvent(keyInputEvent, widgets);
-        if (event instanceof MouseInputEvent mouseInputEvent) distributeMouseInputEvent(mouseInputEvent, widgets);
+    public final void onInputEvent(InputEvent event) {
+        if (event instanceof KeyInputEvent keyInputEvent) {
+            onKeyEvent(keyInputEvent);
+            distributeKeyInputEvent(keyInputEvent, widgets);
+        }
+        if (event instanceof MouseInputEvent mouseInputEvent) {
+            onMouseEvent(mouseInputEvent);
+            distributeMouseInputEvent(mouseInputEvent, widgets);
+        }
     }
+
+    public void onKeyEvent(KeyInputEvent event) {}
+    public void onMouseEvent(MouseInputEvent event) {}
 
     public static void distributeKeyInputEvent(KeyInputEvent event, List<Widget> widgets) {
         for (Widget widget : widgets) {
