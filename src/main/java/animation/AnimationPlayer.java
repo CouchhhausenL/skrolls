@@ -62,6 +62,10 @@ public class AnimationPlayer {
         setPaused(false);
     }
 
+    public boolean isDone() {
+        return frame == frameCount - 1 && !looping;
+    }
+
     public void update() {
         if (paused) return;
         long now = System.nanoTime();

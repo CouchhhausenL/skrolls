@@ -9,15 +9,22 @@ import main.java.screen.widget.Widget;
 
 public class AnimationWidget extends Widget {
     private final AnimationPlayer player;
+    private OnDone onDone = null;
 
     public AnimationWidget(int x, int y, int width, int height, Animation animation) {
         super(x, y, width, height);
         player = new AnimationPlayer(animation);
     }
 
+    public AnimationWidget onDone(OnDone onDone) {
+        this.onDone = onDone;
+        return this;
+    }
+
     @Override
     public void onDraw(DrawContextView context) {
         player.update();
+        if (player.isDone() && onDone != null) onDone.onDone();
         context.drawBuffer(0, 0, player.getCurrentBuffer());
     }
 
@@ -55,5 +62,9 @@ public class AnimationWidget extends Widget {
 
     public void setPaused(boolean paused) {
         player.setPaused(paused);
+    }
+
+    public interface OnDone {
+        void onDone();
     }
 }
