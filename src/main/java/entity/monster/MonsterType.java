@@ -5,6 +5,7 @@ import main.java.MagicType;
 import org.jline.utils.DiffHelper;
 
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public enum MonsterType {
@@ -36,4 +37,26 @@ public enum MonsterType {
     public Monster create() {
         return supplier.get();
     }
+
+
+public static Monster getMonsterByDifficulty(DifficultyLevel difficulty) {
+    List<MonsterType> valids = switch (difficulty) {
+        case NONE -> null;
+        case LOW -> List.of(MonsterType.AXE_ROGUE, MonsterType.ZOMBIE);
+        case INTERMEDIATE ->
+                List.of(MonsterType.FIRE_SPRITE, MonsterType.GIANT_SPIDER, MonsterType.ORK, MonsterType.SKELETON);
+        case MEDIUM ->
+                List.of(MonsterType.ABSTRAY_ANGEL, MonsterType.BLADE_BRUTE, MonsterType.GRIM_REAPER, MonsterType.TONGUE_CRAWLER, MonsterType.FROST_JACKALOPE, MonsterType.PURE_GRYPHON, MonsterType.HALF_BLOOD_DEMON);
+        case HIGH ->
+                List.of(MonsterType.FELID_SPELLWEAVER, MonsterType.CHAOS_ABOMINATION, MonsterType.HALF_BLOOD_DEMON);
+        case EXTREME -> List.of(MonsterType.INFINITY_DRAGON);
+    };
+    if (valids == null) {
+        return null;
+    }
+    int random = (int) (Math.random() * (valids.size()));
+
+
+    return valids.get(random).create();
+}
 }

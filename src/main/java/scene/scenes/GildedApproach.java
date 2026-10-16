@@ -2,7 +2,6 @@ package main.java.scene.scenes;
 
 import main.java.DifficultyLevel;
 import main.java.GameContext;
-import main.java.entity.monster.MonsterType;
 import main.java.scene.Direction;
 import main.java.scene.PathScene;
 
@@ -26,8 +25,4 @@ public class GildedApproach extends PathScene {
         return DifficultyLevel.LOW;
     }
 
-    @Override
-    public MonsterType spawnMonster() {
-        return MonsterType.AXE_ROGUE;
-    }
 }
