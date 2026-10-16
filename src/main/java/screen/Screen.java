@@ -3,6 +3,7 @@ package main.java.screen;
 import main.java.console.input.InputEvent;
 import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
+import main.java.game.GameContext;
 import main.java.screen.widget.Widget;
 
 import java.util.ArrayList;
@@ -12,9 +13,9 @@ public abstract class Screen {
     private final List<Widget> widgets = new ArrayList<>();
     private int width = 0;
     private int height = 0;
+    private boolean initialized = false;
 
     public Screen() {
-        init();
     }
 
     public void setDimensions(int width, int height) {
@@ -30,7 +31,12 @@ public abstract class Screen {
         return height;
     }
 
-    public abstract void init();
+    public void tryInit(GameContext context) {
+        if (initialized) return;
+        initialized = true;
+        init(context);
+    }
+    protected abstract void init(GameContext context);
 
     public void addChild(Widget widget) {
         widgets.add(widget);

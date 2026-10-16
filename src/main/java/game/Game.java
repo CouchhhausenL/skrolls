@@ -19,6 +19,7 @@ public class Game implements GameContext {
 
     public void setScreen(Screen screen) {
         screen.setDimensions(console.getWidth(), console.getHeight());
+        screen.tryInit(this);
         this.screen = screen;
     }
 
