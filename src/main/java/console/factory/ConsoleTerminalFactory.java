@@ -6,7 +6,8 @@ import org.jline.terminal.TerminalBuilder;
 import java.io.IOException;
 
 public final class ConsoleTerminalFactory {
-    private ConsoleTerminalFactory() {}
+    private ConsoleTerminalFactory() {
+    }
 
     public static TerminalHolder create() throws IOException {
         Terminal terminal = TerminalBuilder.terminal();

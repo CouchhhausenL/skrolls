@@ -16,58 +16,62 @@ public class Inventory {
     private Staff staff;
     private List<Artifact> artifacts;
 
-    public void addItem(Item item){
+    public void addItem(Item item) {
         backpack.add(item);
     }
-    public void addItems(List<Item> items){
-        for(Item item: items){
+
+    public void addItems(List<Item> items) {
+        for (Item item : items) {
             addItem(item);
         }
     }
 
-    public String equipStaff(Staff staff){
+    public String equipStaff(Staff staff) {
         Staff oldStaff = this.staff;
         backpack.remove(staff);
         backpack.add(oldStaff);
         this.staff = staff;
-        return  "You've equipped '" + staff.getName() + "' and stashed '" +  oldStaff.getName() + "' in your backpack.";
+        return "You've equipped '" + staff.getName() + "' and stashed '" + oldStaff.getName() + "' in your backpack.";
     }
 
-    public String equipArmor(Armor armor){
+    public String equipArmor(Armor armor) {
         Armor oldArmor = this.armor;
         backpack.remove(armor);
         backpack.add(oldArmor);
         this.armor = armor;
-        return  "You've equipped '" + armor.getName() + "' and stashed '" +  oldArmor.getName() + "' in your backpack.";
+        return "You've equipped '" + armor.getName() + "' and stashed '" + oldArmor.getName() + "' in your backpack.";
     }
 
-    public String equipArtifact(Artifact artifact){
-        if(artifacts.size() >= 10){
-        return "The artifact '" + artifact.getName() + "' can't be equipped, because you have already have 10 artifacts equipped.";
+    public String equipArtifact(Artifact artifact) {
+        if (artifacts.size() >= 10) {
+            return "The artifact '" + artifact.getName() + "' can't be equipped, because you have already have 10 artifacts equipped.";
         } else {
             backpack.remove(artifact);
             artifacts.add(artifact);
-        return "You've equipped '" + artifact.getName() + "'.";
+            return "You've equipped '" + artifact.getName() + "'.";
         }
     }
 
-    public List<Item> getBackpackItems(){
+    public List<Item> getBackpackItems() {
         return List.copyOf(backpack);
     }
-    public Staff getStaff(){
+
+    public Staff getStaff() {
         return staff;
     }
-    public Armor getArmor(){
+
+    public Armor getArmor() {
         return armor;
     }
-    public List<Artifact> getArtifacts(){
+
+    public List<Artifact> getArtifacts() {
         return List.copyOf(artifacts);
     }
 
-    public double getCombinedEffect(ItemEffectType itemEffectType){
+    public double getCombinedEffect(ItemEffectType itemEffectType) {
         double combinedEffect = 0;
         for (Artifact artifact : artifacts) {
-           combinedEffect = combinedEffect + artifact.getItemEffectStrength(itemEffectType);
+            combinedEffect = combinedEffect + artifact.getItemEffectStrength(itemEffectType);
         }
         return combinedEffect;
     }
@@ -81,9 +85,8 @@ public class Inventory {
         }
         return currentHighest;
     }
-    public Quality getHighestQualityItem(){
 
-
+    public Quality getHighestQualityItem() {
 
 
         int highestOrdinal = -1; // Oder dein bisheriger Initialwert
@@ -96,7 +99,7 @@ public class Inventory {
             highestOrdinal = checkItemQuality(item, highestOrdinal);
         }
 
-        highestOrdinal = checkItemQuality(armour, highestOrdinal);
+        highestOrdinal = checkItemQuality(armor, highestOrdinal);
         highestOrdinal = checkItemQuality(staff, highestOrdinal);
         return Quality.values()[highestOrdinal];
     }

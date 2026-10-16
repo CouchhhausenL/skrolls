@@ -14,7 +14,7 @@ public class GopherSummitRowanCross extends CrossroadScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.SOUTH_WEST, "Back to Winterfort Castle",Winterfort::new);
+        exits.addExit(Direction.SOUTH_WEST, "Back to Winterfort Castle", Winterfort::new);
         exits.addExit(Direction.EAST, "Rowan Avenue", RowanAvenue::new);
         exits.addExit(Direction.NORTH, "Gopher Connector", GopherConnector::new);
         exits.addExit(Direction.WEST, "Summit Ribbon", SummitRibbon::new);

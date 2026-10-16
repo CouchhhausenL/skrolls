@@ -13,10 +13,10 @@ public class Potion extends Item implements Usable {
     public final MagicType magicType;
     public final List<PotionEffect> potionEffects;
 
-    public Potion(String name, String description, Quality quality, MagicType magicType, List<PotionEffect> potionEffects){
-        super(name,description);
+    public Potion(String name, String description, Quality quality, MagicType magicType, List<PotionEffect> potionEffects) {
+        super(name, description);
         this.quality = quality;
-        this.magicType  = magicType;
+        this.magicType = magicType;
         this.potionEffects = potionEffects;
 
     }

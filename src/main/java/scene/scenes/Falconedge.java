@@ -14,7 +14,7 @@ public class Falconedge extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.SOUTH_EAST, "Highland Vector",HighlandVector::new);
+        exits.addExit(Direction.SOUTH_EAST, "Highland Vector", HighlandVector::new);
         exits.addExit(Direction.WEST, "Highland Boulevard", HighlandBoulevard::new);
         exits.addExit("FalconedgeFortress", "Enter Falconedge Fortress", FalconedgeFortress::new);
 

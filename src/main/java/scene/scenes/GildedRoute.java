@@ -9,19 +9,20 @@ public class GildedRoute extends PathScene {
     protected GildedRoute(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.NORTH_WEST, "Ashwick",Ashwick::new);
+    protected void setupExits() {
+        exits.addExit(Direction.NORTH_WEST, "Ashwick", Ashwick::new);
         exits.addExit(Direction.SOUTH_EAST, "Summit-Gilded Junction", SummitGildedJunction::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Gilded Route";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

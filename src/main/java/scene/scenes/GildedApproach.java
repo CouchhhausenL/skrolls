@@ -9,19 +9,20 @@ public class GildedApproach extends PathScene {
     protected GildedApproach(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.NORTH_WEST, "The Happy Fly Pub",TheHappyFlyPub::new);
+    protected void setupExits() {
+        exits.addExit(Direction.NORTH_WEST, "The Happy Fly Pub", TheHappyFlyPub::new);
         exits.addExit(Direction.SOUTH_EAST, "Winterfort", Winterfort::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Gilded Approach";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

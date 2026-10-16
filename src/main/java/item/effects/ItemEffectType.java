@@ -10,8 +10,7 @@ public enum ItemEffectType {
     SPEED,
     DEFENSE,
     ATTACK,
-   CRIT_CHANCE,
-
+    CRIT_CHANCE,
 
 
     // Boost per percent
@@ -28,9 +27,6 @@ public enum ItemEffectType {
     RESISTANCE_DRAGONIC,
     RESISTANCE_ARCANE,
     RESISTANCE_CHAOS,
-
-
-
 
 
 }

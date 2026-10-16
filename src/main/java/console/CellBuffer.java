@@ -35,12 +35,13 @@ public class CellBuffer {
     public int getWidth() {
         return width;
     }
+
     public int getHeight() {
         return height;
     }
 
     public boolean isInDimensions(int x, int y) {
-        return !(x < 0 || x > width - 1 || y < 0 || y > height -1);
+        return !(x < 0 || x > width - 1 || y < 0 || y > height - 1);
     }
 
     public boolean setCharacter(int x, int y, char character) {
@@ -48,6 +49,7 @@ public class CellBuffer {
         characters[y][x] = character;
         return true;
     }
+
     public boolean setForeground(int x, int y, int foreground) {
         if (foreground < 0)
             throw new IllegalArgumentException("Foreground color cannot be negative");
@@ -55,6 +57,7 @@ public class CellBuffer {
         foregrounds[y][x] = foreground;
         return true;
     }
+
     public boolean setBackground(int x, int y, int background) {
         if (background < -1)
             throw new IllegalArgumentException("Background color cannot be negative");
@@ -70,6 +73,7 @@ public class CellBuffer {
         setBackground(x, y, background);
         return true;
     }
+
     public boolean setTransparent(int x, int y, char character, int foreground, int background) {
         if (background == TRANSPARENT_BACKGROUND)
             background = getBackground(x, y);
@@ -80,9 +84,11 @@ public class CellBuffer {
     public char getCharacter(int x, int y) {
         return characters[y][x];
     }
+
     public int getForeground(int x, int y) {
         return foregrounds[y][x];
     }
+
     public int getBackground(int x, int y) {
         return backgrounds[y][x];
     }

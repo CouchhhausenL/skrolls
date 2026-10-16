@@ -13,6 +13,7 @@ public class VerticalContainerWidget extends AbstractContainerWidget {
     public int getGap() {
         return gap;
     }
+
     public void setGap(int gap) {
         if (gap < 0) throw new IllegalArgumentException("Gap cannot be negative");
         this.gap = gap;

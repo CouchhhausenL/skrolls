@@ -9,19 +9,20 @@ public class WinterLane extends PathScene {
     protected WinterLane(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.NORTH_WEST, "Winterfort",Winterfort::new);
-        exits.addExit(Direction.SOUTH_EAST,"The Chilly Cliff Pub", TheChillyCliffPub::new);
+    protected void setupExits() {
+        exits.addExit(Direction.NORTH_WEST, "Winterfort", Winterfort::new);
+        exits.addExit(Direction.SOUTH_EAST, "The Chilly Cliff Pub", TheChillyCliffPub::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Winter Lane";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

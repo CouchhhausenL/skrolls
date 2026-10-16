@@ -15,9 +15,11 @@ public class TextFieldWidget extends Widget {
         this.placeholder = placeholder;
         this.content = content;
     }
+
     public TextFieldWidget(int x, int y, int width, int height, String placeholder) {
         this(x, y, width, height, placeholder, "");
     }
+
     public TextFieldWidget(int x, int y, int width, int height) {
         this(x, y, width, height, "");
     }
@@ -25,12 +27,15 @@ public class TextFieldWidget extends Widget {
     public String getContent() {
         return content;
     }
+
     public void setContent(String content) {
         this.content = content;
     }
+
     public String getPlaceholder() {
         return placeholder;
     }
+
     public void setPlaceholder(String placeholder) {
         this.placeholder = placeholder;
     }

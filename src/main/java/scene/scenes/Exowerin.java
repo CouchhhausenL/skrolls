@@ -14,7 +14,7 @@ public class Exowerin extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.NORTH_EAST, "Archer Passage",ArcherPassage::new);
+        exits.addExit(Direction.NORTH_EAST, "Archer Passage", ArcherPassage::new);
         exits.addExit("TheYggdrasoul", "Visit The Yggdrasoul Elder Tree", TheYggdrasoul::new);
         exits.addExit("Redwood Woodlands", "Go to surrounding Redwood Woodlands", RedwoodWoodlands::new);
 

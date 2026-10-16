@@ -14,8 +14,8 @@ public class Musterfield extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.SOUTH_WEST, "Rowan Avenue",RowanAvenue::new);
-        exits.addExit(Direction.EAST, "Rowan Connector",RowanConnector::new);
+        exits.addExit(Direction.SOUTH_WEST, "Rowan Avenue", RowanAvenue::new);
+        exits.addExit(Direction.EAST, "Rowan Connector", RowanConnector::new);
 
 
     }

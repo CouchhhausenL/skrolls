@@ -14,7 +14,7 @@ public class MudRedwoodArcherCrossway extends CrossroadScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.NORTH_WEST, "Mud Route",MudRoute::new);
+        exits.addExit(Direction.NORTH_WEST, "Mud Route", MudRoute::new);
         exits.addExit(Direction.SOUTH_WEST, "Archer Passage", ArcherPassage::new);
         exits.addExit(Direction.SOUTH_EAST, "Redwood Connector", RedwoodConnector::new);
         exits.addExit(Direction.NORTH_EAST, "Acorn Lane", AcornLane::new);

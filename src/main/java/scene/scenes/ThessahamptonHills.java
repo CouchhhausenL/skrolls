@@ -8,18 +8,19 @@ public class ThessahamptonHills extends LocationScene {
     protected ThessahamptonHills(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit("CathedralLane", "Return to CathedralLane",CathedralLane::new);
+    protected void setupExits() {
+        exits.addExit("CathedralLane", "Return to CathedralLane", CathedralLane::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Thessahampton Hills";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

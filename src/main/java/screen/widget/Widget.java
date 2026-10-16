@@ -22,15 +22,19 @@ public abstract class Widget {
     public int getX() {
         return x;
     }
+
     public int getY() {
         return y;
     }
+
     public int getWidth() {
         return width;
     }
+
     public int getHeight() {
         return height;
     }
+
     public boolean isHovered() {
         return hovered;
     }
@@ -38,24 +42,30 @@ public abstract class Widget {
     public void setX(int x) {
         this.x = x;
     }
+
     public void setY(int y) {
         this.y = y;
     }
+
     public void setWidth(int width) {
         if (width <= 0) throw new IllegalArgumentException("width out of range");
         this.width = width;
     }
+
     public void setHeight(int height) {
         if (height <= 0) throw new IllegalArgumentException("height out of range");
         this.height = height;
     }
+
     public void setHovered(boolean hovered) {
         this.hovered = hovered;
     }
+
     public void setDimensions(int width, int height) {
         setWidth(width);
         setHeight(height);
     }
+
     public void setPosition(int x, int y) {
         setX(x);
         setY(y);
@@ -71,7 +81,9 @@ public abstract class Widget {
     }
 
     protected abstract void onDraw(DrawContextView context);
+
     public abstract void onKeyInput(KeyInputEvent event);
+
     public abstract void onMouseInput(MouseInputEvent event);
 
 }

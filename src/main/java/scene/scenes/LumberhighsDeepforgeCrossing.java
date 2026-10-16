@@ -14,7 +14,7 @@ public class LumberhighsDeepforgeCrossing extends CrossroadScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.SOUTH, "Boulder Route",BoulderRoute::new);
+        exits.addExit(Direction.SOUTH, "Boulder Route", BoulderRoute::new);
         exits.addExit(Direction.EAST, "Deepforge", Deepforge::new);
         exits.addExit(Direction.WEST, "Lumberhighs Approach", LumberhighsApproach::new);
         exits.addExit(Direction.NORTH, "Ivory Pass", IvoryPass::new);

@@ -9,16 +9,14 @@ import java.util.*;
 public abstract class Entity {
     private final String name;
     private int health;
-    private int maxHealth;
-    private int speed;
+    private final int maxHealth;
+    private final int speed;
     private final Set<VolatileEffect> volatileEffects = EnumSet.noneOf(VolatileEffect.class);
     private final Map<Stat, Integer> statStages = new EnumMap<>(Stat.class);
     private final List<PotionEffect> potionEffects = new ArrayList<>();
 
 
-
-
-    public Entity(String name, int maxHealth, int speed){
+    public Entity(String name, int maxHealth, int speed) {
         this.name = name;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
@@ -94,34 +92,40 @@ public abstract class Entity {
     }
 
 
-    public void addPotionEffect(PotionEffect potionEffect){
+    public void addPotionEffect(PotionEffect potionEffect) {
         potionEffects.add(potionEffect);
     }
-    public void removePotionEffect(PotionEffect potionEffect){
+
+    public void removePotionEffect(PotionEffect potionEffect) {
         potionEffects.remove(potionEffect);
     }
-    public void tickAllPotionEffects(){
+
+    public void tickAllPotionEffects() {
         potionEffects.removeIf(PotionEffect::tickDuration);
     }
 
 
-    public Boolean isAlive(){return health > 0;}
+    public Boolean isAlive() {
+        return health > 0;
+    }
 
-    public String getName(){return name;}
+    public String getName() {
+        return name;
+    }
 
-    public int getSpeed(){
+    public int getSpeed() {
         return speed;
     }
 
     public abstract int getDefenseStat();
 
     public abstract MagicType getDefendingMagicType();
+
     public abstract MagicType getAttackingMagicType();
 
     public abstract int getLevel();
 
     public abstract int getAttackStat();
-
 
 
 }

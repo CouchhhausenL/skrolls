@@ -4,10 +4,9 @@ import main.java.battle.BattleContext;
 
 public class GameContext {
     public BattleContext getCurrentBattle() {
-       // Dummy
+        // Dummy
         return null;
     }
-
 
 
     //Dummy Class!

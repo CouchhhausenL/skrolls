@@ -9,19 +9,20 @@ public class TheChillyCliffPub extends LocationScene {
     protected TheChillyCliffPub(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.EAST, "Seaside Route",SeasideRoute::new);
+    protected void setupExits() {
+        exits.addExit(Direction.EAST, "Seaside Route", SeasideRoute::new);
         exits.addExit(Direction.NORTH_WEST, "WinterLane", WinterLane::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "The Chilly Cliff Pub";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

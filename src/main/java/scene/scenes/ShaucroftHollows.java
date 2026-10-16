@@ -14,7 +14,7 @@ public class ShaucroftHollows extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.SOUTH_WEST, "Meadow Trace",MeadowTrace::new);
+        exits.addExit(Direction.SOUTH_WEST, "Meadow Trace", MeadowTrace::new);
         exits.addExit(Direction.EAST, "Meadow Trodden Path", MeadowTroddenPath::new);
 
 
@@ -27,6 +27,6 @@ public class ShaucroftHollows extends SettlementScene {
 
     @Override
     public String getName() {
-            return "Shaucroft Hollows";
+        return "Shaucroft Hollows";
     }
 }

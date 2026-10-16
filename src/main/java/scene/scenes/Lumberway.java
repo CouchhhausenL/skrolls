@@ -9,19 +9,20 @@ public class Lumberway extends PathScene {
     protected Lumberway(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.NORTH_WEST, "Winterfort",Winterfort::new);
+    protected void setupExits() {
+        exits.addExit(Direction.NORTH_WEST, "Winterfort", Winterfort::new);
         exits.addExit(Direction.EAST, "Brass Maple Wood", BrassMapleWood::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Lumberway";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

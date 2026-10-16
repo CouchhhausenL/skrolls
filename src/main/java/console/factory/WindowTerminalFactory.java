@@ -12,7 +12,8 @@ import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class WindowTerminalFactory {
-    private WindowTerminalFactory() {}
+    private WindowTerminalFactory() {
+    }
 
     public static TerminalHolder create() throws IOException {
         SwingTerminal terminal = new SwingTerminal();
@@ -91,7 +92,8 @@ public final class WindowTerminalFactory {
                     terminal.processInputBytes(
                             sequence.getBytes(java.nio.charset.StandardCharsets.US_ASCII)
                     );
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                }
             }
 
             private int buttonCode(int button) {
@@ -150,7 +152,6 @@ public final class WindowTerminalFactory {
             frame.dispose();
         });
     }
-
 
 
     // Uses java reflection to hide blinking cursor in swing emulator

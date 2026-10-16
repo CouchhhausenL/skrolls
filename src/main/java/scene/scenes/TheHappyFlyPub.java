@@ -9,19 +9,20 @@ public class TheHappyFlyPub extends LocationScene {
     protected TheHappyFlyPub(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.NORTH_WEST, "Gilded Nexus",GildedNexus::new);
+    protected void setupExits() {
+        exits.addExit(Direction.NORTH_WEST, "Gilded Nexus", GildedNexus::new);
         exits.addExit(Direction.WEST, "Gilded Approach", GildedApproach::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "The Happy Fly Pub";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

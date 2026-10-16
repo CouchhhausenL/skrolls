@@ -8,18 +8,19 @@ public class DigeterelSummit extends LocationScene {
     protected DigeterelSummit(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit("Digeterel Summit Base", "Return to Digeterel Summit Base",DigeterelSummitBase::new);
+    protected void setupExits() {
+        exits.addExit("Digeterel Summit Base", "Return to Digeterel Summit Base", DigeterelSummitBase::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Digeterel Summit";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

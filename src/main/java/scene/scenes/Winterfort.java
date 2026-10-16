@@ -14,8 +14,8 @@ public class Winterfort extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.NORTH_EAST, "Gopher Byway",GopherByway::new);
-        exits.addExit(Direction.EAST, "Lumberway",Lumberway::new);
+        exits.addExit(Direction.NORTH_EAST, "Gopher Byway", GopherByway::new);
+        exits.addExit(Direction.EAST, "Lumberway", Lumberway::new);
         exits.addExit(Direction.SOUTH_EAST, "Winter Lane", WinterLane::new);
         exits.addExit(Direction.SOUTH_WEST, "Merchant Avenue", MerchantAvenue::new);
         exits.addExit(Direction.NORTH_WEST, "Gilded Approach", GildedApproach::new);

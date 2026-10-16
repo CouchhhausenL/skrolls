@@ -21,9 +21,11 @@ public abstract class Screen {
         this.width = width;
         this.height = height;
     }
+
     public int getWidth() {
         return width;
     }
+
     public int getHeight() {
         return height;
     }
@@ -33,6 +35,7 @@ public abstract class Screen {
     public void addChild(Widget widget) {
         widgets.add(widget);
     }
+
     public void removeChild(Widget widget) {
         widgets.remove(widget);
     }
@@ -45,6 +48,7 @@ public abstract class Screen {
         context.throwIfScissorStackInvalid();
         onPostDraw(context);
     }
+
     public void onInputEvent(InputEvent event) {
         if (event instanceof KeyInputEvent keyInputEvent) distributeKeyInputEvent(keyInputEvent, widgets);
         if (event instanceof MouseInputEvent mouseInputEvent) distributeMouseInputEvent(mouseInputEvent, widgets);
@@ -91,6 +95,10 @@ public abstract class Screen {
     }
 
     public abstract void onResize();
-    protected void onPreDraw(DrawContext context) {}
-    protected void onPostDraw(DrawContext context) {}
+
+    protected void onPreDraw(DrawContext context) {
+    }
+
+    protected void onPostDraw(DrawContext context) {
+    }
 }

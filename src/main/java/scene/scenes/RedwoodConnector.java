@@ -9,19 +9,20 @@ public class RedwoodConnector extends PathScene {
     protected RedwoodConnector(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.NORTH_WEST, "Muddy-Redwood-Archer Crossway",JuniperVale::new);
+    protected void setupExits() {
+        exits.addExit(Direction.NORTH_WEST, "Muddy-Redwood-Archer Crossway", JuniperVale::new);
         exits.addExit(Direction.SOUTH_EAST, "Valor Lookout", ValorLookout::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Redwood Connector";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

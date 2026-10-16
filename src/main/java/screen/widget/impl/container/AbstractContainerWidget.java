@@ -20,6 +20,7 @@ public abstract class AbstractContainerWidget extends Widget {
     public void addChild(Widget widget) {
         widgets.add(widget);
     }
+
     public void removeChild(Widget widget) {
         widgets.remove(widget);
     }

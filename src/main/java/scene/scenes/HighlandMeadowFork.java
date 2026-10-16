@@ -14,7 +14,7 @@ public class HighlandMeadowFork extends CrossroadScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.SOUTH_EAST, "Gopher Connector",GopherConnector::new);
+        exits.addExit(Direction.SOUTH_EAST, "Gopher Connector", GopherConnector::new);
         exits.addExit(Direction.NORTH_EAST, "Meadow-Trace", MeadowTrace::new);
         exits.addExit(Direction.NORTH_WEST, "Highland Vector", HighlandVector::new);
 

@@ -8,18 +8,19 @@ public class WinterfortCastle extends LocationScene {
     protected WinterfortCastle(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit("Winterfort", "Leave Winterfort Castle",Winterfort::new);
+    protected void setupExits() {
+        exits.addExit("Winterfort", "Leave Winterfort Castle", Winterfort::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Winterforst Castle";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

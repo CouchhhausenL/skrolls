@@ -9,19 +9,20 @@ public class LumberhighsApproach extends PathScene {
     protected LumberhighsApproach(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.WEST, "Brass Maple Wood",BrassMapleWood::new);
+    protected void setupExits() {
+        exits.addExit(Direction.WEST, "Brass Maple Wood", BrassMapleWood::new);
         exits.addExit(Direction.EAST, "Lumberhighs-Deepforge Crossing", LumberhighsDeepforgeCrossing::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Lumberhighs Approach";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

@@ -14,7 +14,7 @@ public class Faywater extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.WEST, "Seaside Route",SeasideRoute::new);
+        exits.addExit(Direction.WEST, "Seaside Route", SeasideRoute::new);
         exits.addExit(Direction.NORTH, "Artic Pass", ArcticPass::new);
         exits.addExit("TheAbandinedIsle", "Ship to The Abandined Isle", TheAbandinedIsle::new);
 

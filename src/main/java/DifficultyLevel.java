@@ -11,14 +11,16 @@ public enum DifficultyLevel {
     private final int level;
     private final int baseDamage;
 
-    DifficultyLevel(int level, int baseDamage){
+    DifficultyLevel(int level, int baseDamage) {
         this.level = level;
         this.baseDamage = baseDamage;
     }
-    public int getLevel(){
+
+    public int getLevel() {
         return level;
     }
-    public int getBaseDamage(){
+
+    public int getBaseDamage() {
         return baseDamage;
     }
 

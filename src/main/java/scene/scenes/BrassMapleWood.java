@@ -9,19 +9,20 @@ public class BrassMapleWood extends LocationScene {
     protected BrassMapleWood(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.WEST, "Lumberway",Lumberway::new);
-        exits.addExit(Direction.EAST, "Lumberhighs Approach",LumberhighsApproach::new);
+    protected void setupExits() {
+        exits.addExit(Direction.WEST, "Lumberway", Lumberway::new);
+        exits.addExit(Direction.EAST, "Lumberhighs Approach", LumberhighsApproach::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Brass Maple Wood";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

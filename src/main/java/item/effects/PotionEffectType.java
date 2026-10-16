@@ -40,8 +40,7 @@ public enum PotionEffectType {
     HEALING_REDUCTION(false),   // reduced healing received
 
 
-
-;
+    ;
 
 
     private final boolean beneficial;

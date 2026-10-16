@@ -14,8 +14,8 @@ public class Ashwick extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.NORTH_EAST, "Highland Boulevard",HighlandBoulevard::new);
-        exits.addExit(Direction.SOUTH_WEST, "Silt Passage",SiltPassage::new);
+        exits.addExit(Direction.NORTH_EAST, "Highland Boulevard", HighlandBoulevard::new);
+        exits.addExit(Direction.SOUTH_WEST, "Silt Passage", SiltPassage::new);
         exits.addExit(Direction.SOUTH_EAST, "Gilded Route", GildedRoute::new);
         exits.addExit("SoulObelisk", "Enter Soul Obelisk", SoulObelisk::new);
         exits.addExit("Treacherous Forest", "Go to surrounding Treacherous Forest", TreacherousForest::new);

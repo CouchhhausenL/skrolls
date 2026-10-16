@@ -14,8 +14,8 @@ public class JuniperVale extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.NORTH_EAST, "Silt Passage",SiltPassage::new);
-        exits.addExit(Direction.SOUTH_WEST, "Mud Route",MudRoute::new);
+        exits.addExit(Direction.NORTH_EAST, "Silt Passage", SiltPassage::new);
+        exits.addExit(Direction.SOUTH_WEST, "Mud Route", MudRoute::new);
 
 
     }

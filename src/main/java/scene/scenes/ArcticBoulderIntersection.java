@@ -9,20 +9,21 @@ public class ArcticBoulderIntersection extends PathScene {
     protected ArcticBoulderIntersection(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.EAST, "Little Passage",LittlePassage::new);
-        exits.addExit(Direction.NORTH,"Boulder Route", BoulderRoute::new);
-        exits.addExit(Direction.SOUTH,"Arctic Pass", ArcticPass::new);
+    protected void setupExits() {
+        exits.addExit(Direction.EAST, "Little Passage", LittlePassage::new);
+        exits.addExit(Direction.NORTH, "Boulder Route", BoulderRoute::new);
+        exits.addExit(Direction.SOUTH, "Arctic Pass", ArcticPass::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Arctic-Boulder Intersection";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

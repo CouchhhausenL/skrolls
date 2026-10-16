@@ -9,19 +9,20 @@ public class IvoryPass extends PathScene {
     protected IvoryPass(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.NORTH, "Silverhollow",Silverhollow::new);
+    protected void setupExits() {
+        exits.addExit(Direction.NORTH, "Silverhollow", Silverhollow::new);
         exits.addExit(Direction.SOUTH, "Lumberhighs-Deepforge Crossing", LumberhighsDeepforgeCrossing::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Ivory Pass";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

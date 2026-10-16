@@ -32,7 +32,8 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
 
     @Override
     public List<String> suggest(String prefix) {
-        if (defaultValue != null && String.valueOf(defaultValue).startsWith(prefix)) return List.of(String.valueOf(defaultValue));
+        if (defaultValue != null && String.valueOf(defaultValue).startsWith(prefix))
+            return List.of(String.valueOf(defaultValue));
         return List.of();
     }
 

@@ -9,19 +9,20 @@ public class CelestialRill extends PathScene {
     protected CelestialRill(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.WEST, "Kronomore",Kronomore::new);
+    protected void setupExits() {
+        exits.addExit(Direction.WEST, "Kronomore", Kronomore::new);
         exits.addExit(Direction.EAST, "The Chilly Cliff Pub", TheChillyCliffPub::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Celestial Rill";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

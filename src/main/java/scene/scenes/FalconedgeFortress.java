@@ -8,18 +8,19 @@ public class FalconedgeFortress extends LocationScene {
     protected FalconedgeFortress(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit("Falconedge", "Leave Falconedge Fortress",Falconedge::new);
+    protected void setupExits() {
+        exits.addExit("Falconedge", "Leave Falconedge Fortress", Falconedge::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Falconedge Fortress";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

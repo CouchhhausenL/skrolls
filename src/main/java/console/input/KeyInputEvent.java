@@ -5,6 +5,7 @@ public final class KeyInputEvent implements InputEvent {
 
     private final Type type;
     private final int code;
+
     private KeyInputEvent(Type type, int code) {
         this.type = type;
         this.code = code;
@@ -13,6 +14,7 @@ public final class KeyInputEvent implements InputEvent {
     public Type type() {
         return type;
     }
+
     public int code() {
         return code;
     }
@@ -55,36 +57,47 @@ public final class KeyInputEvent implements InputEvent {
     public static KeyInputEvent character(int code) {
         return new KeyInputEvent(Type.CHARACTER, code);
     }
+
     public static KeyInputEvent escape() {
         return new KeyInputEvent(Type.ESCAPE, 27);
     }
+
     public static KeyInputEvent control(int code) {
         return new KeyInputEvent(Type.CONTROL, code);
     }
+
     public static KeyInputEvent alt(int code) {
         return new KeyInputEvent(Type.ALT, code);
     }
+
     public static KeyInputEvent arrowUp() {
         return new KeyInputEvent(Type.ARROW_UP, NO_CODE);
     }
+
     public static KeyInputEvent arrowDown() {
         return new KeyInputEvent(Type.ARROW_DOWN, NO_CODE);
     }
+
     public static KeyInputEvent arrowRight() {
         return new KeyInputEvent(Type.ARROW_RIGHT, NO_CODE);
     }
+
     public static KeyInputEvent arrowLeft() {
         return new KeyInputEvent(Type.ARROW_LEFT, NO_CODE);
     }
+
     public static KeyInputEvent tab() {
         return new KeyInputEvent(Type.TAB, 9);
     }
+
     public static KeyInputEvent backspace() {
         return new KeyInputEvent(Type.BACKSPACE, 8);
     }
+
     public static KeyInputEvent enter() {
         return new KeyInputEvent(Type.ENTER, 10);
     }
+
     public static KeyInputEvent delete() {
         return new KeyInputEvent(Type.DELETE, 126);
     }
@@ -93,34 +106,42 @@ public final class KeyInputEvent implements InputEvent {
         int ord = letter.ordinal();
         return
                 code == ('a' + ord) || // lowercase
-                code == ('A' + ord) || // uppercase
-                code == ord + 1;       // ctrl + ...
+                        code == ('A' + ord) || // uppercase
+                        code == ord + 1;       // ctrl + ...
     }
 
     public Character asChar() {
         return code != NO_CODE ? (char) code : null;
     }
+
     public boolean isChar() {
         return type == Type.CHARACTER;
     }
+
     public boolean isChar(Letter letter) {
         return isChar() && isLetter(letter);
     }
+
     public boolean isEscape() {
         return type == Type.ESCAPE;
     }
+
     public boolean isCtrl() {
         return type == Type.CONTROL;
     }
+
     public boolean isCtrl(Letter letter) {
         return isCtrl() && isLetter(letter);
     }
+
     public boolean isAlt() {
         return type == Type.ALT;
     }
+
     public boolean isAlt(Letter letter) {
         return isAlt() && isLetter(letter);
     }
+
     public Direction getArrowDirection() {
         return switch (type) {
             case ARROW_UP -> Direction.UP;
@@ -130,21 +151,27 @@ public final class KeyInputEvent implements InputEvent {
             default -> null;
         };
     }
+
     public boolean isArrow() {
         return getArrowDirection() != null;
     }
+
     public boolean isArrow(Direction direction) {
         return getArrowDirection() == direction;
     }
+
     public boolean isTab() {
         return type == Type.TAB;
     }
+
     public boolean isBackspace() {
         return type == Type.BACKSPACE;
     }
+
     public boolean isEnter() {
         return type == Type.ENTER;
     }
+
     public boolean isDelete() {
         return type == Type.DELETE;
     }

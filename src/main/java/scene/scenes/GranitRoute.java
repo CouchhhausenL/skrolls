@@ -9,19 +9,20 @@ public class GranitRoute extends PathScene {
     protected GranitRoute(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.NORTH_WEST, "Rough Ridge Spire Crossing",RoughRidgeSpire::new);
+    protected void setupExits() {
+        exits.addExit(Direction.NORTH_WEST, "Rough Ridge Spire Crossing", RoughRidgeSpire::new);
         exits.addExit(Direction.SOUTH_EAST, "Silverhollow", Silverhollow::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "GranitRoute";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

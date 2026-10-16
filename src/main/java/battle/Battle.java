@@ -1,12 +1,10 @@
 package main.java.battle;
 
-import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;
 import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
-import main.java.item.items.Potion;
 
 public class Battle implements BattleContext {
     private Player player;
@@ -17,11 +15,9 @@ public class Battle implements BattleContext {
     public void fight() {
         player.resetVolatileEffects();
         player.resetStatStages();
-        while(round()){
+        while (round()) {
 
         }
-
-
 
 
     }
@@ -40,28 +36,22 @@ public class Battle implements BattleContext {
         return checkAllAlive();
     }
 
-    public boolean monsterAttack(){
+    public boolean monsterAttack() {
         damagePlayer();
         return checkAllAlive();
     }
 
-    public boolean playerTurn(){
+    public boolean playerTurn() {
         return checkAllAlive();
     }
 
-    public boolean checkAllAlive(){
-        if (player.isAlive() && enemy.isAlive()){
-            return true;
-        }
-        else {return false;}
+    public boolean checkAllAlive() {
+        return player.isAlive() && enemy.isAlive();
 
     }
 
 
-
-
-
-    public void updatePotionEffects(){
+    public void updatePotionEffects() {
 
     }
 
@@ -74,7 +64,7 @@ public class Battle implements BattleContext {
         return enemy;
     }
 
-    public void damagePlayer(){
+    public void damagePlayer() {
         int baseDamage = enemy.getDifficulty().getBaseDamage();
         int attackValue = AttackHelper.calculateAttackValue(enemy.getAttackStat(), enemy.getStatStage(Stat.ATTACK), 1.0);
 
@@ -91,10 +81,7 @@ public class Battle implements BattleContext {
         player.takeDamage(damage);
 
 
-
     }
-
-
 
 
     public void damageEnemy(int attackBaseDamage, MagicType attackType) {

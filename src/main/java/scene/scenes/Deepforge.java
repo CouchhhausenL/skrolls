@@ -14,7 +14,7 @@ public class Deepforge extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.WEST, "Lumberhighs-Deepforge Crossing",LumberhighsDeepforgeCrossing::new);
+        exits.addExit(Direction.WEST, "Lumberhighs-Deepforge Crossing", LumberhighsDeepforgeCrossing::new);
 
 
     }

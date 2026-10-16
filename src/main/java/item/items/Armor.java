@@ -8,7 +8,7 @@ import main.java.item.effects.ItemEffect;
 import java.util.List;
 
 public class Armor extends MagicItem {
-    public Armor(String name, String description, Quality quality, MagicType magicType, List<ItemEffect> itemEffects){
+    public Armor(String name, String description, Quality quality, MagicType magicType, List<ItemEffect> itemEffects) {
         super(name, description, quality, magicType, itemEffects);
     }
 }

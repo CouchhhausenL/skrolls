@@ -12,9 +12,11 @@ public class SceneExits {
     public void addExit(AbstractSceneExit exit) {
         exits.add(exit);
     }
+
     public void addExit(String id, String displayName, SceneResolver resolver) {
-        addExit(new SceneExit(id, displayName,resolver));
+        addExit(new SceneExit(id, displayName, resolver));
     }
+
     public void addExit(Direction direction, String displayName, SceneResolver resolver) {
         addExit(new DirectionalSceneExit(direction, displayName, resolver));
     }

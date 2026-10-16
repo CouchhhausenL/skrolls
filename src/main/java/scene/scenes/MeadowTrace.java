@@ -9,19 +9,20 @@ public class MeadowTrace extends PathScene {
     protected MeadowTrace(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.SOUTH_WEST, "Highland-Meadow Fork",HighlandMeadowFork::new);
+    protected void setupExits() {
+        exits.addExit(Direction.SOUTH_WEST, "Highland-Meadow Fork", HighlandMeadowFork::new);
         exits.addExit(Direction.NORTH_EAST, "Shaucroft Hollows", ShaucroftHollows::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Meadow Trace";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

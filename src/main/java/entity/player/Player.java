@@ -3,14 +3,13 @@ package main.java.entity.player;
 import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;
-import main.java.item.effects.ItemEffect;
 import main.java.item.effects.ItemEffectType;
 
 public class Player extends Entity {
     private int mana;
     private int maxMana;
     private int magicShards;
-    private Inventory inventory;
+    private final Inventory inventory;
 
 
     public Player(String name, int maxHealth, int speed, Inventory inventory) {
@@ -32,26 +31,25 @@ public class Player extends Entity {
     }
 
 
-
-
-    public double getDamageItemFactor(){
+    public double getDamageItemFactor() {
         return inventory.getCombinedEffect(ItemEffectType.DAMAGE);
     }
 
-    public double getBaseDamageItemFactor(){
+    public double getBaseDamageItemFactor() {
         return inventory.getCombinedEffect(ItemEffectType.OWN_MAGIC);
 
     }
-    public double getDefenseItemFactor(MagicType magicType){
-        ItemEffectType searchType = switch (magicType){
-            case KINETIC  -> ItemEffectType.RESISTANCE_KINETIC;
-            case ELEMENTAL-> ItemEffectType.RESISTANCE_ELEMENTAL;
-            case PURITY   -> ItemEffectType.RESISTANCE_PURITY;
-            case ABYSSAL  -> ItemEffectType.RESISTANCE_ABYSSAL;
+
+    public double getDefenseItemFactor(MagicType magicType) {
+        ItemEffectType searchType = switch (magicType) {
+            case KINETIC -> ItemEffectType.RESISTANCE_KINETIC;
+            case ELEMENTAL -> ItemEffectType.RESISTANCE_ELEMENTAL;
+            case PURITY -> ItemEffectType.RESISTANCE_PURITY;
+            case ABYSSAL -> ItemEffectType.RESISTANCE_ABYSSAL;
             case NECROTIC -> ItemEffectType.RESISTANCE_NECROTIC;
             case DRAGONIC -> ItemEffectType.RESISTANCE_DRAGONIC;
-            case ARCANE   -> ItemEffectType.RESISTANCE_ARCANE;
-            case CHAOS    -> ItemEffectType.RESISTANCE_CHAOS;
+            case ARCANE -> ItemEffectType.RESISTANCE_ARCANE;
+            case CHAOS -> ItemEffectType.RESISTANCE_CHAOS;
             case INFINITY -> null;
         };
         if (searchType == null) {
@@ -60,29 +58,28 @@ public class Player extends Entity {
 
         return inventory.getCombinedEffect(searchType);
     }
+
     @Override
-    public int getDefenseStat(){
+    public int getDefenseStat() {
         return (int) Math.floor(inventory.getCombinedEffect(ItemEffectType.DEFENSE));
     }
 
     @Override
-    public MagicType getAttackingMagicType(){
+    public MagicType getAttackingMagicType() {
         return inventory.getStaff().getMagicType();
     }
 
     @Override
-    public int getLevel(){
+    public int getLevel() {
         return DifficultyLevel.values()[inventory.getStaff().getQuality().ordinal()].getLevel();
     }
 
 
-
-
-    public Inventory getInventory(){
+    public Inventory getInventory() {
         return inventory;
     }
 
-    public DifficultyLevel getDifficultyLevel(){
+    public DifficultyLevel getDifficultyLevel() {
         return DifficultyLevel.values()[inventory.getHighestQualityItem().ordinal()];
     }
 

@@ -8,7 +8,7 @@ public abstract class Scene {
     protected final SceneExits exits = new SceneExits();
     protected GameContext gameContext;
 
-    protected Scene(GameContext gameContext){
+    protected Scene(GameContext gameContext) {
         setupExits();
         this.gameContext = gameContext;
     }
@@ -16,7 +16,9 @@ public abstract class Scene {
     protected abstract void setupExits();
 
     public abstract DifficultyLevel getDifficulty();
+
     public abstract String getName();
+
     public SceneExits getExits() {
         return exits;
     }

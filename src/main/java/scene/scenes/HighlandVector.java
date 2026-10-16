@@ -9,19 +9,20 @@ public class HighlandVector extends PathScene {
     protected HighlandVector(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.SOUTH_EAST, "HighlandMeadowFork",HighlandMeadowFork::new);
+    protected void setupExits() {
+        exits.addExit(Direction.SOUTH_EAST, "HighlandMeadowFork", HighlandMeadowFork::new);
         exits.addExit(Direction.NORTH_WEST, "Falconedge", Falconedge::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Highland Vector";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

@@ -9,19 +9,20 @@ public class PeakwatchTower extends LocationScene {
     protected PeakwatchTower(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.EAST, "Summit Ribbon",SummitRibbon::new);
+    protected void setupExits() {
+        exits.addExit(Direction.EAST, "Summit Ribbon", SummitRibbon::new);
         exits.addExit(Direction.WEST, "Summit Scarp", SummitScarp::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Peakwatch Tower";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

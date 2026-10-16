@@ -9,18 +9,19 @@ public class MemorialShorePillar extends LocationScene {
     protected MemorialShorePillar(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.EAST, "Little Passage",LittlePassage::new);
+    protected void setupExits() {
+        exits.addExit(Direction.EAST, "Little Passage", LittlePassage::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Little Passage";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.HIGH;
     }
 

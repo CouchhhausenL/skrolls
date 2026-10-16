@@ -8,18 +8,19 @@ public class TheYggdrasoul extends LocationScene {
     protected TheYggdrasoul(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit("Exowerin", "Go back to Exowerin",Exowerin::new);
+    protected void setupExits() {
+        exits.addExit("Exowerin", "Go back to Exowerin", Exowerin::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "The Yggdrasoul";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.HIGH;
     }
 

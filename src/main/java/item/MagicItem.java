@@ -11,7 +11,7 @@ public abstract class MagicItem extends Item {
     private final MagicType magicType;
     private final List<ItemEffect> itemEffects;
 
-    public MagicItem (String name, String description, Quality quality, MagicType magicType, List<ItemEffect> itemEffects) {
+    public MagicItem(String name, String description, Quality quality, MagicType magicType, List<ItemEffect> itemEffects) {
         super(name, description);
         this.magicType = magicType;
         this.quality = quality;
@@ -19,23 +19,26 @@ public abstract class MagicItem extends Item {
     }
 
 
-    public MagicType getMagicType(){return magicType;}
-    public List<ItemEffect> getItemEffects(){
+    public MagicType getMagicType() {
+        return magicType;
+    }
+
+    public List<ItemEffect> getItemEffects() {
         return itemEffects;
     }
 
-    public double getItemEffectStrength(ItemEffectType effectType){
+    public double getItemEffectStrength(ItemEffectType effectType) {
         double itemEffectStrength = 0;
-        for (ItemEffect currentEffect: itemEffects){
-            if(currentEffect.getItemEffectType() == effectType){
-                itemEffectStrength = itemEffectStrength + currentEffect.getEffectStrength();
+        for (ItemEffect currentEffect : itemEffects) {
+            if (currentEffect.itemEffectType() == effectType) {
+                itemEffectStrength = itemEffectStrength + currentEffect.effectStrength();
             }
         }
         return itemEffectStrength;
     }
 
 
-    public Quality getQuality(){
+    public Quality getQuality() {
         return quality;
     }
 }

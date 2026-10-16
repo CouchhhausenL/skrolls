@@ -3,7 +3,6 @@ package main.java.entity.monster;
 import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;
-import org.jline.utils.DiffHelper;
 
 public class Monster extends Entity {
     private final String description;
@@ -12,7 +11,7 @@ public class Monster extends Entity {
     private final int defense;
     private final DifficultyLevel difficulty;
 
-    public Monster(String name, String description, int maxHealth, int speed, int attack, int defense, DifficultyLevel difficulty, MagicType magicType){
+    public Monster(String name, String description, int maxHealth, int speed, int attack, int defense, DifficultyLevel difficulty, MagicType magicType) {
         super(name, maxHealth, speed);
         this.description = description;
         this.magicType = magicType;
@@ -26,15 +25,16 @@ public class Monster extends Entity {
     }
 
 
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return difficulty;
     }
-    public int getLevel(){
+
+    public int getLevel() {
         return difficulty.getLevel();
     }
 
     @Override
-    public int getDefenseStat(){
+    public int getDefenseStat() {
         return defense;
     }
 
@@ -50,5 +50,7 @@ public class Monster extends Entity {
     }
 
     @Override
-    public MagicType getAttackingMagicType(){return magicType;}
+    public MagicType getAttackingMagicType() {
+        return magicType;
+    }
 }

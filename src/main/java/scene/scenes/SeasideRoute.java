@@ -9,19 +9,20 @@ public class SeasideRoute extends PathScene {
     protected SeasideRoute(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.WEST, "Winterfort",Winterfort::new);
-        exits.addExit(Direction.EAST,"Faywater", Faywater::new);
+    protected void setupExits() {
+        exits.addExit(Direction.WEST, "Winterfort", Winterfort::new);
+        exits.addExit(Direction.EAST, "Faywater", Faywater::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Seaside Route";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

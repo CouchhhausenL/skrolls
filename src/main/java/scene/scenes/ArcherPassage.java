@@ -9,19 +9,20 @@ public class ArcherPassage extends PathScene {
     protected ArcherPassage(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.SOUTH_WEST, "Exowerin",Exowerin::new);
+    protected void setupExits() {
+        exits.addExit(Direction.SOUTH_WEST, "Exowerin", Exowerin::new);
         exits.addExit(Direction.NORTH_EAST, "Muddy-Redwood-Archer Crossway", MudRedwoodArcherCrossway::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Archer Passage";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.HIGH;
     }
 

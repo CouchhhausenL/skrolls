@@ -10,8 +10,8 @@ import java.util.List;
 
 public class Staff extends MagicItem implements Usable {
 
-    public Staff(String name, String description, Quality quality, MagicType magicType, List<ItemEffect> itemEffects){
-        super(name,description, quality, magicType, itemEffects);
+    public Staff(String name, String description, Quality quality, MagicType magicType, List<ItemEffect> itemEffects) {
+        super(name, description, quality, magicType, itemEffects);
     }
 
     @Override

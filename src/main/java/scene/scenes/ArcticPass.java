@@ -9,19 +9,20 @@ public class ArcticPass extends PathScene {
     protected ArcticPass(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.SOUTH, "Faywater",Faywater::new);
-        exits.addExit(Direction.NORTH,"Arctic-Boulder Intersection", ArcticBoulderIntersection::new);
+    protected void setupExits() {
+        exits.addExit(Direction.SOUTH, "Faywater", Faywater::new);
+        exits.addExit(Direction.NORTH, "Arctic-Boulder Intersection", ArcticBoulderIntersection::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Arctic Pass";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

@@ -8,7 +8,8 @@ import org.jline.utils.InfoCmp;
 import java.io.IOException;
 
 public final class CommonTerminalFactory {
-    private CommonTerminalFactory() {}
+    private CommonTerminalFactory() {
+    }
 
     public static TerminalHolder create(TerminalType type) throws IOException {
         return switch (type) {

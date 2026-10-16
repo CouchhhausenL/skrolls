@@ -11,11 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 public final class SkaParser {
-    private SkaParser() {}
+    private SkaParser() {
+    }
 
-    private static final char FRAME      = '\u0001';
-    private static final char ROW_END    = '\u0002';
-    private static final char PIXEL      = '\u0003';
+    private static final char FRAME = '\u0001';
+    private static final char ROW_END = '\u0002';
+    private static final char PIXEL = '\u0003';
     private static final char PIXEL_DATA = '\u0004';
 
     public static Animation parse(String path) throws IOException {

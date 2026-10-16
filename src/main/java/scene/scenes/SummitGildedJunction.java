@@ -14,7 +14,7 @@ public class SummitGildedJunction extends CrossroadScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.NORTH_WEST, "Gilded Route",GildedRoute::new);
+        exits.addExit(Direction.NORTH_WEST, "Gilded Route", GildedRoute::new);
         exits.addExit(Direction.NORTH_EAST, "Summit Concurse", SummitConcurse::new);
         exits.addExit(Direction.SOUTH_WEST, "Gilded Nexus", GildedNexus::new);
 

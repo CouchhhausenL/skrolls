@@ -9,19 +9,20 @@ public class BoulderRoute extends PathScene {
     protected BoulderRoute(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.SOUTH, "Arctic-Boulder Intersection",ArcticBoulderIntersection::new);
+    protected void setupExits() {
+        exits.addExit(Direction.SOUTH, "Arctic-Boulder Intersection", ArcticBoulderIntersection::new);
         exits.addExit(Direction.NORTH, "Lumberhighs-Deepforge Crossing", LumberhighsDeepforgeCrossing::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Boulder Route";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 

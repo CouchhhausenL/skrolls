@@ -14,7 +14,7 @@ public class Silverhollow extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.NORTH_WEST, "Granit Route",GranitRoute::new);
+        exits.addExit(Direction.NORTH_WEST, "Granit Route", GranitRoute::new);
         exits.addExit(Direction.SOUTH, "Ivory Pass", IvoryPass::new);
 
 

@@ -14,7 +14,7 @@ public class Kronomore extends SettlementScene {
     @Override
     protected void setupExits() {
 
-        exits.addExit(Direction.WEST, "Cathedral Lane",CathedralLane::new);
+        exits.addExit(Direction.WEST, "Cathedral Lane", CathedralLane::new);
         exits.addExit(Direction.EAST, "Celestial Rill", CelestialRill::new);
         exits.addExit("ColdwallCastle", "Enter Coldwall Castle", ColdwallCastle::new);
 

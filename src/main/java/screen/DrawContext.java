@@ -25,6 +25,7 @@ public class DrawContext implements DrawContextView {
     public void clear() {
         buffer.clear();
     }
+
     public void resize(int width, int height) {
         buffer.resize(width, height);
     }
@@ -35,6 +36,7 @@ public class DrawContext implements DrawContextView {
         this.width = width;
         this.height = height;
     }
+
     public void clearLimits() {
         this.offsetX = 0;
         this.offsetY = 0;
@@ -58,6 +60,7 @@ public class DrawContext implements DrawContextView {
 
         buffer.setTransparent(x, y, character, foreground, background);
     }
+
     @Override
     public void cell(int x, int y, int background) {
         cell(x, y, ' ', 0, background);
@@ -71,6 +74,7 @@ public class DrawContext implements DrawContextView {
             }
         }
     }
+
     @Override
     public void fill(int x1, int y1, int x2, int y2, int background) {
         fill(x1, y1, x2, y2, ' ', 0, background);
@@ -82,6 +86,7 @@ public class DrawContext implements DrawContextView {
             cell(x + i, y, string.charAt(i), foreground, background);
         }
     }
+
     @Override
     public void drawString(int x, int y, String string, int foreground) {
         drawString(x, y, string, foreground, CellBuffer.TRANSPARENT_BACKGROUND);
@@ -105,13 +110,14 @@ public class DrawContext implements DrawContextView {
     public void pushScissor(int x1, int y1, int x2, int y2) {
         scissorStack.push(x1 + offsetX, y1 + offsetY, x2 + offsetX, y2 + offsetY);
     }
+
     @Override
     public void popScissor() {
         scissorStack.pop();
     }
 
     static class ScissorStack {
-        private final Stack<Entry> stack =  new Stack<>();
+        private final Stack<Entry> stack = new Stack<>();
 
         private ScissorStack() {
 
@@ -120,9 +126,11 @@ public class DrawContext implements DrawContextView {
         public void push(int x1, int y1, int x2, int y2) {
             stack.push(new Entry(x1, y1, x2, y2));
         }
+
         public void pop() {
             stack.pop();
         }
+
         public int size() {
             return stack.size();
         }

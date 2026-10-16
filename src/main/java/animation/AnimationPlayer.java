@@ -41,6 +41,7 @@ public class AnimationPlayer {
     public boolean isLooping() {
         return looping;
     }
+
     public void setLooping(boolean looping) {
         this.looping = looping;
     }
@@ -48,12 +49,15 @@ public class AnimationPlayer {
     public boolean isPaused() {
         return paused;
     }
+
     public void setPaused(boolean paused) {
         this.paused = paused;
     }
+
     public void pause() {
         setPaused(true);
     }
+
     public void resume() {
         setPaused(false);
     }

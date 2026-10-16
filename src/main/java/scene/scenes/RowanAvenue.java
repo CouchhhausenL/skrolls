@@ -9,19 +9,20 @@ public class RowanAvenue extends PathScene {
     protected RowanAvenue(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.SOUTH_WEST, "The Score Gopher",TheScoreGopher::new);
+    protected void setupExits() {
+        exits.addExit(Direction.SOUTH_WEST, "The Score Gopher", TheScoreGopher::new);
         exits.addExit(Direction.NORTH_EAST, "Musterfield", Musterfield::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Rowan Avenue";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

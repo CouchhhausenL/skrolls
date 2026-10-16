@@ -9,19 +9,20 @@ public class SummitRibbon extends PathScene {
     protected SummitRibbon(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.EAST, "Gopher-Summit-Rowan Cross",GopherSummitRowanCross::new);
-        exits.addExit(Direction.WEST,"Peakwatch Tower", PeakwatchTower::new);
+    protected void setupExits() {
+        exits.addExit(Direction.EAST, "Gopher-Summit-Rowan Cross", GopherSummitRowanCross::new);
+        exits.addExit(Direction.WEST, "Peakwatch Tower", PeakwatchTower::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Summit Ribbon";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.LOW;
     }
 

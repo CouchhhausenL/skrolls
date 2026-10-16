@@ -14,13 +14,16 @@ public abstract class VerbParameter<T> {
     public String getName() {
         return name;
     }
+
     public boolean hasDefaultValue() {
         return defaultValue != null;
     }
+
     public T getDefaultValue() {
         return defaultValue;
     }
 
     public abstract VerbMatchResult validate(String input);
+
     public abstract List<String> suggest(String prefix);
 }

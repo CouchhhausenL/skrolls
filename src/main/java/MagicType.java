@@ -16,19 +16,21 @@ public enum MagicType {
     private final int color;
     private static final double[][] EFFECTIVENESS = {
             //  KIN  ELE  PUR  ABY  NEC  DRA  ARC  CHA  INF
-            {   1.0, 1.0, 0.5, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5 }, // KINETIC
-            {   2.0, 1.0, 2.0, 1.0, 2.0, 0.5, 1.0, 1.0, 1.0 }, // ELEMENTAL
-            {   1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.5, 1.0 }, // PURITY
-            {   1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 2.0, 1.0, 1.0 }, // ABYSSAL
-            {   2.0, 2.0, 1.0, 2.0, 1.0, 0.5, 0.5, 2.0, 1.0 }, // NECROTIC
-            {   1.0, 2.0, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0 }, // DRAGONIC
-            {   2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 2.0, 1.0 }, // ARCANE
-            {   2.0, 1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 1.0, 1.0 }, // CHAOS
-            {   2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0 }  // INFINITY
+            {1.0, 1.0, 0.5, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5}, // KINETIC
+            {2.0, 1.0, 2.0, 1.0, 2.0, 0.5, 1.0, 1.0, 1.0}, // ELEMENTAL
+            {1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 1.0, 0.5, 1.0}, // PURITY
+            {1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 2.0, 1.0, 1.0}, // ABYSSAL
+            {2.0, 2.0, 1.0, 2.0, 1.0, 0.5, 0.5, 2.0, 1.0}, // NECROTIC
+            {1.0, 2.0, 1.0, 1.0, 2.0, 2.0, 1.0, 1.0, 1.0}, // DRAGONIC
+            {2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 2.0, 1.0}, // ARCANE
+            {2.0, 1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 1.0, 1.0}, // CHAOS
+            {2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0}  // INFINITY
     };
+
     public double getEffectivenessAgainst(MagicType defender) {
         return EFFECTIVENESS[this.ordinal()][defender.ordinal()];
     }
+
     public static double getEffectiveness(MagicType attacker, MagicType defender) {
         return EFFECTIVENESS[attacker.ordinal()][defender.ordinal()];
     }
@@ -39,7 +41,15 @@ public enum MagicType {
         this.color = color;
     }
 
-    public String getSymbol() {return symbol;}
-    public String getDisplayName() { return name; }
-    public int getColor() { return color; }
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public String getDisplayName() {
+        return name;
+    }
+
+    public int getColor() {
+        return color;
+    }
 }

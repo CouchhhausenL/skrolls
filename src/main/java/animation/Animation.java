@@ -23,24 +23,31 @@ public class Animation {
     public int getWidth() {
         return width;
     }
+
     public int getHeight() {
         return height;
     }
+
     public int getFrameCount() {
         return frames.length;
     }
+
     public int getBackground() {
         return background;
     }
+
     public int getFps() {
         return fps;
     }
+
     public AnimationFrame getFrame(int frame) {
         return frames[frame];
     }
+
     public void overlayFrameOntoBuffer(CellBuffer buffer, int frame) {
         getFrame(frame).overlayOntoBuffer(buffer);
     }
+
     public void initBuffer(CellBuffer buffer) {
         buffer.fill(' ', 0xFFFFFF, background);
     }

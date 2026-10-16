@@ -9,19 +9,20 @@ public class MeadowTroddenPath extends PathScene {
     protected MeadowTroddenPath(GameContext gameContext) {
         super(gameContext);
     }
+
     @Override
-    protected void setupExits(){
-        exits.addExit(Direction.EAST, "Clioppexar",Clioppexar::new);
+    protected void setupExits() {
+        exits.addExit(Direction.EAST, "Clioppexar", Clioppexar::new);
         exits.addExit(Direction.WEST, "Shaucroft Hollows", ShaucroftHollows::new);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Meadow Trodden Path";
     }
 
     @Override
-    public DifficultyLevel getDifficulty(){
+    public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
 
