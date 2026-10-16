@@ -3,7 +3,7 @@ package main.java;
 import main.java.console.Console;
 import main.java.console.TerminalType;
 import main.java.game.Game;
-import main.java.screen.impl.TestScreen;
+import main.java.screen.impl.StartupScreen;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class Main {
         Console console = new Console(guiFlag ? TerminalType.WINDOW : TerminalType.CONSOLE);
         Game game = new Game(console);
 
-        game.setScreen(new TestScreen());
+        game.setScreen(new StartupScreen());
         game.run();
 
         console.close();
