@@ -6,6 +6,7 @@ import main.java.entity.Entity;
 import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
+import main.java.item.items.Potion;
 
 public class Battle implements BattleContext {
     private Player player;
@@ -16,6 +17,51 @@ public class Battle implements BattleContext {
     public void fight() {
         player.resetVolatileEffects();
         player.resetStatStages();
+        while(round()){
+
+        }
+
+
+
+
+    }
+
+    public boolean round() {
+        if (player.getSpeed() >= enemy.getSpeed()) {
+            if (!playerTurn()) return false;
+
+            if (!monsterAttack()) return false;
+        } else {
+            if (!monsterAttack()) return false;
+
+            if (!playerTurn()) return false;
+        }
+
+        return checkAllAlive();
+    }
+
+    public boolean monsterAttack(){
+        damagePlayer();
+        return checkAllAlive();
+    }
+
+    public boolean playerTurn(){
+        return checkAllAlive();
+    }
+
+    public boolean checkAllAlive(){
+        if (player.isAlive() && enemy.isAlive()){
+            return true;
+        }
+        else {return false;}
+
+    }
+
+
+
+
+
+    public void updatePotionEffects(){
 
     }
 
@@ -28,6 +74,28 @@ public class Battle implements BattleContext {
         return enemy;
     }
 
+    public void damagePlayer(){
+        int baseDamage = enemy.getDifficulty().getBaseDamage();
+        int attackValue = AttackHelper.calculateAttackValue(enemy.getAttackStat(), enemy.getStatStage(Stat.ATTACK), 1.0);
+
+        int defenseValue = AttackHelper.calculateDefenseValue(enemy.getDefenseStat(), enemy.getStatStage(Stat.DEFENSE), 1.0);
+
+        int level = enemy.getDifficulty().getLevel();
+        double stab = 1.0;
+
+        int critLevel = 1;
+
+        double typeEffectivness = MagicType.getEffectiveness(enemy.getAttackingMagicType(), player.getDefendingMagicType());
+
+        int damage = AttackHelper.calculateDamage(level, baseDamage, attackValue, defenseValue, stab, critLevel, typeEffectivness);
+        player.takeDamage(damage);
+
+
+
+    }
+
+
+
 
     public void damageEnemy(int attackBaseDamage, MagicType attackType) {
         double baseDamageItemFactor = player.getBaseDamageItemFactor();
@@ -39,17 +107,20 @@ public class Battle implements BattleContext {
         int attackValue = AttackHelper.calculateAttackValue(attackStat, attackStatStage, damageItemFactor);
 
 
-        int defenseStat = enemy.getDefenseStat();
-        int defenseStatStage = enemy.getStatStage(Stat.DEFENSE);
-        int defenseValue = AttackHelper.calculateDefenseValue(defenseStat, defenseStatStage);
+        int defenseStat = player.getDefenseStat();
+        int defenseStatStage = player.getStatStage(Stat.DEFENSE);
+        double defenseItemFactor = player.getDefenseItemFactor(attackType);
+        int defenseValue = AttackHelper.calculateDefenseValue(defenseStat, defenseStatStage, defenseItemFactor);
 
-        int level = DifficultyLevel.values()[player.getInventory().getStaff().getQuality().ordinal()].getLevel();
+        int level = player.getLevel();
         double stab = 1.0;
-        if (player.getInventory().getStaff().getMagicType() == attackType) {
+        if (player.getAttackingMagicType() == attackType) {
             stab = 1.5;
         }
         int critLevel = 1;
         // Here can go checking if potions increase critChance
+
+
         double typeEffectiveness = MagicType.getEffectiveness(attackType, enemy.getDefendingMagicType());
 
 

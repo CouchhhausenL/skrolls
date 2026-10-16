@@ -1,11 +1,10 @@
 package main.java.entity;
 
 import main.java.MagicType;
+import main.java.item.effects.PotionEffect;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 
 public abstract class Entity {
     private final String name;
@@ -14,6 +13,9 @@ public abstract class Entity {
     private int speed;
     private final Set<VolatileEffect> volatileEffects = EnumSet.noneOf(VolatileEffect.class);
     private final Map<Stat, Integer> statStages = new EnumMap<>(Stat.class);
+    private final List<PotionEffect> potionEffects = new ArrayList<>();
+
+
 
 
     public Entity(String name, int maxHealth, int speed){
@@ -91,6 +93,20 @@ public abstract class Entity {
         volatileEffects.remove(effect);
     }
 
+
+    public void addPotionEffect(PotionEffect potionEffect){
+        potionEffects.add(potionEffect);
+    }
+    public void removePotionEffect(PotionEffect potionEffect){
+        potionEffects.remove(potionEffect);
+    }
+    public void tickAllPotionEffects(){
+        potionEffects.removeIf(PotionEffect::tickDuration);
+    }
+
+
+    public Boolean isAlive(){return health > 0;}
+
     public String getName(){return name;}
 
     public int getSpeed(){
@@ -100,6 +116,9 @@ public abstract class Entity {
     public abstract int getDefenseStat();
 
     public abstract MagicType getDefendingMagicType();
+    public abstract MagicType getAttackingMagicType();
+
+    public abstract int getLevel();
 
     public abstract int getAttackStat();
 

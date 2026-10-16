@@ -38,9 +38,9 @@ public final class AttackHelper {
 
     }
 
-    public static int calculateDefenseValue(int defenseStat, int defenseStatStage) {
+    public static int calculateDefenseValue(int defenseStat, int defenseStatStage, double combinedItemFactor) {
         double sv = convertStatToDouble(defenseStatStage);
-        return (int) Math.floor(defenseStat * sv);
+        return (int) Math.floor(defenseStat * sv * combinedItemFactor);
     }
 
 
