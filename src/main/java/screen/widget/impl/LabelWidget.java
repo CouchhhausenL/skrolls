@@ -14,6 +14,10 @@ public class LabelWidget extends Widget {
         this.content = content;
     }
 
+    public LabelWidget(int x, int y, String content) {
+        this(x, y, content.length(), 1, content);
+    }
+
     public String getContent() {
         return content;
     }
@@ -24,7 +28,7 @@ public class LabelWidget extends Widget {
 
     @Override
     public void onDraw(DrawContextView context) {
-        context.drawString(0, 0, content, isHovered() ? Color.RED : Color.WHITE);
+        context.drawString(0, 0, content, Color.WHITE);
     }
 
     @Override
