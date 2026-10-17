@@ -3,6 +3,7 @@ package main.java.entity.player;
 import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;
+import main.java.item.Inventory;
 import main.java.item.effects.ItemEffectType;
 
 public class Player extends Entity {

@@ -1,4 +1,4 @@
-package main.java.entity.player;
+package main.java.item;
 
 import main.java.item.Item;
 import main.java.item.MagicItem;
