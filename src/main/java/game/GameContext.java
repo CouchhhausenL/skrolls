@@ -7,5 +7,5 @@ public interface GameContext {
 
     void setScreen(Screen screen);
     BattleContext getCurrentBattle();
-
+    void stop();
 }

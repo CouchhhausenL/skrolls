@@ -183,6 +183,10 @@ public final class KeyInputEvent implements InputEvent {
         return type == Type.DELETE;
     }
 
+    public boolean isSpace() {
+        return isChar(' ');
+    }
+
     public enum Letter {
         A, B, C, D, E, F, G, H, I,
         J, K, L, M, N, O, P, Q, R,

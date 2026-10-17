@@ -23,7 +23,7 @@ public class MapScreen extends Screen {
     protected void init(GameContext context) {
         for (Zoom zoom : Zoom.values()) {
             Animation animation = SkaParser.parse("map/map" + (zoom.ordinal() + 1) + ".ska");
-            AnimationWidget widget = new AnimationWidget(0, 0, animation.getWidth(), animation.getHeight(), animation);
+            AnimationWidget widget = new AnimationWidget(0, 0, animation);
             widget.setLooping(true);
             widgetMap.put(zoom, widget);
         }

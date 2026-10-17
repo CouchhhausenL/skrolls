@@ -12,6 +12,7 @@ public class Game implements GameContext {
     public static final int MIN_WIDTH = 80;
     public static final int MIN_HEIGHT = 30;
 
+    private boolean running = false;
     private final Console console;
     private Screen screen = null;
     private final DrawContext drawContext;
@@ -28,7 +29,7 @@ public class Game implements GameContext {
     }
 
     public void run() {
-        boolean running = true;
+        running = true;
         while (running) {
             if (console.areDimensionsDirty()) {
                 console.updateDimensions();
@@ -49,7 +50,7 @@ public class Game implements GameContext {
                     if (event == null) break;
 
                     if (event instanceof KeyInputEvent key && key.isCtrl(KeyInputEvent.Letter.Q))
-                        running = false;
+                        stop();
 
                     screen.onInputEvent(event);
                 }
@@ -73,6 +74,10 @@ public class Game implements GameContext {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void stop() {
+        running = false;
     }
 
     @Override
