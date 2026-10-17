@@ -1,9 +1,6 @@
 package main.java.verb;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Verb {
     private final String name;
@@ -15,6 +12,20 @@ public class Verb {
         this.name = name;
         this.aliases = aliases;
         this.parameters = parameters;
+    }
+
+    public boolean matchesNameOrAlias(String input) {
+        if (name.equalsIgnoreCase(input)) return true;
+
+        for (String alias : aliases) {
+            if (alias.equalsIgnoreCase(input)) return true;
+        }
+
+        return false;
+    }
+
+    public List<VerbParameterVariant> getVariants() {
+        return Collections.unmodifiableList(parameters);
     }
 
     public static Builder builder(String name) {

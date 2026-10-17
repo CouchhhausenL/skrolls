@@ -10,6 +10,28 @@ public class VerbParameterVariant {
         this.parameters = parameters;
     }
 
+    public void analyze(String input) {
+        String[] words = input.split(" ");
+        int wordCount = 1;
+
+        for (VerbParameter<?> parameter : parameters) {
+            String current = getStringFormWordCount(words, wordCount);
+            VerbParameterMatchResult result = parameter.validate(current);
+            if (result == VerbParameterMatchResult.NO_MATCH) break;
+
+            wordCount++;
+            if (wordCount >= words.length) break;
+        }
+    }
+
+    private String getStringFormWordCount(String[] words, int count) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            result.append(words[i]);
+        }
+        return result.toString();
+    }
+
     public static class Builder {
         private final Verb.Builder parent;
         private final List<VerbParameter<?>> parameters = new ArrayList<>();

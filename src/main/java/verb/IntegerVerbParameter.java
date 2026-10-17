@@ -19,14 +19,14 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
     }
 
     @Override
-    public VerbMatchResult validate(String input) {
+    public VerbParameterMatchResult validate(String input) {
         try {
             int value = Integer.parseInt(input);
             return value >= min && value <= max
-                    ? VerbMatchResult.MATCH
-                    : VerbMatchResult.NO_MATCH;
+                    ? VerbParameterMatchResult.MATCH
+                    : VerbParameterMatchResult.NO_MATCH;
         } catch (NumberFormatException ignored) {
-            return VerbMatchResult.NO_MATCH;
+            return VerbParameterMatchResult.NO_MATCH;
         }
     }
 

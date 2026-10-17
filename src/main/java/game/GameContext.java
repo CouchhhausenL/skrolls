@@ -3,7 +3,7 @@ package main.java.game;
 import main.java.battle.BattleContext;
 import main.java.screen.Screen;
 
-public interface GameContext {
+public interface GameContext extends VerbGameContext {
 
     void setScreen(Screen screen);
     BattleContext getCurrentBattle();

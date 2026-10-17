@@ -16,6 +16,10 @@ public class AnimationWidget extends Widget {
         player = new AnimationPlayer(animation);
     }
 
+    public AnimationWidget(int x, int y, Animation animation) {
+        this(x, y, animation.getWidth(), animation.getHeight(), animation);
+    }
+
     public AnimationWidget onDone(OnDone onDone) {
         this.onDone = onDone;
         return this;

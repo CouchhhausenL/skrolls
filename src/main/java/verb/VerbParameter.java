@@ -23,7 +23,7 @@ public abstract class VerbParameter<T> {
         return defaultValue;
     }
 
-    public abstract VerbMatchResult validate(String input);
+    public abstract VerbParameterMatchResult validate(String input);
 
     public abstract List<String> suggest(String prefix);
 }

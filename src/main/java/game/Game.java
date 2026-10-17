@@ -7,6 +7,9 @@ import main.java.console.input.KeyInputEvent;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.util.Color;
+import main.java.verb.Verb;
+
+import java.util.List;
 
 public class Game implements GameContext {
     public static final int MIN_WIDTH = 80;
@@ -83,5 +86,31 @@ public class Game implements GameContext {
     @Override
     public BattleContext getCurrentBattle() {
         return null;
+    }
+
+
+    @Override
+    public List<Verb> getVerbs() {
+        return List.of(
+                Verb.builder("use")
+                        .aliases("drink", "consume", "chug")
+                        .variant()
+                            .choice("item", "water", "healing potion", "resistance potion", "healing potion deluxe", "healing health boost potion").build()
+                            .integer("count", 1, 10).defaultValue(1).build()
+                            .choice("times", "times").defaultValue("times").build()
+                            .build()
+                        .variant()
+                            .integer("count", 1, 10).defaultValue(1).build()
+                            .choice("item", "healing potions", "resistance potions").build()
+                            .build()
+                        .build(),
+
+                Verb.builder("use")
+                        .aliases("eat", "consume")
+                        .variant()
+                            .choice("item", "pizza", "burger").build()
+                            .build()
+                        .build()
+        );
     }
 }

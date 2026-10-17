@@ -11,14 +11,23 @@ public class ChoiceVerbParameter extends VerbParameter<String> {
     }
 
     @Override
-    public VerbMatchResult validate(String input) {
+    public VerbParameterMatchResult validate(String input) {
         String lowerCaseInput = input.toLowerCase();
 
-        VerbMatchResult result = VerbMatchResult.NO_MATCH;
+        VerbParameterMatchResult result = VerbParameterMatchResult.NO_MATCH;
         for (String choice : options) {
             String lowerCaseChoice = choice.toLowerCase();
-            if (lowerCaseChoice.equals(lowerCaseInput)) return VerbMatchResult.MATCH;
-            if (lowerCaseChoice.startsWith(lowerCaseInput)) return VerbMatchResult.PARTIAL;
+            if (lowerCaseChoice.equals(lowerCaseInput)) {
+                result = result == VerbParameterMatchResult.PARTIAL
+                        ? VerbParameterMatchResult.MATCH_AND_PARTIAL
+                        : VerbParameterMatchResult.MATCH;
+            } else if (lowerCaseChoice.startsWith(lowerCaseInput)) {
+                result = result == VerbParameterMatchResult.MATCH
+                        ? VerbParameterMatchResult.MATCH_AND_PARTIAL
+                        : VerbParameterMatchResult.PARTIAL;
+            }
+
+            if (result == VerbParameterMatchResult.MATCH_AND_PARTIAL) return result;
         }
         return result;
     }
