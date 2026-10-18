@@ -1,20 +1,21 @@
 package main.java.item;
 
-import main.java.item.Item;
-import main.java.item.MagicItem;
-import main.java.item.Quality;
 import main.java.item.effects.ItemEffectType;
 import main.java.item.items.Armor;
 import main.java.item.items.Artifact;
+import main.java.item.items.Scroll;
 import main.java.item.items.Staff;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Inventory {
-    private List<Item> backpack;
-    private Armor armor;
-    private Staff staff;
-    private List<Artifact> artifacts;
+    private final List<Item> backpack = new ArrayList<>();
+    private final EquipmentStore equipment = new EquipmentStore();
+
+    public Inventory() {
+    }
 
     public void addItem(Item item) {
         backpack.add(item);
@@ -26,51 +27,29 @@ public class Inventory {
         }
     }
 
-    public String equipStaff(Staff staff) {
-        Staff oldStaff = this.staff;
-        backpack.remove(staff);
-        backpack.add(oldStaff);
-        this.staff = staff;
-        return "You've equipped '" + staff.getName() + "' and stashed '" + oldStaff.getName() + "' in your backpack.";
-    }
-
-    public String equipArmor(Armor armor) {
-        Armor oldArmor = this.armor;
-        backpack.remove(armor);
-        backpack.add(oldArmor);
-        this.armor = armor;
-        return "You've equipped '" + armor.getName() + "' and stashed '" + oldArmor.getName() + "' in your backpack.";
-    }
-
-    public String equipArtifact(Artifact artifact) {
-        if (artifacts.size() >= 10) {
-            return "The artifact '" + artifact.getName() + "' can't be equipped, because you have already have 10 artifacts equipped.";
-        } else {
-            backpack.remove(artifact);
-            artifacts.add(artifact);
-            return "You've equipped '" + artifact.getName() + "'.";
-        }
-    }
-
     public List<Item> getBackpackItems() {
-        return List.copyOf(backpack);
+        return Collections.unmodifiableList(backpack);
     }
 
     public Staff getStaff() {
-        return staff;
+        return equipment.getEquipable(EquipmentType.STAFF);
     }
 
     public Armor getArmor() {
-        return armor;
+        return equipment.getEquipable(EquipmentType.ARMOR);
     }
 
     public List<Artifact> getArtifacts() {
-        return List.copyOf(artifacts);
+        return equipment.getEquipables(EquipmentType.ARTIFACT);
+    }
+
+    public List<Scroll> getScrolls() {
+        return equipment.getEquipables(EquipmentType.SCROLL);
     }
 
     public double getCombinedEffect(ItemEffectType itemEffectType) {
         double combinedEffect = 0;
-        for (Artifact artifact : artifacts) {
+        for (Artifact artifact : getArtifacts()) {
             combinedEffect = combinedEffect + artifact.getItemEffectStrength(itemEffectType);
         }
         return combinedEffect;
@@ -87,22 +66,18 @@ public class Inventory {
     }
 
     public Quality getHighestQualityItem() {
-
-
         int highestOrdinal = -1; // Oder dein bisheriger Initialwert
 
         for (Item item : backpack) {
             highestOrdinal = checkItemQuality(item, highestOrdinal);
         }
 
-        for (Item item : artifacts) {
+        for (Item item : getArtifacts()) {
             highestOrdinal = checkItemQuality(item, highestOrdinal);
         }
 
-        highestOrdinal = checkItemQuality(armor, highestOrdinal);
-        highestOrdinal = checkItemQuality(staff, highestOrdinal);
+        highestOrdinal = checkItemQuality(getArmor(), highestOrdinal);
+        highestOrdinal = checkItemQuality(getStaff(), highestOrdinal);
         return Quality.values()[highestOrdinal];
     }
-
-
 }
