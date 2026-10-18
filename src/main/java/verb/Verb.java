@@ -5,9 +5,9 @@ import java.util.*;
 public class Verb {
     private final String name;
     private final List<String> aliases;
-    private final List<VerbParameterVariant> parameters;
+    private final List<VerbVariant> parameters;
 
-    private Verb(String name, List<String> aliases, List<VerbParameterVariant> parameters) {
+    private Verb(String name, List<String> aliases, List<VerbVariant> parameters) {
         Objects.requireNonNull(name, "Name cannot be null");
         this.name = name;
         this.aliases = aliases;
@@ -24,7 +24,7 @@ public class Verb {
         return false;
     }
 
-    public List<VerbParameterVariant> getVariants() {
+    public List<VerbVariant> getVariants() {
         return Collections.unmodifiableList(parameters);
     }
 
@@ -35,7 +35,7 @@ public class Verb {
     public static class Builder {
         private final String name;
         private final List<String> aliases = new ArrayList<>();
-        private final List<VerbParameterVariant> parameters = new ArrayList<>();
+        private final List<VerbVariant> parameters = new ArrayList<>();
 
         private Builder(String name) {
             this.name = name;
@@ -46,13 +46,13 @@ public class Verb {
             return this;
         }
 
-        public Builder variant(VerbParameterVariant parameters) {
+        public Builder variant(VerbVariant parameters) {
             this.parameters.add(parameters);
             return this;
         }
 
-        public VerbParameterVariant.Builder variant() {
-            return new VerbParameterVariant.Builder(this);
+        public VerbVariant.Builder variant() {
+            return new VerbVariant.Builder(this);
         }
 
         public Verb build() {

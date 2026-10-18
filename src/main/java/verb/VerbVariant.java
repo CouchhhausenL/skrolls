@@ -3,10 +3,10 @@ package main.java.verb;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VerbParameterVariant {
+public class VerbVariant {
     private final List<VerbParameter<?>> parameters;
 
-    private VerbParameterVariant(List<VerbParameter<?>> parameters) {
+    private VerbVariant(List<VerbParameter<?>> parameters) {
         this.parameters = parameters;
     }
 
@@ -54,7 +54,7 @@ public class VerbParameterVariant {
         }
 
         public Verb.Builder build() {
-            return parent.variant(new VerbParameterVariant(parameters));
+            return parent.variant(new VerbVariant(parameters));
         }
     }
 }

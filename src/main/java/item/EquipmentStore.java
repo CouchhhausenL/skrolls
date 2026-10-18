@@ -3,7 +3,7 @@ package main.java.item;
 import java.util.*;
 
 public class EquipmentStore {
-    private final Map<EquipmentType<?>, List<Equipable>> items = new EnumMap<>(EquipmentType.class);
+    private final Map<EquipmentType<?>, List<Equipable>> items = new HashMap<>();
 
     public EquipmentStore() {
         for (EquipmentType<?> type : EquipmentType.values()) {

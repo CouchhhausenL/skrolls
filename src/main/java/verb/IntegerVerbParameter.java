@@ -38,13 +38,13 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
     }
 
     public static class Builder {
-        private final VerbParameterVariant.Builder parent;
+        private final VerbVariant.Builder parent;
         private final String name;
         private final Integer min;
         private final Integer max;
         private Integer defaultValue = null;
 
-        public Builder(VerbParameterVariant.Builder parent, String name, int min, int max) {
+        public Builder(VerbVariant.Builder parent, String name, int min, int max) {
             this.parent = parent;
             this.name = name;
             this.min = min;
@@ -56,7 +56,7 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
             return this;
         }
 
-        public VerbParameterVariant.Builder build() {
+        public VerbVariant.Builder build() {
             return parent.parameter(new IntegerVerbParameter(name, min, max, defaultValue));
         }
 

@@ -44,12 +44,12 @@ public class ChoiceVerbParameter extends VerbParameter<String> {
     }
 
     public static class Builder {
-        private final VerbParameterVariant.Builder parent;
+        private final VerbVariant.Builder parent;
         private final String name;
         private final List<String> choices;
         private String defaultValue;
 
-        public Builder(VerbParameterVariant.Builder parent, String name, String[] choices) {
+        public Builder(VerbVariant.Builder parent, String name, String[] choices) {
             this.parent = parent;
             this.name = name;
             this.choices = List.of(choices);
@@ -60,7 +60,7 @@ public class ChoiceVerbParameter extends VerbParameter<String> {
             return this;
         }
 
-        public VerbParameterVariant.Builder build() {
+        public VerbVariant.Builder build() {
             parent.parameter(new ChoiceVerbParameter(name, defaultValue, choices));
             return parent;
         }
