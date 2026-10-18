@@ -57,7 +57,7 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
         }
 
         public VerbVariant.Builder build() {
-            return parent.parameter(new IntegerVerbParameter(name, min, max, defaultValue));
+            return parent.parameter(new IntegerVerbParameter(name, defaultValue, min, max));
         }
 
     }
