@@ -21,6 +21,18 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
     }
 
     @Override
+    public Integer getValue(String input) {
+        try {
+            int value = Integer.parseInt(input);
+            if (value >= min && value <= max)
+                return value;
+        } catch (NumberFormatException ignored) {
+        }
+
+        throw new IllegalArgumentException("input is invalid");
+    }
+
+    @Override
     public VerbParameterMatchResult validate(String input) {
         try {
             int value = Integer.parseInt(input);
@@ -34,6 +46,7 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
 
     @Override
     public List<String> suggest(String prefix) {
+        Integer defaultValue = getDefaultValue();
         if (defaultValue != null && String.valueOf(defaultValue).startsWith(prefix))
             return List.of(String.valueOf(defaultValue));
         return List.of();

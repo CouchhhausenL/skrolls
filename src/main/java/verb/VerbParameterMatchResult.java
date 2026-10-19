@@ -4,5 +4,9 @@ public enum VerbParameterMatchResult {
     MATCH_AND_PARTIAL,
     MATCH,
     PARTIAL,
-    NO_MATCH
+    NO_MATCH;
+
+    public boolean isSomeMatch() {
+        return this == MATCH || this == MATCH_AND_PARTIAL;
+    }
 }

@@ -1,17 +1,22 @@
 package main.java.verb;
 
+import main.java.game.GameContext;
+
 import java.util.*;
 
 public class Verb {
     private final String name;
     private final List<String> aliases;
-    private final List<VerbVariant> parameters;
+    private final List<VerbVariant> variants;
+    private final OnExecute onExecute;
 
-    private Verb(String name, List<String> aliases, List<VerbVariant> parameters) {
-        Objects.requireNonNull(name, "Name cannot be null");
+    private Verb(String name, List<String> aliases, List<VerbVariant> variants, OnExecute onExecute) {
+        Objects.requireNonNull(name, "name must not be null");
+        Objects.requireNonNull(onExecute, "onExecute must not be null");
         this.name = name;
         this.aliases = aliases;
-        this.parameters = parameters;
+        this.variants = variants;
+        this.onExecute = onExecute;
     }
 
     public boolean matchesNameOrAlias(String input) {
@@ -24,8 +29,25 @@ public class Verb {
         return false;
     }
 
-    public List<VerbVariant> getVariants() {
-        return Collections.unmodifiableList(parameters);
+    public boolean allVariantsHaveParameterName(String name) {
+        for (VerbVariant variant : variants) {
+            if (!variant.hasParameterWithName(name))
+                return false;
+        }
+        return true;
+    }
+
+    public List<VerbVariantAnalysisResult> analyze(String input) {
+        List<VerbVariantAnalysisResult> results = new ArrayList<>();
+        for (VerbVariant variant : variants) {
+            results.addAll(variant.analyze(input));
+        }
+        return results;
+    }
+
+    public void execute(VerbVariantAnalysisResult result, GameContext gameContext) {
+        VerbExecutionContext executionContext = new VerbExecutionContext(this, result);
+        onExecute.execute(executionContext, gameContext);
     }
 
     public static Builder builder(String name) {
@@ -55,9 +77,13 @@ public class Verb {
             return new VerbVariant.Builder(this);
         }
 
-        public Verb build() {
-            return new Verb(name, aliases, parameters);
+        public Verb build(OnExecute onExecute) {
+            return new Verb(name, aliases, parameters, onExecute);
         }
 
+    }
+
+    public interface OnExecute {
+        void execute(VerbExecutionContext executionContext, GameContext context);
     }
 }

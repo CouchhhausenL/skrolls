@@ -4,7 +4,7 @@ import java.util.List;
 
 public abstract class VerbParameter<T> {
     private final String name; // Can be null
-    protected final T defaultValue;
+    private final T defaultValue;
 
     protected VerbParameter(String name, T defaultValue) {
         this.name = name;
@@ -15,6 +15,10 @@ public abstract class VerbParameter<T> {
         return name;
     }
 
+    public boolean hasName() {
+        return name != null;
+    }
+
     public boolean hasDefaultValue() {
         return defaultValue != null;
     }
@@ -22,6 +26,8 @@ public abstract class VerbParameter<T> {
     public T getDefaultValue() {
         return defaultValue;
     }
+
+    public abstract T getValue(String input);
 
     public abstract VerbParameterMatchResult validate(String input);
 

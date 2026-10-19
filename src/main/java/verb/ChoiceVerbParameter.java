@@ -11,17 +11,29 @@ public class ChoiceVerbParameter extends VerbParameter<String> {
     }
 
     @Override
+    public String getValue(String input) {
+        String normalizedInput = input.toLowerCase();
+        for (String option : options) {
+            String normalizedOption = option.toLowerCase();
+            if (normalizedOption.equals(normalizedInput))
+                return normalizedOption;
+        }
+
+        throw new IllegalArgumentException("Input is invalid");
+    }
+
+    @Override
     public VerbParameterMatchResult validate(String input) {
-        String lowerCaseInput = input.toLowerCase();
+        String normalizedInput = input.toLowerCase();
 
         VerbParameterMatchResult result = VerbParameterMatchResult.NO_MATCH;
-        for (String choice : options) {
-            String lowerCaseChoice = choice.toLowerCase();
-            if (lowerCaseChoice.equals(lowerCaseInput)) {
+        for (String option : options) {
+            String normalizedOption = option.toLowerCase();
+            if (normalizedOption.equals(normalizedInput)) {
                 result = result == VerbParameterMatchResult.PARTIAL
                         ? VerbParameterMatchResult.MATCH_AND_PARTIAL
                         : VerbParameterMatchResult.MATCH;
-            } else if (lowerCaseChoice.startsWith(lowerCaseInput)) {
+            } else if (normalizedOption.startsWith(normalizedInput)) {
                 result = result == VerbParameterMatchResult.MATCH
                         ? VerbParameterMatchResult.MATCH_AND_PARTIAL
                         : VerbParameterMatchResult.PARTIAL;
@@ -46,13 +58,13 @@ public class ChoiceVerbParameter extends VerbParameter<String> {
     public static class Builder {
         private final VerbVariant.Builder parent;
         private final String name;
-        private final List<String> choices;
+        private final List<String> options;
         private String defaultValue;
 
-        public Builder(VerbVariant.Builder parent, String name, String[] choices) {
+        public Builder(VerbVariant.Builder parent, String name, String[] options) {
             this.parent = parent;
             this.name = name;
-            this.choices = List.of(choices);
+            this.options = List.of(options);
         }
 
         public Builder defaultValue(String defaultValue) {
@@ -61,7 +73,7 @@ public class ChoiceVerbParameter extends VerbParameter<String> {
         }
 
         public VerbVariant.Builder build() {
-            parent.parameter(new ChoiceVerbParameter(name, defaultValue, choices));
+            parent.parameter(new ChoiceVerbParameter(name, defaultValue, options));
             return parent;
         }
     }

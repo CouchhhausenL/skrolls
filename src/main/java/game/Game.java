@@ -103,14 +103,17 @@ public class Game implements GameContext {
                             .integer("count", 1, 10).defaultValue(1).build()
                             .choice("item", "healing potions", "resistance potions").build()
                             .build()
-                        .build(),
+                        .build((executionContext, context) -> {
+                        }),
 
                 Verb.builder("use")
                         .aliases("eat", "consume")
                         .variant()
                             .choice("item", "pizza", "burger").build()
                             .build()
-                        .build()
+                        .build(((executionContext, context) -> {
+
+                        }))
         );
     }
 }
