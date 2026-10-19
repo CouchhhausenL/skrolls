@@ -9,10 +9,12 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
     private IntegerVerbParameter(String name, Integer defaultValue, int min, int max) {
         super(name, defaultValue);
 
-        if (defaultValue == null)
-            throw new IllegalArgumentException("Default value cannot be null");
-        if (!(defaultValue >= min && defaultValue <= max))
-            throw new IllegalArgumentException("Invalid default value " + defaultValue);
+        if (defaultValue != null)
+            if (!(defaultValue >= min && defaultValue <= max))
+                throw new IllegalArgumentException(String.format(
+                        "defaultValue is invalid (%d is not in range %d to %d)",
+                        defaultValue, min, max
+                ));
 
         this.min = min;
         this.max = max;
