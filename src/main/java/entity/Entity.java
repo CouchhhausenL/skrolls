@@ -128,4 +128,11 @@ public abstract class Entity {
     public abstract int getAttackStat();
 
 
+    public int getHealth() {
+        return health;
+    }
+
+    public int getMaxHealth() {
+    return maxHealth;
+    }
 }

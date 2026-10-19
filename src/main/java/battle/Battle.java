@@ -11,6 +11,10 @@ public class Battle implements BattleContext {
     private Monster enemy;
     private int round;
 
+    public Battle(Player player, Monster monster){
+    this.player = player;
+    this.enemy = monster;
+    }
 
     public void fight() {
         player.resetVolatileEffects();
@@ -56,13 +60,28 @@ public class Battle implements BattleContext {
     }
 
 
-    public Entity getPlayer() {
-        return player;
+    public String getPlayerName() {
+            return player.getName();
     }
 
-    public Entity getEnemy() {
-        return enemy;
+    public String getEnemyName() {
+        return enemy.getName();
     }
+    public int getPlayerHealth(){
+        return player.getHealth();
+    }
+    public int getPlayerMaxHealth(){
+        return player.getMaxHealth();
+    }
+
+    public int getEnemyHealth(){
+        return enemy.getHealth();
+    }
+    public int getEnemyMaxHealth(){
+        return enemy.getMaxHealth();
+    }
+
+
 
     public void damagePlayer() {
         int baseDamage = enemy.getDifficulty().getBaseDamage();

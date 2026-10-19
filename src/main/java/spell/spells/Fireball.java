@@ -6,8 +6,8 @@ import main.java.battle.BattleContext;
 import main.java.spell.Spell;
 
 public class Fireball extends Spell {
-    public Fireball(String name, String description, MagicType magicType) {
-        super(name, description, magicType);
+    public Fireball() {
+        super("Fireball", "A strong elemental attack dealing high damage amounts.", MagicType.NECROTIC);
     }
 
 
@@ -16,8 +16,13 @@ public class Fireball extends Spell {
         if (context.getCurrentBattle() != null) {
             BattleContext battleContext = context.getCurrentBattle();
 
-            battleContext.damageEnemy(90, MagicType.ELEMENTAL);
+            battleContext.damageEnemy(90, this.magicType);
 
         }
+    }
+
+    @Override
+    public String getAnimationName() {
+        return "attack_ball.ska";
     }
 }
