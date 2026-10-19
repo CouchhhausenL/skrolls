@@ -49,8 +49,16 @@ public class Inventory {
 
     public double getCombinedEffect(ItemEffectType itemEffectType) {
         double combinedEffect = 0;
+        Staff staff = getStaff();
+        if (staff != null) {
+            combinedEffect += staff.getItemEffectStrength(itemEffectType);
+        }
+        Armor armor = getArmor();
+        if (armor != null) {
+            combinedEffect += armor.getItemEffectStrength(itemEffectType);
+        }
         for (Artifact artifact : getArtifacts()) {
-            combinedEffect = combinedEffect + artifact.getItemEffectStrength(itemEffectType);
+            combinedEffect += artifact.getItemEffectStrength(itemEffectType);
         }
         return combinedEffect;
     }

@@ -17,7 +17,7 @@ public class Battle implements BattleContext {
     }
 
     public void fight() {
-        player.resetVolatileEffects();
+        player.resetCombatEffects();
         player.resetStatStages();
         while (round()) {
 
@@ -27,6 +27,7 @@ public class Battle implements BattleContext {
     }
 
     public boolean round() {
+        player.applyPeriodicEffects();
         if (player.getSpeed() >= enemy.getSpeed()) {
             if (!playerTurn()) return false;
 
