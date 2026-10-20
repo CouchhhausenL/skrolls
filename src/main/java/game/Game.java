@@ -148,4 +148,9 @@ public class Game implements GameContext {
     public List<String> getMessages() {
         return Collections.unmodifiableList(messages);
     }
+
+    @Override
+    public int getMessagesHashCode() {
+        return messages.hashCode();
+    }
 }

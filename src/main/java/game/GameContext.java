@@ -16,6 +16,7 @@ public interface GameContext {
 
     void addMessage(String message);
     List<String> getMessages();
+    int getMessagesHashCode();
 
     void setBattle(Battle battle);
 }

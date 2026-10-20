@@ -1,6 +1,7 @@
 package main.java.screen.impl;
 
 import main.java.game.GameContext;
+import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.ChatMessageWidget;
 import main.java.screen.widget.impl.VerbInputWidget;
@@ -9,6 +10,7 @@ import main.java.screen.widget.impl.container.ScrollableContainerWidget;
 public class MainGameScreen extends Screen {
     private static final int VERB_INPUT_HEIGHT = 6;
 
+    private int lastMessagesCode = 0;
     private GameContext context;
 
     private VerbInputWidget verbInputWidget;
@@ -46,5 +48,14 @@ public class MainGameScreen extends Screen {
     @Override
     public void onResize() {
         positionWidgets();
+    }
+
+    @Override
+    protected void onPreDraw(DrawContext context) {
+        int newHashCode = this.context.getMessagesHashCode();
+        if (lastMessagesCode != newHashCode) {
+            lastMessagesCode = newHashCode;
+            updateMessages();
+        }
     }
 }
