@@ -12,6 +12,7 @@ import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
+import main.java.screen.impl.InventoryScreen;
 import main.java.screen.impl.MapScreen;
 import main.java.spell.Spell;
 import main.java.util.Color;
@@ -162,6 +163,21 @@ public class Game implements GameContext {
     @Override
     public List<Verb> getVerbs() {
         List<Verb> verbs = new ArrayList<>();
+
+        verbs.add(Verb.builder("open").aliases("show", "display")
+                .variant()
+                .choice("type", "map", "inventory")
+                .build()
+                .build()
+                .build(((executionContext, context) -> {
+                    String type = executionContext.getString("type");
+                    if (type.equals("map"))
+                        setScreen(new MapScreen());
+
+                    if (type.equals("inventory"))
+                        setScreen(new InventoryScreen());
+                })));
+
         if (player != null)
             verbs.addAll(player.getInventory().getVerbs());
 
