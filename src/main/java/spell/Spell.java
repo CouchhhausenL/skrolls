@@ -6,7 +6,7 @@ import main.java.MagicType;
 public abstract class Spell {
     private final String name;
     private final String description;
-    private final MagicType magicType;
+    protected final MagicType magicType;
 
     public Spell(String name, String description, MagicType magicType) {
         this.name = name;
@@ -25,4 +25,6 @@ public abstract class Spell {
     }
 
     public abstract void cast(GameContext context);
+
+    public abstract String getAnimationName();
 }

@@ -49,7 +49,7 @@ public class Animation {
     }
 
     public void initBuffer(CellBuffer buffer) {
-        buffer.fill(' ', 0xFFFFFF, background);
+        buffer.fill(CellBuffer.EMPTY_CELL, 0xFFFFFF, background);
     }
 
     public static class Builder {

@@ -6,4 +6,12 @@ public interface BattleContext {
 
     void damageEnemy(int baseStrength, MagicType magicType);
 
+    String getPlayerName();
+    String getEnemyName();
+
+    int getPlayerHealth();
+    int getPlayerMaxHealth();
+    int getEnemyHealth();
+    int getEnemyMaxHealth();
+
 }

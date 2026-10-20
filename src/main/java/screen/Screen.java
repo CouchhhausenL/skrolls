@@ -5,6 +5,7 @@ import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
 import main.java.game.GameContext;
 import main.java.screen.widget.Widget;
+import main.java.screen.widget.impl.AnimationWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +111,19 @@ public abstract class Screen {
     }
 
     public abstract void onResize();
+
+    protected void autoPositionWidget(AnimationWidget widget) {
+        final int width = widget.getWidth();
+        final int height = widget.getHeight();
+        final int screenWidth = getWidth();
+        final int screenHeight = getHeight();
+
+        widget.setPosition(
+                (screenWidth - width) / 2,
+                (screenHeight - height) / 2
+        );
+
+    }
 
     protected void onPreDraw(DrawContext context) {
     }

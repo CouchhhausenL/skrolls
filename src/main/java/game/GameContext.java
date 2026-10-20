@@ -1,5 +1,6 @@
 package main.java.game;
 
+import main.java.battle.Battle;
 import main.java.battle.BattleContext;
 import main.java.screen.Screen;
 import main.java.verb.Verb;
@@ -13,4 +14,6 @@ public interface GameContext {
     void stop();
     List<Verb> getVerbs();
 
+
+    void setBattle(Battle battle);
 }

@@ -1,8 +1,12 @@
 package main.java.screen.impl;
 
 import main.java.animation.Animation;
+import main.java.battle.Battle;
 import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
+import main.java.entity.monster.Monster;
+import main.java.entity.monster.MonsterType;
+import main.java.entity.player.Player;
 import main.java.game.GameContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
@@ -22,7 +26,9 @@ public class MainMenuScreen extends Screen {
         Animation animation = SkaParser.parse("title.ska");
         addChild(new AnimationWidget(3, 2,  animation));
 
-        optionListeners.put(Option.NEW_GAME, () -> context.setScreen(new MapScreen()));
+        optionListeners.put(Option.NEW_GAME, () -> {
+            context.setBattle(new Battle(new Player("Test", 10, 10, null), MonsterType.AXE_ROGUE.create()));
+            context.setScreen(new BattleScreenTransition());});
         optionListeners.put(Option.EXIT, context::stop);
 
         for (Option option : Option.values()) {

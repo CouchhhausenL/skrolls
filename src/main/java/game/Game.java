@@ -1,5 +1,6 @@
 package main.java.game;
 
+import main.java.battle.Battle;
 import main.java.battle.BattleContext;
 import main.java.console.Console;
 import main.java.console.input.InputEvent;
@@ -18,6 +19,7 @@ public class Game implements GameContext {
     private boolean running = false;
     private final Console console;
     private Screen screen = null;
+    private Battle battle = null;
     private final DrawContext drawContext;
 
     public Game(Console console) {
@@ -83,9 +85,16 @@ public class Game implements GameContext {
         running = false;
     }
 
+
+    @Override
+    public void setBattle(Battle battle){
+        this.battle = battle;
+    }
+
+
     @Override
     public BattleContext getCurrentBattle() {
-        return null;
+        return battle;
     }
 
 
