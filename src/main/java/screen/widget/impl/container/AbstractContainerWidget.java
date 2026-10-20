@@ -25,6 +25,10 @@ public abstract class AbstractContainerWidget extends Widget {
         widgets.remove(widget);
     }
 
+    public void clearChildren() {
+        widgets.clear();
+    }
+
     @Override
     public void draw(DrawContext context) {
         super.draw(context);

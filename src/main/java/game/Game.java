@@ -10,6 +10,8 @@ import main.java.screen.Screen;
 import main.java.util.Color;
 import main.java.verb.Verb;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Game implements GameContext {
@@ -19,7 +21,10 @@ public class Game implements GameContext {
     private boolean running = false;
     private final Console console;
     private Screen screen = null;
+
     private Battle battle = null;
+    private List<String> messages = new ArrayList<>();
+
     private final DrawContext drawContext;
 
     public Game(Console console) {
@@ -124,7 +129,7 @@ public class Game implements GameContext {
                             .choice("item", "pizza", "burger").build()
                             .build()
                         .build(((executionContext, context) -> {
-
+                            context.addMessage("Ate " + executionContext.getString("item"));
                         })),
 
                 Verb.builder("leave")
@@ -132,5 +137,15 @@ public class Game implements GameContext {
                             context.stop();
                         }))
         );
+    }
+
+    @Override
+    public void addMessage(String message) {
+        messages.add(message);
+    }
+
+    @Override
+    public List<String> getMessages() {
+        return Collections.unmodifiableList(messages);
     }
 }

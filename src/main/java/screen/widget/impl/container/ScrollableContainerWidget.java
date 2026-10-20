@@ -17,7 +17,9 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
     @Override
     protected void onPostDraw(DrawContextView context) {
         context.fill(getWidth() - 1, 0, getWidth(), getHeight(), 0x202020);
-        int scrollerY = scroll * getHeight() / (-allHeight + 1);
+        int divide = -allHeight + 1;
+        if (divide == 0 || allHeight == 0) return;
+        int scrollerY = scroll * getHeight() / divide;
 
         final int diff = 1;
         int startY = scrollerY - diff;

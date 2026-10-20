@@ -14,6 +14,8 @@ public interface GameContext {
     void stop();
     List<Verb> getVerbs();
 
+    void addMessage(String message);
+    List<String> getMessages();
 
     void setBattle(Battle battle);
 }
