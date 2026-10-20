@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Java &rarr; UML</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">&lt;{&nbsp;}&gt;</span>
+      <div class="brand-text">
+        <h1>Java &rarr; UML</h1>
+        <p>Upload a zip of Java sources, get a class diagram.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btn-svg" class="btn" type="button" disabled>Export SVG</button>
+      <button id="btn-png" class="btn" type="button" disabled>Export PNG</button>
+      <button id="btn-jpg" class="btn" type="button" disabled>Export JPEG</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <label id="dropzone" class="dropzone" for="file-input">
+        <input id="file-input" type="file" accept=".zip,application/zip,application/x-zip-compressed" hidden />
+        <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 16V4" />
+          <path d="m7 9 5-5 5 5" />
+          <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+        </svg>
+        <strong>Drop a .zip here</strong>
+        <span>or click to browse</span>
+      </label>
+
+      <div id="status" class="status" role="status"></div>
+
+      <div class="zoom">
+        <button id="zoom-out" class="btn ghost" type="button" aria-label="Zoom out">&minus;</button>
+        <span id="zoom-label" class="zoom-label">100%</span>
+        <button id="zoom-in" class="btn ghost" type="button" aria-label="Zoom in">+</button>
+        <button id="zoom-reset" class="btn ghost" type="button">Reset</button>
+      </div>
+
+      <details class="source" id="source-panel">
+        <summary>
+          <span>Mermaid source</span>
+          <button id="copy-source" class="btn ghost tiny" type="button">Copy</button>
+        </summary>
+        <pre id="mermaid-source"></pre>
+      </details>
+    </aside>
+
+    <section id="stage" class="stage">
+      <div id="empty" class="empty">
+        <p>No diagram yet</p>
+        <span>Your class diagram will appear here.</span>
+      </div>
+      <div id="diagram" class="diagram"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
+  <script src="uml-parser.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
