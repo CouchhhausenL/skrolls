@@ -7,9 +7,11 @@ import main.java.screen.widget.impl.ChatMessageWidget;
 import main.java.screen.widget.impl.VerbInputWidget;
 import main.java.screen.widget.impl.container.ScrollableContainerWidget;
 
+// Main exploration screen: scrollable message log on top, verb input at the bottom
 public class MainGameScreen extends Screen {
     private static final int VERB_INPUT_HEIGHT = 6;
 
+    // Cached message log hash to detect changes without rebuilding every frame
     private int lastMessagesCode = 0;
     private GameContext context;
 
@@ -27,6 +29,7 @@ public class MainGameScreen extends Screen {
         addChild(verbInputWidget);
     }
 
+    // Input bar is pinned to the bottom; the log fills the remaining space
     private void positionWidgets() {
         verbInputWidget.setPosition(0, getHeight() - VERB_INPUT_HEIGHT);
         verbInputWidget.setDimensions(getWidth(), VERB_INPUT_HEIGHT);
@@ -36,6 +39,7 @@ public class MainGameScreen extends Screen {
         updateMessages();
     }
 
+    // Rebuilds the log widgets from the current message list
     private void updateMessages() {
         messageContainerWidget.clearChildren();
         for (String message : context.getMessages()) {
@@ -50,6 +54,7 @@ public class MainGameScreen extends Screen {
         positionWidgets();
     }
 
+    // Only rebuild the log when the message list actually changed
     @Override
     protected void onPreDraw(DrawContext context) {
         int newHashCode = this.context.getMessagesHashCode();

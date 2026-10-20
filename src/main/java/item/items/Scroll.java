@@ -6,6 +6,8 @@ import main.java.item.Equippable;
 import main.java.item.Quality;
 import main.java.spell.Spell;
 
+// Equippable wrapper that lets the player cast the contained spell.
+// The name and description are derived from the spell itself.
 public class Scroll extends AbstractItem implements Equippable {
     private final Quality quality;
     private final Spell spell;

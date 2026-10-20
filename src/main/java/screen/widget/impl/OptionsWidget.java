@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// Vertical list of selectable options. The selection is highlighted and
+// activated with SPACE; one option (the first) is selected by default.
 public class OptionsWidget extends Widget {
     private final int color;
 
@@ -20,6 +22,7 @@ public class OptionsWidget extends Widget {
     public OptionsWidget(int x, int y, int width, int height, int color, Map<String, Runnable> rawOptions) {
         super(x, y, width, height);
         this.color = color;
+        // Insertion order of the map determines the display order
         int yIncr = 0;
         for (Map.Entry<String, Runnable> rawOption : rawOptions.entrySet()) {
             LabelWidget widget = new LabelWidget(x, y + yIncr, rawOption.getKey());
@@ -47,6 +50,7 @@ public class OptionsWidget extends Widget {
         if (event.isSpace()) selectedOption.getRunnable().run();
     }
 
+    // Rebuilds the marker prefix of every option to show the selection
     private void setSelectedOption(Option option) {
         for (Option currentOption : options) {
             LabelWidget optionWidget = currentOption.getLabelWidget();
@@ -60,6 +64,7 @@ public class OptionsWidget extends Widget {
         selectedOption = option;
     }
 
+    // Moves the selection, clamped to the ends of the list
     private void offsetSelection(int offset) {
         int newIndex = options.indexOf(selectedOption) + offset;
         if (newIndex < 0) newIndex = 0;

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Player's possessions: a backpack of unequipped items plus the equipped
+// items managed by the EquipmentStore.
 public class Inventory implements VerbSupplier {
     private final List<Item> backpack = new ArrayList<>();
 
@@ -58,6 +60,7 @@ public class Inventory implements VerbSupplier {
         return equipment.getEquipables(EquipmentType.SCROLL);
     }
 
+    // Sums an effect over all equipped items (backpack items do not count)
     public double getCombinedEffect(ItemEffectType itemEffectType) {
         double combinedEffect = 0;
         Staff staff = getStaff();
@@ -74,6 +77,7 @@ public class Inventory implements VerbSupplier {
         return combinedEffect;
     }
 
+    // Returns the higher of the current maximum and the item's quality ordinal
     private int checkItemQuality(Item item, int currentHighest) {
         if (item instanceof MagicItem magicItem) {
             int ordinal = magicItem.getQuality().ordinal();
@@ -84,8 +88,10 @@ public class Inventory implements VerbSupplier {
         return currentHighest;
     }
 
+    // Highest quality across backpack and all equipped items.
+    // Non-magic items (e.g. potions) are ignored.
     public Quality getHighestQualityItem() {
-        int highestOrdinal = -1; // Oder dein bisheriger Initialwert
+        int highestOrdinal = -1; // Starting value below any valid quality ordinal
 
         for (Item item : backpack) {
             highestOrdinal = checkItemQuality(item, highestOrdinal);
@@ -100,6 +106,8 @@ public class Inventory implements VerbSupplier {
         return Quality.values()[highestOrdinal];
     }
 
+    // Moves an item from the backpack into its equipment slot.
+    // Fails if the item is not equippable, not in the backpack or the slot is full.
     public boolean equipItem(Item item) {
         if (!(item instanceof Equippable equippable)) return false;
 
@@ -128,6 +136,8 @@ public class Inventory implements VerbSupplier {
     }
 
 
+    // Unequip verbs for equipped items plus one "equip <item>" verb per
+    // equippable item in the backpack
     @Override
     public List<Verb> getVerbs() {
         List<Verb> verbs = new ArrayList<>();

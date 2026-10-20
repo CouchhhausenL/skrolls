@@ -2,6 +2,9 @@ package main.java.verb;
 
 import java.util.*;
 
+// Resolves parsed parameters to typed values for the execution callback.
+// Values from a variant that only exists in some variants are rejected on
+// access, because they may be absent for other variants at runtime.
 public class VerbExecutionContext {
     private final Map<String, Object> nameParameterValueMap = new HashMap<>();
     private final List<String> nonGlobalNames = new ArrayList<>();
@@ -9,20 +12,19 @@ public class VerbExecutionContext {
     public VerbExecutionContext(Verb verb, VerbVariantAnalysisResult result) {
         if (result == null) return;
 
-        // Add all defaults to the map
+        // Seed the map with every default value of the matched variant
         for (VerbParameter<?> parameter : result.verbVariant().getParameters()) {
             if (parameter.hasDefaultValue() && parameter.hasName())
                 nameParameterValueMap.put(parameter.getName(), parameter.getDefaultValue());
         }
 
-        // Add all specified parameter values to the map
-        // This may overwrite defaults, as expected
+        // Overwrite defaults with the values the user actually typed
         for (VerbParameterAnalysisResult parameterResult : result.parameterResults()) {
             if (!parameterResult.parameter().hasName()) continue;
             nameParameterValueMap.put(parameterResult.parameter().getName(), parameterResult.getValue());
         }
 
-        // Mark all names which do not exist in all variants
+        // Mark names that are not shared by all variants; reading those is unsafe
         for (String name : nameParameterValueMap.keySet()) {
             if (!verb.allVariantsHaveParameterName(name))
                 nonGlobalNames.add(name);

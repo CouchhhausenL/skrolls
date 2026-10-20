@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 
+// Shared combatant state for players and monsters.
+// Stat stages use the -6..+6 scale and are modified independently of the
+// base stats; combat effects may additionally shift the effective stage.
 public abstract class Entity {
     private final String name;
     private int health;
@@ -31,12 +34,14 @@ public abstract class Entity {
         }
     }
 
+    // Returns true while the entity is still alive (health > 0)
     public boolean takeDamage(int amount) {
         health = health - amount;
 
         return (health > 0);
     }
 
+    // Percentage is relative to max health, not current health
     public boolean takePercentualDamage(double percentage) {
         health = (int) (health - (maxHealth * percentage / 100));
 
@@ -56,15 +61,19 @@ public abstract class Entity {
         }
     }
 
+    // Note: percentage is a fraction here (e.g. 0.05 = 5% of max health)
     public void healPercentage(double percentage) {
         health = (int) Math.floor(health + (maxHealth * percentage));
     }
 
+    // Permanently reduces max health by a percentage of the current max
     public void maxHealthPercentageDrain(double percent) {
         maxHealth = (int) Math.min(0, Math.floor(maxHealth - maxHealth * percent / 100));
     }
 
 
+    // Effective stage = stored stage + buff/debuff effect strengths,
+    // clamped to the legal -6..+6 range
     public int getStatStage(Stat stat) {
         int baseStage = statStages.getOrDefault(stat, 0);
         baseStage = baseStage + switch (stat) {
@@ -79,6 +88,8 @@ public abstract class Entity {
         return baseStage;
     }
 
+    // Duration 0 means instant: apply once, then remove the effect.
+    // Periodic effects stay in the list and are handled by applyPeriodicEffects().
     public void applyInstantEffects() {
         List<CombatEffect> instantEffects = combatEffects.stream()
                 .filter(effect -> effect.getDuration() == 0)
@@ -138,6 +149,7 @@ public abstract class Entity {
 
     }
 
+    // Instant effects are consumed immediately; periodic ones remain active
     public void addCombatEffect(CombatEffect combatEffect) {
         combatEffects.add(combatEffect);
         applyInstantEffects();
@@ -147,6 +159,7 @@ public abstract class Entity {
         combatEffects.remove(combatEffect);
     }
 
+    // tickDuration() returns true when the effect expired
     public void tickAllCombatEffects() {
         combatEffects.removeIf(CombatEffect::tickDuration);
     }
@@ -162,6 +175,9 @@ public abstract class Entity {
     }
 
 
+    // Applies all active periodic effects once per round.
+    // Damage is percentage-based (relative to max health); burn weakens over
+    // time while poison worsens. Cursed permanently drains maximum pools.
     public void applyPeriodicEffects() {
         for (CombatEffect combatEffect : combatEffects) {
             CombatEffectType combatEffectType = combatEffect.getCombatEffectType();
@@ -175,6 +191,7 @@ public abstract class Entity {
                         takePercentualDamage(effectStrength + combatEffect.getCurrentRound());
                         break;
                     case CONFUSED:
+                        // Random chance to hurt itself
                         if (Math.random() > 0.5) {
                             takePercentualDamage(effectStrength);
                         }
@@ -190,6 +207,7 @@ public abstract class Entity {
                         break;
 
                     case REGENERATION:
+                        // Regeneration always heals a fixed 5% of max health
                         healPercentage(5);
                         break;
                     case MANA_REGEN:

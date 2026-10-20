@@ -5,6 +5,8 @@ import main.java.console.CellBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+// Immutable animation loaded from a .ska file: shared canvas size,
+// background color, playback speed and per-frame pixel changes.
 public class Animation {
     private final int width;
     private final int height;
@@ -48,10 +50,12 @@ public class Animation {
         getFrame(frame).overlayOntoBuffer(buffer);
     }
 
+    // Resets the playback buffer to a blank canvas with the animation background
     public void initBuffer(CellBuffer buffer) {
         buffer.fill(CellBuffer.EMPTY_CELL, 0xFFFFFF, background);
     }
 
+    // Mutable builder used by SkaParser while frames are read
     public static class Builder {
         private final int width;
         private final int height;

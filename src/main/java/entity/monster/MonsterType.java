@@ -6,6 +6,8 @@ import main.java.MagicType;
 import java.util.List;
 import java.util.function.Supplier;
 
+// Monster catalog. Each entry uses a Supplier so every create() call returns
+// a fresh Monster with independent health/stat state.
 public enum MonsterType {
 
     AXE_ROGUE(() -> new Monster("Axe Rogue", "He loves his axe so much, he has married it.", 200, 60, 70, 60, DifficultyLevel.LOW, MagicType.KINETIC)),
@@ -37,6 +39,7 @@ public enum MonsterType {
     }
 
 
+    // Picks a random monster from the pool matching the requested difficulty
     public static Monster getMonsterByDifficulty(DifficultyLevel difficulty) {
         List<MonsterType> valids = switch (difficulty) {
             case NONE -> null;
@@ -49,6 +52,7 @@ public enum MonsterType {
                     List.of(MonsterType.FELID_SPELLWEAVER, MonsterType.CHAOS_ABOMINATION, MonsterType.HALF_BLOOD_DEMON);
             case EXTREME -> List.of(MonsterType.INFINITY_DRAGON);
         };
+        // NONE has no encounter pool
         if (valids == null) {
             return null;
         }

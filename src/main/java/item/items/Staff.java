@@ -9,6 +9,7 @@ import main.java.item.effects.ItemEffect;
 
 import java.util.List;
 
+// Weapon that also defines the player's attacking magic type and level tier
 public class Staff extends MagicItem implements Equippable {
 
     public Staff(String name, String description, Quality quality, MagicType magicType, List<ItemEffect> itemEffects) {

@@ -12,6 +12,7 @@ import main.java.verb.VerbSupplier;
 
 import java.util.List;
 
+// Access point for screens and verbs to the running Game's state
 public interface GameContext extends VerbSupplier {
 
     void setScreen(Screen screen);

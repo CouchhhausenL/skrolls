@@ -12,6 +12,10 @@ import main.java.spell.spells.*;
 import java.util.List;
 import java.util.function.Supplier;
 
+// Full item catalog, grouped by quality tier.
+// Each entry is a Supplier so create() returns a new instance on every call.
+// Item effects are either flat values (ATTACK, DEFENSE, MAX_HEALTH, ...) or
+// multipliers (DAMAGE, OWN_MAGIC, resistances, e.g. 1.10 = +10%).
 public enum ItemType {
 
     // ==========================================
@@ -516,6 +520,7 @@ public enum ItemType {
         return supplier.get();
     }
 
+    // Returns a random item type from the pool matching the requested quality
     public static ItemType getItemTypeByQuality(Quality quality) {
         List<ItemType> valids = switch (quality) {
             case COMMON -> List.of(
@@ -619,11 +624,13 @@ public enum ItemType {
         return valids.get(random);
     }
 
+    // Convenience: random new item of the given quality (null if none)
     public static Item getItemByQuality(Quality quality) {
         ItemType type = getItemTypeByQuality(quality);
         return type != null ? type.create() : null;
     }
 
+    // Legacy alias kept for callers
     public static Item getItemQuality(Quality quality) {
         return getItemByQuality(quality);
     }

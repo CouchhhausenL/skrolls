@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+// Reads raw terminal bytes on a daemon thread and turns them into InputEvents.
+// Escape sequences are parsed with a small state machine because a single key
+// may arrive as multiple bytes (arrows, alt+key, SGR mouse reports).
 public class InputParser {
     private final NonBlockingReader reader;
 
@@ -35,6 +38,7 @@ public class InputParser {
     }
 
     private void readLoop() {
+        // Reused across keys to hold the middle part of an escape sequence
         List<Integer> parserBuffer = new ArrayList<>();
 
         try {
@@ -43,14 +47,18 @@ public class InputParser {
                 ParserMode mode = ParserMode.NORMAL;
 
                 try {
+                    // read(0) blocks until the first byte of a new key arrives
                     int key = reader.read(0);
 
                     if (key >= 0) {
+                        // read(10) waits briefly for follow-up bytes of the same
+                        // escape sequence; -1 means the sequence is complete
                         while (running && key >= 0) {
                             mode = readKey(mode, key, parserBuffer);
                             key = reader.read(10);
                         }
 
+                        // Flush a lone escape or partial sequence
                         if (running) {
                             readKey(mode, -1, parserBuffer);
                         }
@@ -77,6 +85,8 @@ public class InputParser {
     private static final int SGR_MOUSE_RELEASE_CODE = 'm';
     private static final String SGR_MOUSE_SPLITTER = ";";
 
+    // Consumes one byte and returns the next state.
+    // -1 signals the end of the current escape sequence.
     private ParserMode readKey(ParserMode mode, int key, List<Integer> buffer) {
         // Last iteration
         if (key == -1) {
@@ -85,24 +95,30 @@ public class InputParser {
         }
 
         if (mode == ParserMode.NORMAL) {
+            // ESC may start a sequence; wait for the next byte to decide
             if (key == ESCAPE_CODE) return ParserMode.ESCAPE;
             eventQueue.add(KeyInputEvent.of(key));
             return ParserMode.NORMAL;
         }
         if (mode == ParserMode.ESCAPE) {
+            // ESC ESC is a standalone escape key
             if (key == ESCAPE_CODE) { // Double escape code
                 eventQueue.add(KeyInputEvent.escape());
                 return ParserMode.ESCAPE;
             }
 
+            // CSI (ESC [) and SS3 (ESC O) introduce special keys
             if (key == CSI_CODE) return ParserMode.CSI;
             if (key == SS3_CODE) return ParserMode.SS3;
 
+            // Anything else after ESC is an Alt+key combination
             eventQueue.add(KeyInputEvent.alt(key));
             return ParserMode.NORMAL;
         }
         if (mode == ParserMode.CSI) {
+            // ESC [ < starts an SGR mouse report
             if (key == SGR_MOUSE_CODE) return ParserMode.SGR_MOUSE;
+            // Plain 'M'/'m' is the legacy X10 mouse encoding, unsupported here
             if (key == SGR_MOUSE_PRESS_CODE || key == SGR_MOUSE_RELEASE_CODE)
                 throw new RuntimeException("Terminal emulator does not support SGR encoding");
         }
@@ -126,8 +142,10 @@ public class InputParser {
         }
 
 
+        // SGR mouse payload: ESC [ < button;x;y M (press) or m (release)
         if (mode == ParserMode.SGR_MOUSE) {
             if (key == SGR_MOUSE_PRESS_CODE || key == SGR_MOUSE_RELEASE_CODE) {
+                // Collect the "button;x;y" parameters seen since ESC [ <
                 StringBuilder builder = new StringBuilder();
                 for (int entry : buffer) {
                     builder.append((char) entry);

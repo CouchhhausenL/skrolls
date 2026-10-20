@@ -13,6 +13,7 @@ import main.java.util.SkaParser;
 
 import java.util.LinkedHashMap;
 
+// Title screen with the animated logo and Start/Exit options
 public class MainMenuScreen extends Screen {
     private OptionsWidget optionsWidget;
 

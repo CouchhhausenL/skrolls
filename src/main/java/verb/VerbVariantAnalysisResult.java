@@ -2,6 +2,8 @@ package main.java.verb;
 
 import java.util.List;
 
+// Outcome of analyzing input against one VerbVariant.
+// Type encodes both how complete the parse is and why it stopped.
 public record VerbVariantAnalysisResult(
         Type type,
         VerbVariant verbVariant,
@@ -20,19 +22,20 @@ public record VerbVariantAnalysisResult(
         return type.getValidity() == Validity.NONE;
     }
 
+    // Number of input words this parse accounted for (0 if no parameter matched)
     public int getConsumedWordCount() {
         return parameterResults.getLast().endWord() + 1;
     }
 
     public enum Type {
-        FULL(Validity.FULL),
-        FULL_DEFAULT(Validity.FULL),
+        FULL(Validity.FULL),           // all parameters matched explicitly
+        FULL_DEFAULT(Validity.FULL),   // remaining parameters filled by defaults
 
-        PARTIAL_MISSING_PARAMETERS(Validity.PARTIAL),
-        PARTIAL_INCOMPLETE_PARAMETER(Validity.PARTIAL),
+        PARTIAL_MISSING_PARAMETERS(Validity.PARTIAL),  // more parameters required
+        PARTIAL_INCOMPLETE_PARAMETER(Validity.PARTIAL), // last parameter unterminated
 
-        NONE_TOO_MANY_WORDS(Validity.NONE),
-        NONE_NO_MATCH(Validity.NONE);
+        NONE_TOO_MANY_WORDS(Validity.NONE), // input has extra trailing words
+        NONE_NO_MATCH(Validity.NONE);       // a parameter did not match at all
 
         private final Validity validity;
 

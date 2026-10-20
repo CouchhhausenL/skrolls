@@ -6,6 +6,7 @@ import main.java.item.effects.ItemEffectType;
 
 import java.util.List;
 
+// Item with a quality tier, a magic affinity and a list of stat effects
 public abstract class MagicItem extends AbstractItem {
     private final Quality quality;
     private final MagicType magicType;
@@ -27,6 +28,7 @@ public abstract class MagicItem extends AbstractItem {
         return itemEffects;
     }
 
+    // Sums every effect of the requested type (0 if none present)
     public double getItemEffectStrength(ItemEffectType effectType) {
         double itemEffectStrength = 0;
         for (ItemEffect currentEffect : itemEffects) {

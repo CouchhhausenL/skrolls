@@ -1,5 +1,7 @@
 package main.java.item.effects;
 
+// One active effect on an entity. A duration of 0 marks an instant effect;
+// periodic effects decrement duration each round and track currentRound.
 public class CombatEffect {
     private final CombatEffectType combatEffectType;
     private int duration;
@@ -25,6 +27,7 @@ public class CombatEffect {
         return currentRound;
     }
 
+    // Returns true when the effect has expired and should be removed
     public boolean tickDuration() {
         duration = duration - 1;
         currentRound++;

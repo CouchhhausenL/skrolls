@@ -9,6 +9,7 @@ public final class ConsoleTerminalFactory {
     private ConsoleTerminalFactory() {
     }
 
+    // Attaches to the host terminal and installs the shared setup/cleanup
     public static TerminalHolder create() throws IOException {
         Terminal terminal = TerminalBuilder.terminal();
 

@@ -6,6 +6,8 @@ import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 import main.java.util.Color;
 
+// Multi-line text label. In "fancy" mode the text types itself out one
+// character at a time, using displayedCharCount as the reveal progress.
 public class LabelWidget extends Widget {
     private String content;
     private boolean fancyMode;
@@ -53,6 +55,7 @@ public class LabelWidget extends Widget {
 
     @Override
     public void onDraw(DrawContextView context) {
+        // Reveal at most one extra character once the delay has elapsed
         if (fancyMode) {
             long now = System.currentTimeMillis();
             if (now - lastTime > fancyCharDelayTime && displayedCharCount < content.length()) {
@@ -63,6 +66,7 @@ public class LabelWidget extends Widget {
 
         String textToDraw = fancyMode ? content.substring(0, displayedCharCount) : content;
 
+        // Split on \n (keeping trailing empties) and draw line by line
         String[] lines = textToDraw.split("\n", -1);
         int y = 0;
         for (String line : lines) {

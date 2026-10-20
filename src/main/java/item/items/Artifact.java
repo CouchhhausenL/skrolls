@@ -9,6 +9,7 @@ import main.java.item.effects.ItemEffect;
 
 import java.util.List;
 
+// Accessory slot (max 3) providing passive stat effects
 public class Artifact extends MagicItem implements Equippable {
     public Artifact(String name, String description, Quality quality, MagicType magicType, List<ItemEffect> itemEffects) {
         super(name, description, quality, magicType, itemEffects);

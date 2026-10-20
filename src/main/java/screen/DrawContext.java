@@ -5,6 +5,9 @@ import main.java.console.Console;
 
 import java.util.Stack;
 
+// Drawing surface for a frame. Supports a translation+size limit (set by
+// Widget.draw) and a stack of scissor rectangles for clipped containers.
+// All coordinates are relative to that limit.
 public class DrawContext implements DrawContextView {
     private final CellBuffer buffer;
     private final ScissorStack scissorStack = new ScissorStack();
@@ -48,13 +51,17 @@ public class DrawContext implements DrawContextView {
         if (scissorStack.size() > 0) throw new IllegalStateException("ScissorStack is not empty");
     }
 
+    // All drawing funnels through here so limits, translation, scissor and
+    // buffer bounds are enforced in one place
     @Override
     public void cell(int x, int y, char character, int foreground, int background) {
+        // Reject coordinates outside the current widget's local size (0 disables)
         if (width != 0 && height != 0) {
             // >= because 0 is also inside
             if (x >= width || y >= height) return;
         }
 
+        // Widget-local -> screen coordinates
         x += offsetX;
         y += offsetY;
         if (scissorStack.isCutOff(x, y)) return;
@@ -69,6 +76,7 @@ public class DrawContext implements DrawContextView {
         cell(x, y, ' ', 0, background);
     }
 
+    // Half-open rectangle: x1/y1 inclusive, x2/y2 exclusive
     @Override
     public void fill(int x1, int y1, int x2, int y2, char character, int foreground, int background) {
         for (int x = x1; x < x2; x++) {
@@ -95,6 +103,7 @@ public class DrawContext implements DrawContextView {
         drawString(x, y, string, foreground, CellBuffer.TRANSPARENT_BACKGROUND);
     }
 
+    // Blits a buffer at an offset, skipping empty cells
     @Override
     public void drawBuffer(int rootX, int rootY, CellBuffer buffer) {
         for (int x = 0; x < buffer.getWidth(); x++) {
@@ -109,6 +118,7 @@ public class DrawContext implements DrawContextView {
         }
     }
 
+    // Scissor rectangles are stored in screen space, so the offset is applied here
     @Override
     public void pushScissor(int x1, int y1, int x2, int y2) {
         scissorStack.push(x1 + offsetX, y1 + offsetY, x2 + offsetX, y2 + offsetY);
@@ -138,6 +148,8 @@ public class DrawContext implements DrawContextView {
             return stack.size();
         }
 
+        // Clipped if the point lies outside any active scissor rectangle
+        // (rectangles are intersected by requiring all of them to contain it)
         public boolean isCutOff(int x, int y) {
             if (stack.isEmpty()) return false;
 

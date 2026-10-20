@@ -3,6 +3,7 @@ package main.java.verb;
 import java.util.ArrayList;
 import java.util.List;
 
+// Parameter accepting an integer within an inclusive [min, max] range
 public class IntegerVerbParameter extends VerbParameter<Integer> {
     private final int min;
     private final int max;
@@ -33,6 +34,7 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
         throw new IllegalArgumentException("input is invalid");
     }
 
+    // Empty input is a valid prefix of any number (PARTIAL)
     @Override
     public VerbParameterMatchResult validate(String input) {
         if (input.isEmpty())

@@ -5,6 +5,7 @@ import main.java.console.input.MouseInputEvent;
 import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 
+// Clickable filled rectangle with a label; fires onClick() on mouse release
 public class ButtonWidget extends Widget {
     private String text;
     private OnClick onClick = null;
@@ -30,6 +31,7 @@ public class ButtonWidget extends Widget {
 
     @Override
     public void onDraw(DrawContextView context) {
+        // Brighter background while hovered
         context.fill(0, 0, getWidth(), getHeight(), isHovered() ? 0xFFFFFF : 0xB0B0B0);
         context.drawString(0, getHeight() / 2, text, 0);
     }

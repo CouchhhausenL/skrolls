@@ -7,6 +7,8 @@ import main.java.item.effects.CombatEffect;
 
 import java.util.List;
 
+// Consumable that applies its combat effects when drunk.
+// Fields are public because only Entity.drinkPotion() reads them.
 public class Potion extends AbstractItem {
     public final Quality quality;
     public final MagicType magicType;

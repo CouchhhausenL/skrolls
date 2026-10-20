@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Central game loop and state holder. Owns the active screen, battle,
+// player, scene and the message log, and pumps input/render each tick.
 public class Game implements GameContext {
     public static final int MIN_WIDTH = 80;
     public static final int MIN_HEIGHT = 30;
@@ -45,12 +47,14 @@ public class Game implements GameContext {
         drawContext = new DrawContext(console.getWidth(), console.getHeight());
     }
 
+    // Switching screens re-initializes only if the screen was not initialized yet
     public void setScreen(Screen screen) {
         screen.setDimensions(console.getWidth(), console.getHeight());
         screen.tryInit(this);
         this.screen = screen;
     }
 
+    // Main loop: handle resize, drain input, draw, then present to the console
     public void run() {
         running = true;
         while (running) {
@@ -67,11 +71,13 @@ public class Game implements GameContext {
             final boolean isHeightTooLow = console.getHeight() < MIN_HEIGHT;
             final boolean isTooSmall = isWidthTooLow || isHeightTooLow;
 
+            // Drain all pending input before drawing so the frame reflects it
             if (screen != null && !isTooSmall) {
                 while (true) {
                     InputEvent event = console.drainEvent();
                     if (event == null) break;
 
+                    // Ctrl+Q is a global quit shortcut
                     if (event instanceof KeyInputEvent key && key.isCtrl(KeyInputEvent.Letter.Q))
                         stop();
 
@@ -86,11 +92,13 @@ public class Game implements GameContext {
                 drawContext.drawString(1, 4, "y: " + console.getHeight() + " / " + MIN_HEIGHT, isHeightTooLow ? Color.RED : Color.GREEN);
             }
 
+            // Clear, blit the draw context, present and reset for the next frame
             console.writeFill(0);
             drawContext.writeToConsole(console);
             console.render();
             drawContext.clear();
 
+            // Small sleep caps the loop at roughly 200 FPS
             try {
                 Thread.sleep(5);
             } catch (InterruptedException e) {
@@ -131,6 +139,7 @@ public class Game implements GameContext {
         return player.getInventory().getScrolls().stream().map(Scroll::getSpell).toList();
     }
 
+    // Leaving a battle successfully returns the player to the map
     @Override
     public void fleeFromBattle() {
         if (battle.tryFlee()) {
@@ -173,6 +182,8 @@ public class Game implements GameContext {
     }
 
 
+    // Rebuilt every keystroke by the verb input widget: global verbs,
+    // scene exits (when a scene is active) and inventory equip/unequip verbs
     @Override
     public List<Verb> getVerbs() {
         List<Verb> verbs = new ArrayList<>();
@@ -201,6 +212,7 @@ public class Game implements GameContext {
                         setScreen(new InventoryScreen());
                 })));
 
+        // One "go <exit>" verb per exit of the current scene
         if (scene != null) {
             scene.getExits().getExits().iterator().forEachRemaining(exit -> {
                 String name = exit.getDisplayName() + " [" + exit.getId() + "]";

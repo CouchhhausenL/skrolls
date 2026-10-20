@@ -2,6 +2,8 @@ package main.java.animation;
 
 import main.java.console.CellBuffer;
 
+// Advances an Animation over time and composites each frame into its own buffer.
+// Timing is based on System.nanoTime() and does not accumulate drift.
 public class AnimationPlayer {
     private static final long ONE_SECOND_IN_NANO = 1_000_000_000L;
 
@@ -70,6 +72,7 @@ public class AnimationPlayer {
         if (paused) return;
         long now = System.nanoTime();
 
+        // Advance at most one frame per update; the next update catches up
         if (now - lastFrameTime > frameDuration) {
             if (isLastFrame()) {
                 if (!looping) return;

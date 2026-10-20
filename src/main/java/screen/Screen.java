@@ -10,6 +10,8 @@ import main.java.screen.widget.impl.AnimationWidget;
 import java.util.ArrayList;
 import java.util.List;
 
+// A full-screen view made of widgets. Subclasses populate widgets in init()
+// and receive input/resize callbacks; drawing and input dispatch are final.
 public abstract class Screen {
     private final List<Widget> widgets = new ArrayList<>();
     private int width = 0;
@@ -50,9 +52,11 @@ public abstract class Screen {
 
     public final void draw(DrawContext context) {
         onPreDraw(context);
+        // Snapshot the list because widgets may add/remove themselves while drawing
         for (Widget widget : new ArrayList<>(widgets)) {
             widget.draw(context);
         }
+        // Every pushed scissor must have been popped by its widget
         context.throwIfScissorStackInvalid();
         onPostDraw(context);
     }
@@ -91,6 +95,7 @@ public abstract class Screen {
         boolean hoveredFound = false;
         for (int i = snapshot.size() - 1; i >= 0; i--) {
             Widget widget = snapshot.get(i);
+            // Skip widgets whose bounds do not contain the cursor
             if (!(
                     x >= widget.getX() && x < widget.getX() + widget.getWidth() &&
                             y >= widget.getY() && y < widget.getY() + widget.getHeight()
@@ -99,6 +104,7 @@ public abstract class Screen {
                 continue;
             }
 
+            // The first (topmost) widget under the cursor is the hovered one
             if (!hoveredFound) {
                 hoveredFound = true;
                 widget.setHovered(true);
@@ -106,6 +112,7 @@ public abstract class Screen {
                 widget.setHovered(false);
             }
 
+            // Rebase the event coordinates to widget-local space
             widget.onMouseInput(new MouseInputEvent(
                     type,
                     x - widget.getX(),
@@ -117,6 +124,7 @@ public abstract class Screen {
 
     public abstract void onResize();
 
+    // Centers a widget on the screen
     protected void autoPositionWidget(AnimationWidget widget) {
         final int width = widget.getWidth();
         final int height = widget.getHeight();

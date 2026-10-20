@@ -14,6 +14,8 @@ import main.java.util.SkaParser;
 import java.util.EnumMap;
 import java.util.Map;
 
+// Pannable, zoomable map. Three pre-rendered zoom levels are swapped in/out
+// of the widget list; offsets are scaled when the zoom changes.
 public class MapScreen extends Screen {
     private GameContext context;
 
@@ -28,6 +30,7 @@ public class MapScreen extends Screen {
     protected void init(GameContext context) {
         this.context = context;
 
+        // Load one map image per zoom level (map1.ska, map2.ska, map3.ska)
         for (Zoom zoom : Zoom.values()) {
             Animation animation = SkaParser.parse("map/map" + (zoom.ordinal() + 1) + ".ska");
             AnimationWidget widget = new AnimationWidget(0, 0, animation);
@@ -47,6 +50,7 @@ public class MapScreen extends Screen {
         if (event.isChar('+')) zoomIn();
         if (event.isChar('-')) zoomOut();
 
+        // WASD and arrows pan; horizontal movement is doubled to match map aspect
         if (event.isArrow(KeyInputEvent.Direction.UP) || event.isChar(KeyInputEvent.Letter.W)) changeOffsets(0, 1);
         if (event.isArrow(KeyInputEvent.Direction.DOWN) || event.isChar(KeyInputEvent.Letter.S)) changeOffsets(0, -1);
         if (event.isArrow(KeyInputEvent.Direction.LEFT) || event.isChar(KeyInputEvent.Letter.A)) changeOffsets(2, 0);
@@ -59,6 +63,7 @@ public class MapScreen extends Screen {
 
         if (event.type() == MouseInputEvent.Type.SCROLL_UP) zoomIn();
         if (event.type() == MouseInputEvent.Type.SCROLL_DOWN) zoomOut();
+        // Track a press and pan relative to the previous drag position
         if (event.type() == MouseInputEvent.Type.PRESS) mouseDownPoint = clickPoint;
         if (event.type() == MouseInputEvent.Type.MOVE && mouseDownPoint != null) {
             drag(mouseDownPoint, clickPoint);
@@ -72,6 +77,7 @@ public class MapScreen extends Screen {
     }
 
     private void setZoom(Zoom zoom) {
+        // Only the active zoom level's widget is attached
         for (Zoom currentZoom : Zoom.values()) {
             AnimationWidget widget = widgetMap.get(currentZoom);
 
@@ -83,6 +89,7 @@ public class MapScreen extends Screen {
         }
 
 
+        // Rescale the pan offset so the same map point stays centered
         if (this.zoom != null) {
             double offsetFactor =
                     (double) zoom.getFactor() / this.zoom.getFactor();
@@ -116,6 +123,7 @@ public class MapScreen extends Screen {
         positionWidgets();
     }
 
+    // Centers every zoom widget and applies the pan offset
     private void positionWidgets() {
         for (Zoom zoom : Zoom.values()) {
             AnimationWidget widget = widgetMap.get(zoom);
@@ -143,6 +151,7 @@ public class MapScreen extends Screen {
         context.drawString(1, getHeight() - 2, "Press escape to exit", Color.WHITE);
     }
 
+    // factor is the scale relative to the base map image
     enum Zoom {
         OUT(1),
         MID(2),

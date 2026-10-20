@@ -4,6 +4,8 @@ import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;
 
+// A single monster instance. The same MagicType is used for both attacking
+// and defending because monsters only have one affinity.
 public class Monster extends Entity {
     private final String description;
     private final MagicType magicType;
@@ -20,6 +22,7 @@ public class Monster extends Entity {
         this.difficulty = difficulty;
     }
 
+    // Placeholder: attacks are currently driven by Battle.damagePlayer()
     public void attack() {
 
     }

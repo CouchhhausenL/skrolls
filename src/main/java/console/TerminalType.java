@@ -5,6 +5,7 @@ import main.java.console.factory.TerminalHolder;
 
 import java.io.IOException;
 
+// Which kind of terminal to create: the host console or a Swing window
 public enum TerminalType {
     CONSOLE,
     WINDOW;

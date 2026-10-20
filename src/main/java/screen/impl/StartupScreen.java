@@ -8,6 +8,8 @@ import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.util.SkaParser;
 
+// Plays the intro animation once, then moves to the main menu.
+// Can be skipped early with [F].
 public class StartupScreen extends Screen {
     private AnimationWidget animationWidget;
     private LabelWidget skipHintWidget;
@@ -15,6 +17,7 @@ public class StartupScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+        // Shared completion callback for both natural end and skip
         endStartup = () -> {
             context.setScreen(new MainMenuScreen());
         };

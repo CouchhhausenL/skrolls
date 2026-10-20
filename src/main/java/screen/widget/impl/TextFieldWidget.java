@@ -3,10 +3,12 @@ package main.java.screen.widget.impl;
 import main.java.screen.DrawContextView;
 import main.java.util.Color;
 
+// Concrete text field with a placeholder and configurable colors
 public class TextFieldWidget extends AbstractTextFieldWidget {
     private String placeholder;
     private final Colors colors;
 
+    // background, cursor, placeholder, content
     public static final Colors DEFAULT_COLORS = new Colors(
             0x101010,
             0x404040,
@@ -39,6 +41,7 @@ public class TextFieldWidget extends AbstractTextFieldWidget {
     @Override
     public void onDraw(DrawContextView context) {
         context.fill(0, 0, getWidth(), getHeight(), colors.background());
+        // Show the placeholder (with a cursor block) while the field is empty
         if (getContent().isEmpty()) {
             context.cell(0, 0, colors.cursor());
             context.drawString(0, 0, placeholder, colors.placeholder());

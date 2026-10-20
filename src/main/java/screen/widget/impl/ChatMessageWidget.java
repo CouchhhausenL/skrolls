@@ -9,6 +9,8 @@ import main.java.util.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+// Word-wrapping message line. The widget grows in height to fit the wrapped
+// text, splitting words that are longer than the available width.
 public class ChatMessageWidget extends Widget {
     private final String content;
 
@@ -29,6 +31,7 @@ public class ChatMessageWidget extends Widget {
         List<String> lines = new ArrayList<>();
 
         // keep \n
+        // -1 preserves trailing empty paragraphs so blank lines survive
         String[] paragraphs = content.split("\n", -1);
 
         for (String paragraph : paragraphs) {
@@ -68,6 +71,7 @@ public class ChatMessageWidget extends Widget {
             }
         }
 
+        // Final height matches the number of wrapped lines
         setHeight(lines.size());
 
         for (int i = 0; i < lines.size(); i++) {

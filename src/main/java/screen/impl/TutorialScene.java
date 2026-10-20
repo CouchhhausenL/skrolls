@@ -8,6 +8,7 @@ import main.java.item.ItemType;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.DialogWidget;
 
+// Step-by-step tutorial dialog that hands out starter gear and a test battle
 public class TutorialScene extends Screen {
 
 
@@ -26,6 +27,7 @@ public class TutorialScene extends Screen {
                 "Do you want to equip it?",
                 DialogWidget.AnswerType.BOOLEAN,
                 () -> {
+                    // "No" sends the dialog back so the question repeats
                     if (dialogWidget.getEnteredBoolean()) {
 
                         Item commonStaff = ItemType.COMMON_STAFF.create();
@@ -45,6 +47,7 @@ public class TutorialScene extends Screen {
             context.equipItem(commonHealthAmulett);
 
         }));
+        // Last step sets up the battle; completing the dialog enters the fight
         dialogWidget.addDialogItem(new DialogWidget.DialogItem("Lets try fighting your first Battle", DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.ORK.create())));
 
 

@@ -1,48 +1,44 @@
 package main.java.item.effects;
 
+// All combat effects and whether they recur every round (periodic)
+// or fire once when applied (instant / special).
 public enum CombatEffectType {
 
-    // ---------- Stat Stage Buffs ---------- -6 to +6
+    // ---------- Stat Stage Buffs: shift a stage by -6..+6 ----------
+    SPEED(false),                // more initiative
+    STRENGTH(false),             // more attack
+    RESISTANCE(false),           // more defense
 
-    SPEED(false),                // increased initiative/speed
-    STRENGTH(false),             // increased attack
-    RESISTANCE(false),  // increased defense
+    // ---------- Stat Stage Debuffs: negative stage shifts ----------
+    SLOWNESS(false),             // less initiative
+    WEAKNESS(false),             // less attack
+    Vulnerability(false),        // less defense
 
-    // -------- Stat Stage Debuffs ------ -6 to +6
-    SLOWNESS(false),
-    WEAKNESS(false),
-    Vulnerability(false),
+    // ---------- Periodic Effects: applied at the start of each round ----------
+    REGENERATION(true),          // heals a fixed percentage of max health
 
-    // --Periodic Effects ---
+    MANA_REGEN(true),            // restores mana
 
-    REGENERATION(true),         // healing over time
+    // ---------- Instant Effects: applied once, then removed ----------
+    HEALING(false),              // flat healing
+    MANA_RESTORE(false),         // flat mana restoration
 
-    MANA_REGEN(true),            // mana over time
+    DAMAGE(false),               // flat damage
 
+    DISPEL(false),               // removes all periodic effects
 
-    // --- Instant Effects ----
-    HEALING(false),              // instant healing
-    MANA_RESTORE(false),         // instant mana restoration
+    // ---------- Special Effects ----------
+    CRITICAL_FOCUS(false),       // raises crit chance, level 1..5
+    FOCUS(false),                // reduces spell mana cost
+    CLEANSE(false),              // resets all stat stages to 0
 
-    DAMAGE(false), //instant Damage
-
-    DISPEL(false), // dispel all periodic Status Effects
-
-
-    // Special Effects
-
-    CRITICAL_FOCUS(false),       // higher crit chance 1 - 5
-    FOCUS(false),                // spells cost less mana
-    CLEANSE(false),              // All Stat Changes go back to 1
-
-
-    //Status Effects
-    BURNED(true), // damage Every Round fixed value
-    POISONED(true), // damage Every Round per percent and gets worse
-    FROZEN(false), //halves speed
-    CONFUSED(true), // chance to hit yourself
-    BLEEDING(true), // damage Every Round
-    CURSED(true), // max health and max mana go down every round
+    // ---------- Status Effects ----------
+    BURNED(true),                // fixed percentage damage every round, weakens over time
+    POISONED(true),              // percentage damage every round, worsens over time
+    FROZEN(false),               // halves speed
+    CONFUSED(true),              // random chance to damage itself
+    BLEEDING(true),              // percentage damage every round
+    CURSED(true),                // drains max health and max mana every round
     ;
     private final boolean periodic;
 

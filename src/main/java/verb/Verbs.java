@@ -8,6 +8,8 @@ public final class Verbs {
     private Verbs() {
     }
 
+    // Keeps only fully valid results (or partially valid ones when allowed),
+    // then returns those that consumed the most input words.
     public static List<VerbVariantAnalysisResult> findBestResults(List<VerbVariantAnalysisResult> results, boolean includePartial) {
 
         // Only elements which are fully (or partially) valid are kept

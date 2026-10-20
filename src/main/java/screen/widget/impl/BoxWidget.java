@@ -5,6 +5,8 @@ import main.java.console.input.MouseInputEvent;
 import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 
+// Draws a simple ASCII rectangle border in a given color.
+// Width/height below 2 produce no output.
 public class BoxWidget extends Widget {
     private final int color;
 

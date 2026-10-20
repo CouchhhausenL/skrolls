@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+// One parameter layout of a Verb. analyze() tries every way of splitting the
+// input across the parameters and yields all plausible parses (backtracking).
 public class VerbVariant {
     private final List<VerbParameter<?>> parameters;
 
@@ -14,6 +16,7 @@ public class VerbVariant {
 
     public List<VerbVariantAnalysisResult> analyze(String input) {
         String[] words = input.stripTrailing().split("\\s+");
+        // A trailing space means the user started a new (empty) word
         if (input.endsWith(" ")) {
             words = Arrays.copyOf(words, words.length + 1);
             words[words.length - 1] = "";
@@ -84,6 +87,9 @@ public class VerbVariant {
         VerbParameter<?> parameter = parameters.getFirst();
         List<VerbParameterAnalysisResult> possibilities = new ArrayList<>();
 
+        // Greedily grow the slice covering the current parameter.
+        // PARTIAL / MATCH_AND_PARTIAL results mean a longer slice could
+        // still match, so keep extending word by word.
         while (true) {
             // The current slice of the input
             String currentSlice = getWordsSlice(words, startWord, wordCount);
@@ -107,6 +113,8 @@ public class VerbVariant {
             if (result == VerbParameterMatchResult.MATCH) break;
 
             // If it was PARTIAL or MATCH_AND_PARTIAL, continue to potentially discover more
+            // Extend the slice; if it would run past the end, record a PARTIAL
+            // parse and stop
             wordCount++;
             if (startWord + wordCount - 1 > words.length - 1) { // Double - 1 is easier to understand
                 possibilities.add(new VerbParameterAnalysisResult(
@@ -122,7 +130,7 @@ public class VerbVariant {
 
         List<VerbVariantAnalysisResult> analysisResults = new ArrayList<>();
 
-        // The loop found nothing (broke before matching)
+        // The loop found nothing (broke before matching), so this branch fails
         if (possibilities.isEmpty()) analysisResults.add(new VerbVariantAnalysisResult(
                 VerbVariantAnalysisResult.Type.NONE_NO_MATCH,
                 this,

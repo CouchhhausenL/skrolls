@@ -2,6 +2,8 @@ package main.java.screen;
 
 import main.java.console.CellBuffer;
 
+// Read-only drawing surface exposed to widgets, so they cannot access the
+// underlying buffer or mutate the context directly
 public interface DrawContextView {
     void cell(int x, int y, char character, int foreground, int background);
 

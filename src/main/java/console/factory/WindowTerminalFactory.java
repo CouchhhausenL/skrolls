@@ -32,6 +32,8 @@ public final class WindowTerminalFactory {
             throw new RuntimeException(e);
         }
 
+        // Cell size is needed to convert Swing pixel coordinates to terminal cells.
+        // 'M' is used as a representative monospace glyph width.
         FontMetrics fm = component.getFontMetrics(
                 component.getTerminalFont()
         );
@@ -39,6 +41,7 @@ public final class WindowTerminalFactory {
         int cellWidth = fm.charWidth('M');
         int cellHeight = fm.getHeight();
 
+        // Keep the terminal grid in sync when the window is resized
         component.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -53,9 +56,12 @@ public final class WindowTerminalFactory {
             }
         });
 
+        // Swing does not emit terminal input, so mouse events are re-encoded as
+        // SGR mouse sequences and fed back into the terminal's input stream
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
+                // 64/65 are the SGR wheel up/down button codes
                 int button = e.getWheelRotation() < 0 ? 64 : 65;
                 sendSgrMouse(button, 'M', e.getX(), e.getY());
             }
@@ -72,11 +78,13 @@ public final class WindowTerminalFactory {
 
             @Override
             public void mouseMoved(MouseEvent e) {
+                // 35 = motion flag (32) + "no button" (3)
                 sendSgrMouse(35, 'M', e.getX(), e.getY());
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
+                // Motion flag (32) combined with the held button
                 sendSgrMouse(32 | buttonCode(e.getModifiersEx()), 'M', e.getX(), e.getY());
             }
 
@@ -85,6 +93,7 @@ public final class WindowTerminalFactory {
                     return;
                 }
 
+                // SGR coordinates are 1-based cell positions
                 int x = pixelX / cellWidth + 1;
                 int y = pixelY / cellHeight + 1;
 
@@ -97,6 +106,7 @@ public final class WindowTerminalFactory {
                 }
             }
 
+            // Maps Swing button masks to SGR button numbers
             private int buttonCode(int button) {
                 return switch (button) {
                     case MouseEvent.BUTTON1 -> 0;
@@ -111,13 +121,14 @@ public final class WindowTerminalFactory {
         component.addMouseMotionListener(mouseAdapter);
         component.addMouseWheelListener(mouseAdapter);
 
+        // Re-encode modifier keys as the control characters a real terminal sends
         component.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
 
                 if (e.isAltDown()) {
-                    send('\033'); // Escape
+                    send('\033'); // Escape prefix
                     return;
                 }
 
@@ -125,6 +136,7 @@ public final class WindowTerminalFactory {
                     if ((int) c < 27) {
                         send(c);
                     } else if (c >= 'a' && c <= 'z') {
+                        // Ctrl+A..Z produce 0x01..0x1A
                         send((char) (c - 'a' + 1));
                     } else if (c >= 'A' && c <= 'Z') {
                         send((char) (c - 'A' + 1));
@@ -155,7 +167,9 @@ public final class WindowTerminalFactory {
     }
 
 
-    // Uses java reflection to hide blinking cursor in swing emulator
+    // Uses java reflection to hide blinking cursor in swing emulator.
+    // SwingTerminal has no public API for this, so both the blink timer and the
+    // visibility flag are cleared directly.
     private static void setCursorInvisible(SwingTerminal.TerminalComponent component) throws NoSuchFieldException, IllegalAccessException {
         Class<? extends SwingTerminal.TerminalComponent> clazz = component.getClass();
 

@@ -42,6 +42,8 @@ public final class KeyInputEvent implements InputEvent {
         DELETE
     }
 
+    // Classifies a raw byte. Several control codes are aliases because terminals
+    // and emulators report the same physical key differently.
     public static KeyInputEvent of(int code) {
 
         if (code == 9) return tab(); // Also ctrl + I
@@ -50,6 +52,7 @@ public final class KeyInputEvent implements InputEvent {
         if (code == 126) return delete();
         if (code == 10 || code == 13) return enter(); //Also ctrl + J / Ctrl + M
         if (code == 27) return escape();
+        // Remaining values below 27 are Ctrl+letter / control characters
         if (code < 27) return control(code);
 
         return character(code);
@@ -103,6 +106,8 @@ public final class KeyInputEvent implements InputEvent {
         return new KeyInputEvent(Type.DELETE, 126);
     }
 
+    // Letter enum order is A=0, B=1, ... so it doubles as an alphabet offset.
+    // Ctrl+letter is encoded as 0x01..0x1A (A=1, B=2, ...).
     private boolean isLetter(Letter letter) {
         int ord = letter.ordinal();
         return

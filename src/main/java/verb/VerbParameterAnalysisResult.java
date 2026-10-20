@@ -1,5 +1,7 @@
 package main.java.verb;
 
+// Result of matching one parameter against a slice of the input.
+// startWord/endWord delimit the inclusive word range that was consumed.
 public record VerbParameterAnalysisResult(
         VerbParameter<?> parameter,
         Validity validity,

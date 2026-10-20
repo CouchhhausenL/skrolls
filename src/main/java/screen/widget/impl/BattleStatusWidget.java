@@ -6,6 +6,7 @@ import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 import main.java.util.Color;
 
+// Fixed-size bordered box showing a combatant's name and a 20-cell health bar
 public class BattleStatusWidget extends Widget {
     private final String name;
     private int health;
@@ -39,6 +40,7 @@ public class BattleStatusWidget extends Widget {
         context.drawString(1, 2, calculateHealthBar(), Color.GREEN);
     }
 
+    // Filled cells proportional to current/max health, clamped to the bar width
     private String calculateHealthBar() {
         int barWidth = 20;
         int filled = maxHealth > 0 ? (health * barWidth) / maxHealth : 0;

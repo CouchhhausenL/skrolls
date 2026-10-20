@@ -5,6 +5,8 @@ import main.java.console.input.MouseInputEvent;
 import main.java.screen.DrawContext;
 import main.java.screen.DrawContextView;
 
+// Base UI element with a position/size. draw() installs the widget's
+// rectangle as the draw limit so subclasses work in local coordinates.
 public abstract class Widget {
     private int x;
     private int y;
@@ -71,6 +73,7 @@ public abstract class Widget {
         setY(y);
     }
 
+    // Limits translate drawing into this widget's space and also clip its size
     public void draw(DrawContext context) {
         try {
             context.setLimits(getX(), getY(), getWidth(), getHeight());

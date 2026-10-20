@@ -9,8 +9,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Enum-like registry of equipment slots. Implemented as a class with static
+// instances so each constant can carry its own generic Equippable subtype.
 public final class EquipmentType<T extends Equippable> {
 
+    // Preserves declaration order for values()
     private static final List<EquipmentType<?>> VALUES = new ArrayList<>();
 
     public static final EquipmentType<Armor> ARMOR =

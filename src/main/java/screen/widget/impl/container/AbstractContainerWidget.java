@@ -10,6 +10,8 @@ import main.java.screen.widget.Widget;
 import java.util.ArrayList;
 import java.util.List;
 
+// Widget that hosts child widgets. Children are drawn clipped to the
+// container's bounds and receive input distributed in topmost-first order.
 public abstract class AbstractContainerWidget extends Widget {
     protected List<Widget> widgets = new ArrayList<Widget>();
 
@@ -31,7 +33,9 @@ public abstract class AbstractContainerWidget extends Widget {
 
     @Override
     public void draw(DrawContext context) {
+        // super.draw installs this container's limits/offset
         super.draw(context);
+        // Children are laid out before drawing, then clipped to the container
         updateWidgetPositions();
         context.pushScissor(0, 0, getWidth(), getHeight());
         for (Widget widget : widgets) {

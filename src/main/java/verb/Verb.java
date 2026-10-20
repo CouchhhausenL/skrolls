@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+// A command such as "go" or "equip". A verb may have several variants
+// (different parameter layouts); the best matching variant is executed.
 public class Verb {
     private final String name;
     private final List<String> aliases;
@@ -57,6 +59,7 @@ public class Verb {
                 .toList();
     }
 
+    // Analyzes the input against every variant and merges the results
     public List<VerbVariantAnalysisResult> analyze(String input) {
         List<VerbVariantAnalysisResult> results = new ArrayList<>();
         for (VerbVariant variant : variants) {
@@ -78,6 +81,8 @@ public class Verb {
         return new Builder(name);
     }
 
+    // Fluent builder: builder("go").aliases(...).variant()...build().build(...)
+    // where the final build takes the execution callback
     public static class Builder {
         private final String name;
         private final List<String> aliases = new ArrayList<>();

@@ -6,6 +6,8 @@ import main.java.item.items.Potion;
 
 import java.util.List;
 
+// What a spell/effect may do during a battle, kept separate from the
+// concrete Battle implementation
 public interface BattleContext {
 
     int damageEnemy(int baseStrength, MagicType magicType);

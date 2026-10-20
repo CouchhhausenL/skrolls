@@ -14,6 +14,9 @@ public enum MagicType {
     private final String symbol;
     private final String name;
     private final int color;
+    // Attacker rows vs defender columns.
+    // 2.0 = super effective, 1.0 = neutral, 0.5 = not very effective.
+    // Indexed by enum ordinal, so enum order must not change.
     private static final double[][] EFFECTIVENESS = {
             //  KIN  ELE  PUR  ABY  NEC  DRA  ARC  CHA  INF
             {1.0, 1.0, 0.5, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5}, // KINETIC

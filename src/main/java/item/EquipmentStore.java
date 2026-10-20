@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Holds equipped items keyed by slot type. Each type has a max capacity
+// (e.g. 3 artifacts, 5 scrolls).
 public class EquipmentStore implements VerbSupplier {
     private final Map<EquipmentType<?>, List<Equippable>> items = new HashMap<>();
 
@@ -17,6 +19,7 @@ public class EquipmentStore implements VerbSupplier {
         }
     }
 
+    // Returns false when the slot is already at capacity
     public boolean equip(Equippable equippable) {
         EquipmentType<?> type = equippable.getEquipmentType();
         if (equippable.getClass() != type.getClassType())
@@ -49,6 +52,7 @@ public class EquipmentStore implements VerbSupplier {
         return list.getFirst();
     }
 
+    // Builds one "unequip <item>" verb per currently equipped item
     @Override
     public List<Verb> getVerbs() {
         List<Verb> verbs = new ArrayList<>();

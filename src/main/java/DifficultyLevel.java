@@ -1,5 +1,8 @@
 package main.java;
 
+// Maps item quality tiers to combat scaling: level is the effective enemy level,
+// baseDamage is the raw damage value used by the damage formula.
+// Ordinal order must stay aligned with Quality and the monster difficulty pools.
 public enum DifficultyLevel {
     NONE(5, 40),
     LOW(15, 50),

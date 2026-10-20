@@ -1,5 +1,6 @@
 package main.java.util;
 
+// Named 0xRRGGBB color constants
 public final class Color {
     private Color() {
     }

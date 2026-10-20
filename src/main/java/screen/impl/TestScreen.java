@@ -4,6 +4,7 @@ import main.java.game.GameContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.VerbInputWidget;
 
+// Scratch screen used to test the verb input widget in isolation
 public class TestScreen extends Screen {
 
     @Override

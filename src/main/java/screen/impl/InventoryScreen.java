@@ -6,6 +6,7 @@ import main.java.game.GameContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.LabelWidget;
 
+// Placeholder inventory screen; closing returns to the main game screen
 public class InventoryScreen extends Screen {
 
     private GameContext context;

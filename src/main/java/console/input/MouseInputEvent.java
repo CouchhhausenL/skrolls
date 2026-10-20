@@ -10,6 +10,9 @@ public record MouseInputEvent(Type type, int x, int y, int button) implements In
         SCROLL_DOWN
     }
 
+    // SGR button bitmask: bit 6 (64) = wheel, bit 5 (32) = motion,
+    // lower two bits = button index (3 = no button). Horizontal scroll is
+    // approximated as vertical because the game only uses up/down.
     public static Type inferType(int button, boolean down) {
         if ((button & 64) != 0) {
             return switch (button & 3) {

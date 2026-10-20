@@ -7,6 +7,7 @@ import main.java.console.input.MouseInputEvent;
 import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 
+// Widget that plays an animation and optionally notifies when it finishes
 public class AnimationWidget extends Widget {
     private final AnimationPlayer player;
     private OnDone onDone = null;
@@ -27,6 +28,7 @@ public class AnimationWidget extends Widget {
 
     @Override
     public void onDraw(DrawContextView context) {
+        // Advance playback once per frame, then report completion
         player.update();
         if (player.isDone() && onDone != null) onDone.onDone();
         context.drawBuffer(0, 0, player.getCurrentBuffer());

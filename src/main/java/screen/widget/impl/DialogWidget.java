@@ -9,6 +9,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
+// Sequenced dialog. Each DialogItem asks a question and may require no answer,
+// a text input or a yes/no choice; onEnter runs on submit and the dialog can
+// jump backward (goToIndex) before moving on.
 public class DialogWidget extends AbstractContainerWidget {
     private final List<DialogItem> dialogItems = new ArrayList<>();
     private int index = 0;
@@ -38,6 +41,7 @@ public class DialogWidget extends AbstractContainerWidget {
         this.onComplete = onComplete;
     }
 
+    // Rebuilds the child widgets for the item at the current index
     private void setupCurrentItem() {
         widgets.clear();
         inputField = null;
@@ -47,10 +51,12 @@ public class DialogWidget extends AbstractContainerWidget {
 
         DialogItem current = dialogItems.get(index);
 
+        // Question is resolved lazily and types out character by character
         questionLabel = new LabelWidget(0, 0, current.questionSupplier().get());
         questionLabel.setFancyMode(true, 20);
         addChild(questionLabel);
 
+        // Add the input control matching the required answer type
         if (current.answerField() == AnswerType.NONE) {
             continueNoticeLabel = new LabelWidget(0, questionLabel.getHeight() + 1, "Press [SPACE] to continue");
             addChild(continueNoticeLabel);
@@ -72,17 +78,21 @@ public class DialogWidget extends AbstractContainerWidget {
         this.lastBooleanAnswer = value;
         enteredAnswers.add(value);
 
+        // onEnter may call goToIndex, which sets redirected and changes the flow
         this.redirected = false;
         DialogItem current = (index < dialogItems.size()) ? dialogItems.get(index) : null;
         if (current != null && current.onEnter() != null) {
             current.onEnter().run();
         }
 
+        // Only advance normally if onEnter did not redirect elsewhere
         if (!redirected) {
             advanceToNext();
         }
     }
 
+    // Jumps to another dialog item; marks the run as redirected so the caller
+    // does not also advance to the next item
     public void goToIndex(int newIndex) {
         if (newIndex >= 0 && newIndex < dialogItems.size()) {
             this.index = newIndex;
@@ -91,6 +101,7 @@ public class DialogWidget extends AbstractContainerWidget {
         }
     }
 
+    // Moves to the next item, or finishes the dialog (running onComplete)
     public void advanceToNext() {
         if (index < dialogItems.size() - 1) {
             index++;
@@ -129,6 +140,7 @@ public class DialogWidget extends AbstractContainerWidget {
         return false;
     }
 
+    // Routes input to the control matching the current answer type
     @Override
     public void onKeyInput(KeyInputEvent event) {
         if (index >= dialogItems.size()) return;

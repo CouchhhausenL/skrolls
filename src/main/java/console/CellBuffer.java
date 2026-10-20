@@ -1,6 +1,9 @@
 package main.java.console;
 
+// Flat grid of terminal cells. Rows are indexed first: [y][x].
+// Colors are 0xRRGGBB. EMPTY_CELL is a hole that overlay() ignores.
 public class CellBuffer {
+    // Means "keep the destination background" when passed to setTransparent()
     public static final int TRANSPARENT_BACKGROUND = -1;
     public static final char EMPTY_CELL = '\0';
 
@@ -20,6 +23,8 @@ public class CellBuffer {
         backgrounds = new int[height][width];
     }
 
+    // Reallocating is simpler than zeroing every row and yields default
+    // values (EMPTY_CELL, foreground 0, background 0)
     public void clear() {
         characters = new char[height][width];
         foregrounds = new int[height][width];
@@ -74,6 +79,7 @@ public class CellBuffer {
         return true;
     }
 
+    // Resolves the transparent sentinel to the existing pixel before writing
     public boolean setTransparent(int x, int y, char character, int foreground, int background) {
         if (background == TRANSPARENT_BACKGROUND)
             background = getBackground(x, y);
@@ -101,6 +107,8 @@ public class CellBuffer {
         }
     }
 
+    // Blits another buffer at an offset. Empty cells and transparent
+    // backgrounds leave the destination untouched.
     public void overlay(int rootX, int rootY, CellBuffer overlay) {
         for (int x = 0; x < overlay.width; x++) {
             for (int y = 0; y < overlay.height; y++) {

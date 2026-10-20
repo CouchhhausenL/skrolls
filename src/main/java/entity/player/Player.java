@@ -6,6 +6,8 @@ import main.java.entity.Entity;
 import main.java.item.Inventory;
 import main.java.item.effects.ItemEffectType;
 
+// Player stats are derived from equipped items in the inventory;
+// base values come from Entity and item effects are added on top.
 public class Player extends Entity {
     private int mana;
     private int maxMana;
@@ -32,6 +34,7 @@ public class Player extends Entity {
 
     }
 
+    // Maps the incoming magic type to the matching resistance item effect
     public double getDefenseItemFactor(MagicType magicType) {
         ItemEffectType searchType = switch (magicType) {
             case KINETIC -> ItemEffectType.RESISTANCE_KINETIC;
@@ -44,6 +47,7 @@ public class Player extends Entity {
             case CHAOS -> ItemEffectType.RESISTANCE_CHAOS;
             case INFINITY -> null;
         };
+        // Infinity has no resistance item effect -> neutral multiplier
         if (searchType == null) {
             return 1.0;
         }
@@ -61,6 +65,7 @@ public class Player extends Entity {
         return inventory.getStaff().getMagicType();
     }
 
+    // Staff quality doubles as the player's effective level tier
     @Override
     public int getLevel() {
         return DifficultyLevel.values()[inventory.getStaff().getQuality().ordinal()].getLevel();
@@ -87,6 +92,7 @@ public class Player extends Entity {
         return inventory;
     }
 
+    // Highest owned item quality determines the player's encounter difficulty
     public DifficultyLevel getDifficultyLevel() {
         return DifficultyLevel.values()[inventory.getHighestQualityItem().ordinal()];
     }

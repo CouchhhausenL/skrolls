@@ -19,11 +19,14 @@ public final class CommonTerminalFactory {
     }
 
     public static void commonInit(Terminal terminal) {
+        // Hide the cursor and draw on the alternate screen so the user's
+        // scrollback is left untouched
         terminal.puts(InfoCmp.Capability.cursor_invisible);
         terminal.puts(InfoCmp.Capability.clear_screen);
         terminal.puts(InfoCmp.Capability.cursor_home);
         terminal.puts(InfoCmp.Capability.enter_ca_mode); // Alternate screen mode
 
+        // Raw mode disables line buffering / echo so every key arrives immediately
         terminal.enterRawMode();
         if (terminal.hasMouseSupport()) {
             terminal.trackMouse(Terminal.MouseTracking.Any);
@@ -33,6 +36,7 @@ public final class CommonTerminalFactory {
         terminal.flush();
     }
 
+    // Undo every change made by commonInit() before the terminal is closed
     public static void commonBeforeClose(Terminal terminal) {
         terminal.trackMouse(Terminal.MouseTracking.Off);
         terminal.writer().write(ANSI.DISABLE_SGR);

@@ -22,6 +22,8 @@ public class Console implements AutoCloseableByCloser {
     private final PrintWriter writer;
     private final InputParser input;
 
+    // Double buffer: back is drawn into, front mirrors what the terminal already shows.
+    // render() only emits cells that differ, which keeps flicker and I/O low.
     private final CellBuffer front;
     private final CellBuffer back;
 
@@ -43,6 +45,7 @@ public class Console implements AutoCloseableByCloser {
         back = new CellBuffer(0, 0);
         updateDimensions();
 
+        // Some emulators report zero size until a real terminal is attached
         if (width == 0 || height == 0) {
             throw new ConsoleConstructionException("Terminal emulator is not supported");
         }
@@ -52,6 +55,7 @@ public class Console implements AutoCloseableByCloser {
 
     public void render() {
         for (int y = 0; y < height; y++) {
+            // Track terminal state to avoid redundant cursor moves and color escapes
             int lastWrittenX = -1;
             int lastWrittenForeground = -1;
             int lastWrittenBackground = -1;
@@ -65,6 +69,7 @@ public class Console implements AutoCloseableByCloser {
                 final int backForeground = back.getForeground(x, y);
                 final int backBackground = back.getBackground(x, y);
 
+                // Empty cells are never drawn and unchanged cells are skipped
                 if (backChar == CellBuffer.EMPTY_CELL) continue;
                 if (
                         frontChar == backChar &&
@@ -72,11 +77,14 @@ public class Console implements AutoCloseableByCloser {
                                 frontBackground == backBackground
                 ) continue;
 
+                // The terminal must always have a concrete background; transparency
+                // is resolved earlier in the buffer overlay stage
                 if (backBackground == CellBuffer.TRANSPARENT_BACKGROUND)
                     throw new IllegalArgumentException("Transparent background is not allowed in direct render");
 
                 front.set(x, y, backChar, backForeground, backBackground);
 
+                // Cursor must be repositioned when x is not the previous column + 1
                 if (lastWrittenX == -1 || x != lastWrittenX + 1)
                     setCursor(x, y);
                 if (lastWrittenForeground != backForeground)
@@ -103,6 +111,7 @@ public class Console implements AutoCloseableByCloser {
         if (buffer.getWidth() != width || buffer.getHeight() != height)
             throw new IllegalArgumentException("Buffer dimensions do not match");
 
+        // Overlay so EMPTY_CELL and transparent backgrounds keep the previous content
         back.overlay(0, 0, buffer);
     }
 
@@ -118,10 +127,12 @@ public class Console implements AutoCloseableByCloser {
         return input.drainEvent();
     }
 
+    // Note the reversed argument order: terminfo addresses (row, column)
     private void setCursor(int x, int y) {
         terminal.puts(InfoCmp.Capability.cursor_address, y, x);
     }
 
+    // Color is stored as 0xRRGGBB; split it into separate RGB channels
     private void setForeground(int color) {
         writer.printf(ANSI.SET_FOREGROUND,
                 (color >> 16) & 0xFF,
@@ -138,6 +149,7 @@ public class Console implements AutoCloseableByCloser {
         );
     }
 
+    // True when the terminal was resized since the last updateDimensions() call
     public boolean areDimensionsDirty() {
         return width != terminal.getColumns() || height != terminal.getRows();
     }
@@ -146,6 +158,7 @@ public class Console implements AutoCloseableByCloser {
         width = terminal.getColumns();
         height = terminal.getRows();
 
+        // Resizing clears both buffers; the next render repaints everything
         front.resize(width, height);
         back.resize(width, height);
     }

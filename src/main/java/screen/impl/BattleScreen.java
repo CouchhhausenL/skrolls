@@ -18,6 +18,8 @@ import main.java.util.SkaParser;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+// Battle view: status boxes, idle animations and three switchable menus
+// (main actions, attack spells, potions) plus the scrolling battle log.
 public class BattleScreen extends Screen {
     private AnimationWidget playerAnimationWidget;
     private AnimationWidget enemyAnimationWidget;
@@ -38,6 +40,7 @@ public class BattleScreen extends Screen {
         enemyBox = new BattleStatusWidget(67, 25, battle.getEnemyName(), battle.getEnemyHealth(), battle.getEnemyMaxHealth());
 
 
+        // Enemy assets are named after the monster ("Axe Rogue" -> "axe_rogue")
         Animation playerIdleAnimation = SkaParser.parse("character/wizard/idle.ska");
         Animation enemyIdleAnimation = SkaParser.parse("character/" + battle.getEnemyName().toLowerCase().replace(" ", "_") + "/idle.ska");
 
@@ -47,14 +50,14 @@ public class BattleScreen extends Screen {
         enemyAnimationWidget = new AnimationWidget(0, 0, enemyIdleAnimation);
         enemyAnimationWidget.setLooping(true);
 
-        // 1. Hauptmenü
+        // 1. Main menu
         Map<String, Runnable> mainOptions = new LinkedHashMap<>();
         mainOptions.put("Attack", () -> switchMenu(attackOptionsWidget));
         mainOptions.put("Drink Potion", () -> switchMenu(potionOptionsWidget));
         mainOptions.put("Flee", context::fleeFromBattle);
         optionsWidget = new OptionsWidget(0, 40, 40, 20, Color.WHITE, mainOptions);
 
-        // 2. Angriffsmenü
+        // 2. Attack menu: one entry per spell from equipped scrolls
         Map<String, Runnable> attackOptions = new LinkedHashMap<>();
         for (Spell spell : context.getSpells()) {
             attackOptions.put(spell.getName(), () -> spell.cast(context));
@@ -62,7 +65,7 @@ public class BattleScreen extends Screen {
         attackOptions.put("Back", () -> switchMenu(optionsWidget));
         attackOptionsWidget = new OptionsWidget(0, 40, 40, 20, Color.WHITE, attackOptions);
 
-        // 3. Tränkemenü
+        // 3. Potion menu
         Map<String, Runnable> potionOptions = new LinkedHashMap<>();
         for (Potion potion : context.getPotions()) {
             potionOptions.put(potion.getName(), () -> context.getCurrentBattle().drinkPotion(potion));
@@ -70,7 +73,7 @@ public class BattleScreen extends Screen {
         potionOptions.put("Back", () -> switchMenu(optionsWidget));
         potionOptionsWidget = new OptionsWidget(0, 40, 40, 20, Color.WHITE, potionOptions);
 
-        // 4. Kampfnachrichten
+        // 4. Battle messages
         messagesHistoryWidget = new ScrollableContainerWidget(0, 30, 40, 10, 0);
         for (String message : battle.getBattleLog()) {
             LabelWidget widget = new LabelWidget(0, 0, message);
@@ -78,19 +81,17 @@ public class BattleScreen extends Screen {
         }
         addChild(messagesHistoryWidget);
 
-        // Basis-Widgets registrieren
+        // Register the base widgets
         addChild(enemyAnimationWidget);
         addChild(playerAnimationWidget);
         addChild(playerBox);
         addChild(enemyBox);
 
-        // Start-Menü aktivieren
+        // Show the main menu first
         switchMenu(optionsWidget);
     }
 
-    /**
-     * Schaltet sauber zwischen den drei Options-Widgets um.
-     */
+    // Removes all option widgets and shows only the requested one
     public void switchMenu(OptionsWidget newMenu) {
         removeChild(optionsWidget);
         removeChild(attackOptionsWidget);

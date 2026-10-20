@@ -17,6 +17,7 @@ public class AnimationFrame {
         return changes[y][x];
     }
 
+    // Applies only the channels present in each change; null cells are skipped
     public void overlayOntoBuffer(CellBuffer buffer) {
         if (buffer.getWidth() != width || buffer.getHeight() != height)
             throw new IllegalArgumentException("Buffer dimensions do not match animation dimensions");

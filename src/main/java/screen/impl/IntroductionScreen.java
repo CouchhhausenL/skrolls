@@ -9,6 +9,8 @@ import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.DialogWidget;
 
+// Opening dialog: welcome message, name input and a choice between the
+// tutorial or starting directly in Winterfort Castle.
 public class IntroductionScreen extends Screen {
 
 
@@ -40,10 +42,12 @@ public class IntroductionScreen extends Screen {
         dialogWidget.setOnComplete(() -> {
 
 
+            // Boolean answer selects tutorial vs. immediate start
             if (dialogWidget.getEnteredBoolean()) {
                 context.setScreen(new TutorialScene());
             } else {
                 context.setScene(new WinterfortCastle(context));
+                // Give the player a basic weapon to start with
                 context.addItem(ItemType.COMMON_STAFF.create());
                 context.setScreen(new MainGameScreen());
             }

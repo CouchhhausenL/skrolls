@@ -2,6 +2,7 @@ package main.java.screen.widget.impl.container;
 
 import main.java.screen.widget.Widget;
 
+// Container that stacks its children top-to-bottom with a fixed gap
 public class VerticalContainerWidget extends AbstractContainerWidget {
     protected int gap;
 
@@ -19,6 +20,7 @@ public class VerticalContainerWidget extends AbstractContainerWidget {
         this.gap = gap;
     }
 
+    // Stack each child directly below the previous one, separated by gap
     @Override
     protected void updateWidgetPositions() {
         int y = 0;
