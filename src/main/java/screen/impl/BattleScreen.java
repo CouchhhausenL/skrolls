@@ -1,13 +1,22 @@
 package main.java.screen.impl;
 
 
+import main.java.MagicType;
 import main.java.animation.Animation;
 import main.java.battle.BattleContext;
 import main.java.game.GameContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.BattleStatusWidget;
+import main.java.screen.widget.impl.LabelWidget;
+import main.java.screen.widget.impl.OptionsWidget;
+import main.java.screen.widget.impl.container.ScrollableContainerWidget;
+import main.java.util.Color;
 import main.java.util.SkaParser;
+
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BattleScreen extends Screen {
     private AnimationWidget playerAnimationWidget;
@@ -15,6 +24,9 @@ public class BattleScreen extends Screen {
 
     private BattleStatusWidget playerBox;
     private BattleStatusWidget enemyBox;
+    private OptionsWidget optionsWidget;
+
+    private ScrollableContainerWidget messagesHistoryWidget;
 
     @Override
     protected void init(GameContext context) {
@@ -31,6 +43,25 @@ public class BattleScreen extends Screen {
         playerAnimationWidget.setLooping(true);
         enemyAnimationWidget = new AnimationWidget(0 , 0, enemyIdleAnimation);
         enemyAnimationWidget.setLooping(true);
+
+        optionsWidget = new OptionsWidget(0, 40 , 40, 20, Color.WHITE, Map.of("Attack", () -> battle.damageEnemy(90, MagicType.NECROTIC),
+        "Drink Potion", () -> context.setScreen(new MapScreen()),
+                "Flee", () -> context.fleeFromBattle()
+        ));
+
+        messagesHistoryWidget = new ScrollableContainerWidget(0, 30, 40, 10, 0);
+        for(String message : battle.getBattleLog()){
+            LabelWidget widget = new LabelWidget(0,0, message);
+            messagesHistoryWidget.addChild(widget);
+        }
+        addChild(messagesHistoryWidget);
+
+
+
+
+        addChild(optionsWidget);
+
+
 
         addChild(enemyAnimationWidget);
         addChild(playerAnimationWidget);

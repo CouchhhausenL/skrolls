@@ -5,12 +5,15 @@ import main.java.battle.BattleContext;
 import main.java.console.Console;
 import main.java.console.input.InputEvent;
 import main.java.console.input.KeyInputEvent;
+import main.java.entity.player.Player;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
+import main.java.screen.impl.MapScreen;
 import main.java.util.Color;
 import main.java.verb.Verb;
 
 import java.util.List;
+import java.util.Map;
 
 public class Game implements GameContext {
     public static final int MIN_WIDTH = 80;
@@ -20,6 +23,8 @@ public class Game implements GameContext {
     private final Console console;
     private Screen screen = null;
     private Battle battle = null;
+
+    private Player player = null;
     private final DrawContext drawContext;
 
     public Game(Console console) {
@@ -90,7 +95,26 @@ public class Game implements GameContext {
     public void setBattle(Battle battle){
         this.battle = battle;
     }
+    @Override
+    public void fleeFromBattle(){
+        if(battle.tryFlee()){
+            battle.sendMessage("You successfully fled from Battle!");
+            setBattle(null);
+            setScreen(new MapScreen());
+        } else {
+            battle.sendMessage("You tried to flee, but it failed");
+        }
+    }
 
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
 
     @Override
     public BattleContext getCurrentBattle() {

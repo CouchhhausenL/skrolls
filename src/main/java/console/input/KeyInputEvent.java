@@ -45,7 +45,7 @@ public final class KeyInputEvent implements InputEvent {
     public static KeyInputEvent of(int code) {
 
         if (code == 9) return tab(); // Also ctrl + I
-        if (code == 8 || code == 128) return backspace(); // Also ctrl + H
+        if (code == 8 || code == 4 || code == 14 || code == 22||code == 127 || code == 128) return backspace(); // Also ctrl + H
         if (code == 126) return delete();
         if (code == 10 || code == 13) return enter(); //Also ctrl + J / Ctrl + M
         if (code == 27) return escape();
