@@ -20,7 +20,13 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
             0x101010,
             0x202020,
             0x404040,
-            Color.WHITE
+            Color.WHITE,
+            0xA0FFA0,
+            0xD0D0D0,
+            0x909090,
+            0x505050,
+            0x303030,
+            0xA0A0FF
     );
 
     public VerbInputWidget(GameContext context, int x, int y, int width, int height, String content, Colors colors) {
@@ -46,19 +52,19 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
             if (y > suggestions.size() - 1) continue;
             VerbSuggestion suggestion = suggestions.get(y);
 
-            int chevronColor = 0x505050;
+            int chevronColor = colors.chevron();
             if (suggestions.size() == 1)
-                chevronColor = 0xA0A0FF;
+                chevronColor = colors.chevronAutocompletionHint();
             if (suggestion.completion().isEmpty())
-                chevronColor = 0x303030;
+                chevronColor = colors.chevronTyped();
 
             context.drawString(0, y, suggestion.isDefault() ? "»" : "›", chevronColor);
-            context.drawString(2, y, suggestion.content(), 0x909090);
-            context.drawString(2 + suggestion.completionOffset(), y, suggestion.completion(), colors.content());
+            context.drawString(2, y, suggestion.content(), colors.typedSuggestion());
+            context.drawString(2 + suggestion.completionOffset(), y, suggestion.completion(), colors.suggestion());
         }
         context.fill(0, yOffset, getWidth(), getHeight(), colors.inputBackground());
         drawCursor(context, 0, yOffset, colors.cursor());
-        drawVisibleText(context, 0, yOffset, executionConsumer != null ? 0xA0FFA0 : colors.content());
+        drawVisibleText(context, 0, yOffset, executionConsumer != null ? colors.correctContent() : colors.content());
     }
 
     @Override
@@ -153,6 +159,17 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
         }
     }
 
-    public record Colors(int background, int inputBackground, int cursor, int content) {
+    public record Colors(
+            int background,
+            int inputBackground,
+            int cursor,
+            int content,
+            int correctContent,
+            int suggestion,
+            int typedSuggestion,
+            int chevron,
+            int chevronTyped,
+            int chevronAutocompletionHint
+    ) {
     }
 }
