@@ -17,7 +17,7 @@ public class IntroductionScreen extends Screen {
     protected void init(GameContext context) {
         dialogWidget = new DialogWidget(0, 0, 80, 30);
         dialogWidget.addDialogItem(new DialogWidget.DialogItem("Hello Dear Traveler! \n" +
-                "Thank you for playing this Game, it was a hell amount of Work so please sit back and enjoy this Textadventure",
+                "Thank you for playing this Game,\nit was a hell amount of Work so please sit back and enjoy this:\n\nTEXT ADVENTURE!!",
                 DialogWidget.AnswerType.NONE,
                 () -> {
                 }));
@@ -47,9 +47,8 @@ public class IntroductionScreen extends Screen {
             }
 
         });
+
         addChild(dialogWidget);
-
-
     }
 
 
