@@ -117,7 +117,9 @@ public class Inventory implements VerbSupplier {
     }
 
 
-    public boolean unequipItem(Equipable equipable) {
+    public boolean unequipItem(Item item) {
+        if (!(item instanceof Equipable equipable)) return false;
+
         if (equipment.unequip(equipable)) {
             backpack.add(equipable);
             return true;
@@ -139,7 +141,7 @@ public class Inventory implements VerbSupplier {
                 Verb.Builder builder = Verb.builder("equip")
                         .aliases("wear");
 
-                builder.variant().choice("item", equipable.getName());
+                builder.variant().choice("item", equipable.getName()).build().build();
 
                 verbs.add(builder.build(((executionContext, context) -> {
                     equipItem(equipable);

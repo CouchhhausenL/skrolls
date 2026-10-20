@@ -155,6 +155,11 @@ public class Game implements GameContext {
     }
 
     @Override
+    public void unequipItem(Item item) {
+        player.getInventory().unequipItem(item);
+    }
+
+    @Override
     public BattleContext getCurrentBattle() {
         return battle;
     }

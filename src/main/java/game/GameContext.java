@@ -29,6 +29,7 @@ public interface GameContext extends VerbSupplier {
     void setPlayer(Player player);
     void addItem(Item item);
     void equipItem(Item item);
+    void unequipItem(Item item);
 
     List<Spell> getSpells();
     List<Potion> getPotions();
