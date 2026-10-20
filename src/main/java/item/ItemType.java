@@ -1,5 +1,9 @@
 package main.java.item;
 
+
+
+import main.java.spell.spells.*;
+import main.java.item.items.Scroll;
 import main.java.MagicType;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
@@ -452,7 +456,60 @@ public enum ItemType {
             new CombatEffect(CombatEffectType.HEALING, 500, 0),
             new CombatEffect(CombatEffectType.MANA_RESTORE, 300, 0),
             new CombatEffect(CombatEffectType.STRENGTH, 3, 5)
-    )));
+    ))),
+
+                // ==========================================
+    // GENERATED SCROLLS (tools/generate_scroll_items.py)
+    // ==========================================
+    SCROLL_ABYSSAL_GRASP(() -> new Scroll(new AbyssalGrasp(), Quality.RARE)),
+    SCROLL_ADRENALINE_RUSH(() -> new Scroll(new AdrenalineRush(), Quality.COMMON)),
+    SCROLL_AETHER_STREAM(() -> new Scroll(new AetherStream(), Quality.EPIC)),
+    SCROLL_ARCANE_CATACLYSM(() -> new Scroll(new ArcaneCataclysm(), Quality.EPIC)),
+    SCROLL_AURA_OF_RENEWAL(() -> new Scroll(new AuraOfRenewal(), Quality.UNCOMMON)),
+    SCROLL_BLOOD_OFFERING(() -> new Scroll(new BloodOffering(), Quality.RARE)),
+    SCROLL_CHAIN_LIGHTNING(() -> new Scroll(new ChainLightning(), Quality.UNCOMMON)),
+    SCROLL_CHAOS_VORTEX(() -> new Scroll(new ChaosVortex(), Quality.LEGENDARY)),
+    SCROLL_CHRONO_SHIFT(() -> new Scroll(new ChronoShift(), Quality.EPIC)),
+    SCROLL_CONCUSSIVE_BLOW(() -> new Scroll(new ConcussiveBlow(), Quality.COMMON)),
+    SCROLL_COSMIC_OBLIVION(() -> new Scroll(new CosmicOblivion(), Quality.MYTHIC)),
+    SCROLL_DEATHBLOOM(() -> new Scroll(new Deathbloom(), Quality.RARE)),
+    SCROLL_DOOM_GRAVE(() -> new Scroll(new DoomGrave(), Quality.RARE)),
+    SCROLL_DRACONIC_BREATH(() -> new Scroll(new DraconicBreath(), Quality.EPIC)),
+    SCROLL_DRAGON_ROAR(() -> new Scroll(new DragonRoar(), Quality.EPIC)),
+    SCROLL_DRAGONHEART_AWAKENING(() -> new Scroll(new DragonheartAwakening(), Quality.EPIC)),
+    SCROLL_ENTROPY_OVERLOAD(() -> new Scroll(new EntropyOverload(), Quality.LEGENDARY)),
+    SCROLL_ETERNAL_ASCENSION(() -> new Scroll(new EternalAscension(), Quality.MYTHIC)),
+    SCROLL_FIREBALL(() -> new Scroll(new Fireball(), Quality.UNCOMMON)),
+    SCROLL_FLURRY_OF_BLOWS(() -> new Scroll(new FlurryOfBlows(), Quality.COMMON)),
+    SCROLL_FROST_NOVA(() -> new Scroll(new FrostNova(), Quality.UNCOMMON)),
+    SCROLL_GLACIAL_SPIKE(() -> new Scroll(new GlacialSpike(), Quality.UNCOMMON)),
+    SCROLL_HARD_SHOVE(() -> new Scroll(new HardShove(), Quality.COMMON)),
+    SCROLL_HEAVY_SHIELD_BASH(() -> new Scroll(new HeavyShieldBash(), Quality.COMMON)),
+    SCROLL_HOLY_CLEANSING(() -> new Scroll(new HolyCleansing(), Quality.UNCOMMON)),
+    SCROLL_INFERNO_BURST(() -> new Scroll(new InfernoBurst(), Quality.UNCOMMON)),
+    SCROLL_INFINITY_BEAM(() -> new Scroll(new InfinityBeam(), Quality.MYTHIC)),
+    SCROLL_IRON_FORTRESS(() -> new Scroll(new IronFortress(), Quality.COMMON)),
+    SCROLL_JUDGMENT_GLARES(() -> new Scroll(new JudgmentGlares(), Quality.UNCOMMON)),
+    SCROLL_LIGHT_RAY(() -> new Scroll(new LightRay(), Quality.UNCOMMON)),
+    SCROLL_MADDENING_ABYSS(() -> new Scroll(new MaddeningAbyss(), Quality.RARE)),
+    SCROLL_MIND_SHATTER(() -> new Scroll(new MindShatter(), Quality.EPIC)),
+    SCROLL_MOLTEN_SURGE(() -> new Scroll(new MoltenSurge(), Quality.UNCOMMON)),
+    SCROLL_PANDEMONIUM_HEX(() -> new Scroll(new PandemoniumHex(), Quality.LEGENDARY)),
+    SCROLL_PLAGUE_HEX(() -> new Scroll(new PlagueHex(), Quality.RARE)),
+    SCROLL_RADIANT_SMITE(() -> new Scroll(new RadiantSmite(), Quality.UNCOMMON)),
+    SCROLL_REST(() -> new Scroll(new Rest(), Quality.COMMON)),
+    SCROLL_SANCTUARY(() -> new Scroll(new Sanctuary(), Quality.UNCOMMON)),
+    SCROLL_SEISMIC_STOMP(() -> new Scroll(new SeismicStomp(), Quality.COMMON)),
+    SCROLL_SHADOW_SIPHON(() -> new Scroll(new ShadowSiphon(), Quality.RARE)),
+    SCROLL_SHATTER_STRIKE(() -> new Scroll(new ShatterStrike(), Quality.COMMON)),
+    SCROLL_SHOCKWAVE_LANCE(() -> new Scroll(new ShockwaveLance(), Quality.COMMON)),
+    SCROLL_SINGULARITY(() -> new Scroll(new Singularity(), Quality.MYTHIC)),
+    SCROLL_THUNDER_SPARK(() -> new Scroll(new ThunderSpark(), Quality.UNCOMMON)),
+    SCROLL_TITAN_GRIT(() -> new Scroll(new TitanGrit(), Quality.COMMON)),
+    SCROLL_VOID_CURSE(() -> new Scroll(new VoidCurse(), Quality.RARE)),
+    SCROLL_WARP_DELIRIUM(() -> new Scroll(new WarpDelirium(), Quality.LEGENDARY)),
+    SCROLL_WYRM_REND(() -> new Scroll(new WyrmRend(), Quality.EPIC));
+    // END GENERATED SCROLLS
 
     private final Supplier<Item> supplier;
 
@@ -470,37 +527,97 @@ public enum ItemType {
                     COMMON_STAFF, COMMON_HEAVY_STICK, COMMON_FIRE_WAND, COMMON_PURITY_ROD,
                     COMMON_ARMOUR, COMMON_ELEMENTAL_ROBE, COMMON_PURITY_CLOAK,
                     COMMON_HEALTH_AMULET, COMMON_WARRIOR_RING, COMMON_GUARD_CHARM, COMMON_PRAYER_BEADS, COMMON_SWIFT_FEATHER,
-                    COMMON_HEALTH_POTION, COMMON_MANA_POTION
+                    COMMON_HEALTH_POTION, COMMON_MANA_POTION,
+                    // SCROLLS_START
+                    SCROLL_ADRENALINE_RUSH,
+                    SCROLL_CONCUSSIVE_BLOW,
+                    SCROLL_FLURRY_OF_BLOWS,
+                    SCROLL_HARD_SHOVE,
+                    SCROLL_HEAVY_SHIELD_BASH,
+                    SCROLL_IRON_FORTRESS,
+                    SCROLL_REST,
+                    SCROLL_SEISMIC_STOMP,
+                    SCROLL_SHATTER_STRIKE,
+                    SCROLL_SHOCKWAVE_LANCE,
+                    SCROLL_TITAN_GRIT
+                    // SCROLLS_END
             );
             case UNCOMMON -> List.of(
                     UNCOMMON_KINETIC_STAFF, UNCOMMON_EMBER_STAFF, UNCOMMON_DAWN_SCEPTRE, UNCOMMON_BONE_WAND,
                     UNCOMMON_CHAINMAIL, UNCOMMON_GRAVE_SHROUD, UNCOMMON_SALAMANDER_VEST,
                     UNCOMMON_RUBY_PENDANT, UNCOMMON_STEEL_BANGLE, UNCOMMON_PURITY_MEDALLION, UNCOMMON_ZEPHYR_CHARM, UNCOMMON_WARDING_TALISMAN,
-                    UNCOMMON_HEALTH_POTION, UNCOMMON_STRENGTH_POTION
+                    UNCOMMON_HEALTH_POTION, UNCOMMON_STRENGTH_POTION,
+                    // SCROLLS_START
+                    SCROLL_AURA_OF_RENEWAL,
+                    SCROLL_CHAIN_LIGHTNING,
+                    SCROLL_FIREBALL,
+                    SCROLL_FROST_NOVA,
+                    SCROLL_GLACIAL_SPIKE,
+                    SCROLL_HOLY_CLEANSING,
+                    SCROLL_INFERNO_BURST,
+                    SCROLL_JUDGMENT_GLARES,
+                    SCROLL_LIGHT_RAY,
+                    SCROLL_MOLTEN_SURGE,
+                    SCROLL_RADIANT_SMITE,
+                    SCROLL_SANCTUARY,
+                    SCROLL_THUNDER_SPARK
+                    // SCROLLS_END
             );
             case RARE -> List.of(
                     RARE_BLAZING_STAFF, RARE_ABYSS_ROD, RARE_RADIANT_STAFF, RARE_WAR_PIKE,
                     RARE_KNIGHT_PLATE, RARE_MAGMA_ROBE, RARE_CHITIN_ARMOR,
                     RARE_BERSERKER_CREST, RARE_AEGIS_PENDANT, RARE_ELEMENTAL_CORE, RARE_SOUL_GEM, RARE_QUICKSILVER_TALISMAN,
-                    RARE_GREATER_HEALTH_POTION, RARE_STONEFORM_ELIXIR
+                    RARE_GREATER_HEALTH_POTION, RARE_STONEFORM_ELIXIR,
+                    // SCROLLS_START
+                    SCROLL_ABYSSAL_GRASP,
+                    SCROLL_BLOOD_OFFERING,
+                    SCROLL_DEATHBLOOM,
+                    SCROLL_DOOM_GRAVE,
+                    SCROLL_MADDENING_ABYSS,
+                    SCROLL_PLAGUE_HEX,
+                    SCROLL_SHADOW_SIPHON,
+                    SCROLL_VOID_CURSE
+                    // SCROLLS_END
             );
             case EPIC -> List.of(
                     EPIC_ARCHON_SCEPTER, EPIC_NETHER_STAFF, EPIC_WYRMCLAW_ROD, EPIC_WARPING_CADUCEUS, EPIC_ASTRAL_PILLAR,
                     EPIC_WYRMSCALE_MAIL, EPIC_VOID_SHROUD, EPIC_SANCTIFIED_CUIRASS, EPIC_CHAOS_MANTLE,
                     EPIC_DRAGON_EYE, EPIC_NETHER_BULWARK_HEART, EPIC_SERAPH_FEATHER, EPIC_RIFT_HOURGLASS, EPIC_BLOODSTONE_CHOKER, EPIC_CHAOS_EMBLEM,
-                    EPIC_SUPERIOR_HEALTH_POTION, EPIC_CLEANSING_ELIXIR
+                    EPIC_SUPERIOR_HEALTH_POTION, EPIC_CLEANSING_ELIXIR,
+                    // SCROLLS_START
+                    SCROLL_AETHER_STREAM,
+                    SCROLL_ARCANE_CATACLYSM,
+                    SCROLL_CHRONO_SHIFT,
+                    SCROLL_DRACONIC_BREATH,
+                    SCROLL_DRAGON_ROAR,
+                    SCROLL_DRAGONHEART_AWAKENING,
+                    SCROLL_MIND_SHATTER,
+                    SCROLL_WYRM_REND
+                    // SCROLLS_END
             );
             case LEGENDARY -> List.of(
                     LEGENDARY_ASTRAL_STAFF, LEGENDARY_CHAOS_HERALD, LEGENDARY_SUNWYRM_IGNITION, LEGENDARY_ABYSSAL_SOVEREIGN,
                     LEGENDARY_GRAND_MAGUS_ROBE, LEGENDARY_CHAOTIC_WARP_ARMOR, LEGENDARY_TITAN_BULWARK,
                     LEGENDARY_VOID_SINGULARITY_HEART, LEGENDARY_ASTRAL_COMPASS, LEGENDARY_DRAKE_MOTHER_HEART, LEGENDARY_CROWN_OF_MIGHT, LEGENDARY_PHASE_SHIFT_TALISMAN,
-                    LEGENDARY_ARCH_SAGE_ELIXIR, LEGENDARY_AEGIS_ELIXIR
+                    LEGENDARY_ARCH_SAGE_ELIXIR, LEGENDARY_AEGIS_ELIXIR,
+                    // SCROLLS_START
+                    SCROLL_CHAOS_VORTEX,
+                    SCROLL_ENTROPY_OVERLOAD,
+                    SCROLL_PANDEMONIUM_HEX,
+                    SCROLL_WARP_DELIRIUM
+                    // SCROLLS_END
             );
             case MYTHIC -> List.of(
                     MYTHIC_INFINITY_STAFF, MYTHIC_RAGNAROK_SCEPTER, MYTHIC_GENESIS_LANCE,
                     MYTHIC_ETERNAL_VESTMENT, MYTHIC_COSMIC_AEGIS,
                     MYTHIC_INFINITY_ORB, MYTHIC_AEON_PRISM, MYTHIC_WORLD_RENDER_HORN, MYTHIC_DIVINE_HALO, MYTHIC_SINGULARITY_SHARD,
-                    MYTHIC_AMBROSIA
+                    MYTHIC_AMBROSIA,
+                    // SCROLLS_START
+                    SCROLL_COSMIC_OBLIVION,
+                    SCROLL_ETERNAL_ASCENSION,
+                    SCROLL_INFINITY_BEAM,
+                    SCROLL_SINGULARITY
+                    // SCROLLS_END
             );
         };
         int random = (int) (Math.random() * (valids.size()));

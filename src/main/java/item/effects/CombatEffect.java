@@ -7,7 +7,7 @@ public class CombatEffect {
     private double effectStrength;
 
 
-    public CombatEffect(CombatEffectType combatEffectType, int effectStrength, int duration) {
+    public CombatEffect(CombatEffectType combatEffectType, double effectStrength, int duration) {
         this.combatEffectType = combatEffectType;
         this.effectStrength = effectStrength;
         this.duration = duration;

@@ -6,6 +6,7 @@ import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
+import main.java.item.items.Potion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +85,11 @@ public class Battle implements BattleContext {
 
 
     @Override
+    public void drinkPotion(Potion potion) {
+        player.drinkPotion(potion);
+    }
+
+    @Override
     public void sendMessage(String message) {
         battleLog.add(message);
     }
@@ -120,7 +126,7 @@ public class Battle implements BattleContext {
     public void sendStatusMessage(){}
 
 
-    public void damagePlayer() {
+    public int damagePlayer() {
         int baseDamage = enemy.getDifficulty().getBaseDamage();
         int attackValue = AttackHelper.calculateAttackValue(enemy.getAttackStat(), enemy.getStatStage(Stat.ATTACK), 1.0);
 
@@ -135,12 +141,14 @@ public class Battle implements BattleContext {
 
         int damage = AttackHelper.calculateDamage(level, baseDamage, attackValue, defenseValue, stab, critLevel, typeEffectiveness);
         player.takeDamage(damage);
+        return damage;
 
 
     }
 
 
-    public void damageEnemy(int attackBaseDamage, MagicType attackType) {
+    @Override
+    public int damageEnemy(int attackBaseDamage, MagicType attackType) {
         double baseDamageItemFactor = player.getBaseDamageItemFactor();
         int baseDamage = AttackHelper.calculateBaseDamage(attackBaseDamage, baseDamageItemFactor);
 
@@ -168,7 +176,7 @@ public class Battle implements BattleContext {
 
         int damage = AttackHelper.calculateDamage(level, baseDamage, attackValue, defenseValue, stab, critLevel, typeEffectiveness);
         enemy.takeDamage(damage);
-
+        return damage;
     }
 
     public MagicType getEnemyMagicType() {

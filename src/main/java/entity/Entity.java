@@ -4,6 +4,7 @@ import main.java.MagicType;
 import main.java.entity.player.Player;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
+import main.java.item.items.Potion;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -126,7 +127,12 @@ public abstract class Entity {
         combatEffects.clear();
     }
     
+    public void drinkPotion(Potion potion){
+        for(CombatEffect combatEffect : potion.combatEffects){
+            addCombatEffect(combatEffect);
+        }
 
+    }
 
     public void addCombatEffect(CombatEffect combatEffect) {
         combatEffects.add(combatEffect);

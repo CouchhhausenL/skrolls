@@ -59,8 +59,7 @@ public class EquipmentStore implements VerbSupplier {
                         .aliases("deequip");
                 builder.variant().choice("item", equipable.getName());
                 verbs.add(builder.build(((executionContext, context) -> {
-                    unequip(equipable);
-                    context.getPlayer().getInventory().addItem(equipable);
+                    context.equipItem(equipable);
                 })));
             }
         }

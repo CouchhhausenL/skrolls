@@ -6,6 +6,8 @@ import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 import main.java.util.Color;
 
+import java.util.List;
+
 public class LabelWidget extends Widget {
     private String content;
     private boolean fancyMode;
@@ -13,7 +15,7 @@ public class LabelWidget extends Widget {
 
     private int displayedCharCount = 0;
     private long lastTime = 0;
-    private long fancyCharDelayTime = 100; // Zeit in Millisekunden pro Buchstabe
+    private long fancyCharDelayTime = 100;
 
     public LabelWidget(int x, int y, int width, int height, String content) {
         super(x, y, width, height);
@@ -21,7 +23,19 @@ public class LabelWidget extends Widget {
     }
 
     public LabelWidget(int x, int y, String content) {
-        this(x, y, content.length(), 1, content);
+        this(x, y, calculateWidth(content), calculateHeight(content), content);
+    }
+
+    private static int calculateWidth(String text) {
+        int max = 0;
+        for (String line : text.split("\n", -1)) {
+            max = Math.max(max, line.length());
+        }
+        return Math.max(1, max);
+    }
+
+    private static int calculateHeight(String text) {
+        return Math.max(1, text.split("\n", -1).length);
     }
 
     public String getContent() {
@@ -30,11 +44,15 @@ public class LabelWidget extends Widget {
 
     public void setContent(String content) {
         this.content = content;
+        setDimensions(calculateWidth(content), calculateHeight(content));
+        this.displayedCharCount = 0;
     }
 
-   public void setFancyMode(boolean fancyMode){
+       public void setFancyMode(boolean fancyMode, int fancyCharDelayTime){
         this.fancyMode = fancyMode;
+        this.fancyCharDelayTime = fancyCharDelayTime;
    }
+
     @Override
     public void onDraw(DrawContextView context) {
         if (fancyMode) {
@@ -43,13 +61,19 @@ public class LabelWidget extends Widget {
                 displayedCharCount++;
                 lastTime = now;
             }
+        }
 
-            String subContent = content.substring(0, displayedCharCount);
-            context.drawString(0,0, subContent, Color.WHITE);
-        } else {
-            context.drawString(0, 0, content, Color.WHITE);
+        String textToDraw = fancyMode ? content.substring(0, displayedCharCount) : content;
+
+        String[] lines = textToDraw.split("\n", -1);
+        int y = 0;
+        for (String line : lines) {
+            context.drawString(0, y, line, Color.WHITE);
+            y++;
         }
     }
+
+
 
     @Override
     public void onKeyInput(KeyInputEvent event) {

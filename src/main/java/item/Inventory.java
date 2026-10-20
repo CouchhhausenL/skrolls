@@ -100,6 +100,33 @@ public class Inventory implements VerbSupplier {
         return Quality.values()[highestOrdinal];
     }
 
+    public boolean equipItem(Item item) {
+        if (!(item instanceof Equipable equipable)) return false;
+
+        if (!backpack.contains(equipable)) {
+            return false;
+        }
+
+        boolean equipped = equipment.equip(equipable);
+        if (equipped) {
+            backpack.remove(equipable);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public boolean unequipItem(Equipable equipable) {
+        if (equipment.unequip(equipable)) {
+            backpack.add(equipable);
+            return true;
+        }
+        return false;
+    }
+
+
+
     @Override
     public List<Verb> getVerbs() {
         List<Verb> verbs = new ArrayList<>();
@@ -115,8 +142,7 @@ public class Inventory implements VerbSupplier {
                 builder.variant().choice("item", equipable.getName());
 
                 verbs.add(builder.build(((executionContext, context) -> {
-                    removeItem(equipable);
-                    equipment.equip(equipable);
+                    equipItem(equipable);
                 })));
             }
         }

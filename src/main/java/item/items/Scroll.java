@@ -16,6 +16,10 @@ public class Scroll extends AbstractItem implements Equipable {
         this.spell = spell;
     }
 
+    public Spell getSpell(){
+        return spell;
+    }
+
     @Override
     public EquipmentType<Scroll> getEquipmentType() {
         return EquipmentType.SCROLL;
