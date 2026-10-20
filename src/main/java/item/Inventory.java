@@ -88,4 +88,34 @@ public class Inventory {
         highestOrdinal = checkItemQuality(getStaff(), highestOrdinal);
         return Quality.values()[highestOrdinal];
     }
+
+    public boolean equipItem(Item item) {
+        if (!(item instanceof Equipable equipable)) {
+            return false;
+        }
+        if (!backpack.contains(item)) {
+            return false;
+        }
+
+        boolean equipped = equipment.equip(equipable);
+        if (equipped) {
+            backpack.remove(item);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public boolean unequipItem(Equipable equipable) {
+        if (equipment.unequip(equipable)) {
+            if (equipable instanceof Item item) {
+                backpack.add(item);
+            }
+            return true;
+        }
+        return false;
+    }
+
+
 }

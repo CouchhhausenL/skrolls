@@ -25,6 +25,9 @@ public abstract class Spell {
     }
 
     public abstract void cast(GameContext context);
+    public MagicType getMagicType() {
+        return magicType;
+    }
 
     public abstract String getAnimationName();
 }

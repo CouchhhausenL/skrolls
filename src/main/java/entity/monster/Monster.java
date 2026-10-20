@@ -25,6 +25,7 @@ public class Monster extends Entity {
     }
 
 
+
     public DifficultyLevel getDifficulty() {
         return difficulty;
     }
@@ -42,6 +43,8 @@ public class Monster extends Entity {
     public int getAttackStat() {
         return attack;
     }
+
+
 
 
     @Override

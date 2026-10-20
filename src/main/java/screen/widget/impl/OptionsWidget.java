@@ -41,7 +41,7 @@ public class OptionsWidget extends Widget {
         int yOffset = 0;
         for (Option option : options) {
             context.drawString(0, yOffset, option.getLabelWidget().getContent(), color);
-            yOffset += 2; // oder 1 je nach gewünschtem Zeilenabstand
+            yOffset += 2;
         }
     }
 

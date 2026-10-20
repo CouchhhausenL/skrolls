@@ -5,13 +5,20 @@ import main.java.battle.BattleContext;
 import main.java.console.Console;
 import main.java.console.input.InputEvent;
 import main.java.console.input.KeyInputEvent;
+import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
+import main.java.item.Item;
+import main.java.item.items.Potion;
+import main.java.item.items.Scroll;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.impl.MapScreen;
+import main.java.spell.Spell;
 import main.java.util.Color;
 import main.java.verb.Verb;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,9 +99,27 @@ public class Game implements GameContext {
 
 
     @Override
-    public void setBattle(Battle battle){
-        this.battle = battle;
+    public void setBattle(Monster monster){
+        this.battle = new Battle(player, monster);
     }
+
+    @Override
+    public List<Potion> getPotions() {
+        List<Potion> potions = new ArrayList<>();
+        for(Item item: player.getInventory().getBackpackItems()){
+            if(item instanceof Potion){
+                potions.add((Potion) item);
+            }
+        }
+
+        return  potions;
+    }
+
+    @Override
+    public List<Spell> getSpells() {
+        return player.getInventory().getScrolls().stream().map(Scroll::getSpell).toList();
+    }
+
     @Override
     public void fleeFromBattle(){
         if(battle.tryFlee()){
@@ -112,8 +137,19 @@ public class Game implements GameContext {
     }
 
     @Override
-    public Player getPlayer() {
-        return player;
+    public String getPlayerName() {
+        return player.getName();
+    }
+
+    @Override
+    public void addItem(Item item) {
+        player.getInventory().addItem(item);
+    }
+
+    @Override
+    public void equipItem(Item item) {
+        player.getInventory().equipItem(item);
+
     }
 
     @Override

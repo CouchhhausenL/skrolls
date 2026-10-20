@@ -49,7 +49,7 @@ public abstract class Screen {
 
     public final void draw(DrawContext context) {
         onPreDraw(context);
-        for (Widget widget : widgets) {
+        for (Widget widget : new ArrayList<>(widgets)) {
             widget.draw(context);
         }
         context.throwIfScissorStackInvalid();
@@ -71,7 +71,7 @@ public abstract class Screen {
     public void onMouseEvent(MouseInputEvent event) {}
 
     public static void distributeKeyInputEvent(KeyInputEvent event, List<Widget> widgets) {
-        for (Widget widget : widgets) {
+        for (Widget widget : new ArrayList<>(widgets)) {
             widget.onKeyInput(event);
         }
     }
@@ -82,10 +82,11 @@ public abstract class Screen {
         int y = event.y();
         int button = event.button();
 
+        List<Widget> snapshot = new ArrayList<>(widgets);
         // Iterate in reverse order to make checking for topmost hovered widget easier
         boolean hoveredFound = false;
-        for (int i = widgets.size() - 1; i >= 0; i--) {
-            Widget widget = widgets.get(i);
+        for (int i = snapshot.size() - 1; i >= 0; i--) {
+            Widget widget = snapshot.get(i);
             if (!(
                     x >= widget.getX() && x < widget.getX() + widget.getWidth() &&
                             y >= widget.getY() && y < widget.getY() + widget.getHeight()
