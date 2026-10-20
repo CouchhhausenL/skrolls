@@ -1,8 +1,8 @@
 package main.java.spell.spells;
 
-import main.java.game.GameContext;
 import main.java.MagicType;
 import main.java.battle.BattleContext;
+import main.java.game.GameContext;
 import main.java.spell.Spell;
 
 public class Fireball extends Spell {

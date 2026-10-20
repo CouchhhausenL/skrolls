@@ -1,7 +1,6 @@
 package main.java.battle;
 
 import main.java.MagicType;
-import main.java.entity.Entity;
 import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;

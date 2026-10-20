@@ -4,7 +4,6 @@ import main.java.animation.Animation;
 import main.java.battle.Battle;
 import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
-import main.java.entity.monster.Monster;
 import main.java.entity.monster.MonsterType;
 import main.java.entity.player.Player;
 import main.java.game.GameContext;

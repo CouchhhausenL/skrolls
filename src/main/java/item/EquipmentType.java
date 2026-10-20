@@ -1,6 +1,9 @@
 package main.java.item;
 
-import main.java.item.items.*;
+import main.java.item.items.Armor;
+import main.java.item.items.Artifact;
+import main.java.item.items.Scroll;
+import main.java.item.items.Staff;
 
 import java.util.ArrayList;
 import java.util.Collections;

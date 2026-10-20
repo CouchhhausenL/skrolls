@@ -139,7 +139,7 @@ public class DrawContext implements DrawContextView {
         }
 
         public boolean isCutOff(int x, int y) {
-            if (stack.size() == 0) return false;
+            if (stack.isEmpty()) return false;
 
             for (Entry entry : stack) {
                 if (!(x >= entry.x1 && x <= entry.x2 && y >= entry.y1 && y <= entry.y2)) return true;

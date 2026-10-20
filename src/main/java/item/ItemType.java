@@ -1,10 +1,10 @@
 package main.java.item;
 
 import main.java.MagicType;
-import main.java.item.effects.ItemEffect;
-import main.java.item.effects.ItemEffectType;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
+import main.java.item.effects.ItemEffect;
+import main.java.item.effects.ItemEffectType;
 import main.java.item.items.Armor;
 import main.java.item.items.Artifact;
 import main.java.item.items.Potion;

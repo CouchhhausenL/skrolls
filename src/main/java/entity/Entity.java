@@ -5,7 +5,10 @@ import main.java.entity.player.Player;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 
 public abstract class Entity {
