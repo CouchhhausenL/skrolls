@@ -17,6 +17,7 @@ public class DialogWidget extends AbstractContainerWidget {
     private Boolean lastBooleanAnswer = null;
     private boolean redirected = false;
     private LabelWidget questionLabel;
+    private LabelWidget continueNoticeLabel;
     private TextFieldWidget inputField;
     private OptionsWidget optionsWidget;
     private Runnable onComplete = () -> {
@@ -50,6 +51,10 @@ public class DialogWidget extends AbstractContainerWidget {
         questionLabel.setFancyMode(true, 20);
         addChild(questionLabel);
 
+        if (current.answerField() == AnswerType.NONE) {
+            continueNoticeLabel = new LabelWidget(0, questionLabel.getHeight() + 1, "Press [SPACE] to continue");
+            addChild(continueNoticeLabel);
+        }
         if (current.answerField() == AnswerType.INPUT) {
             inputField = new TextFieldWidget(0, questionLabel.getHeight() + 1, getWidth(), 1, "...Answer here", TextFieldWidget.DEFAULT_COLORS);
             addChild(inputField);
