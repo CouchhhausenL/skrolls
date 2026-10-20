@@ -33,6 +33,9 @@
     window.mermaid.initialize({
       startOnLoad: false,
       securityLevel: "loose",
+      // Effectively remove mermaid's diagram size limits.
+      maxTextSize: Number.MAX_SAFE_INTEGER,
+      maxEdges: Number.MAX_SAFE_INTEGER,
       theme: "dark",
       darkMode: true,
       layout: "dagre",
