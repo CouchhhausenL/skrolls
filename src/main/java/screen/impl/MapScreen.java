@@ -4,8 +4,10 @@ import main.java.animation.Animation;
 import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
 import main.java.game.GameContext;
+import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
+import main.java.util.Color;
 import main.java.util.Point;
 import main.java.util.SkaParser;
 
@@ -13,7 +15,10 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class MapScreen extends Screen {
+    private GameContext context;
+
     private final Map<Zoom, AnimationWidget> widgetMap = new EnumMap<>(Zoom.class);
+
     private Zoom zoom;
     private Point mouseDownPoint;
     private int xOffset = 0;
@@ -21,18 +26,24 @@ public class MapScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+        this.context = context;
+
         for (Zoom zoom : Zoom.values()) {
             Animation animation = SkaParser.parse("map/map" + (zoom.ordinal() + 1) + ".ska");
             AnimationWidget widget = new AnimationWidget(0, 0, animation);
             widget.setLooping(true);
             widgetMap.put(zoom, widget);
         }
+
         positionWidgets();
         setZoom(Zoom.OUT);
     }
 
     @Override
     public void onKeyEvent(KeyInputEvent event) {
+        if (event.isEscape())
+            context.setScreen(new MainGameScreen());
+
         if (event.isChar('+')) zoomIn();
         if (event.isChar('-')) zoomOut();
 
@@ -124,6 +135,12 @@ public class MapScreen extends Screen {
     @Override
     public void onResize() {
         positionWidgets();
+    }
+
+    @Override
+    protected void onPostDraw(DrawContext context) {
+        context.drawString(1, getHeight() - 3, "Use mouse / arrow to move and +/- or scroll to zoom.", Color.WHITE);
+        context.drawString(1, getHeight() - 2, "Press escape to exit", Color.WHITE);
     }
 
     enum Zoom {
