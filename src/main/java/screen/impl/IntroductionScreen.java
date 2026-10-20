@@ -4,6 +4,7 @@ package main.java.screen.impl;
 import main.java.entity.player.Player;
 import main.java.game.GameContext;
 import main.java.item.Inventory;
+import main.java.item.ItemType;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.*;
 
@@ -39,6 +40,7 @@ public class IntroductionScreen extends Screen {
         if(dialogWidget.getEnteredBoolean()){
             context.setScreen(new TutorialScene());
         } else {
+            context.addItem(ItemType.COMMON_STAFF.create());
             context.setScreen(new MainGameScreen());
         }
 
