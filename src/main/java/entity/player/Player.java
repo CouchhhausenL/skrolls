@@ -18,14 +18,6 @@ public class Player extends Entity {
         this.inventory = inventory;
     }
 
-    public void cast() {
-
-    }
-
-    public void move() {
-
-    }
-
     @Override
     public int getAttackStat() {
         return (int) inventory.getCombinedEffect(ItemEffectType.ATTACK);
