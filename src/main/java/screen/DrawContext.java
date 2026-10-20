@@ -54,10 +54,13 @@ public class DrawContext implements DrawContextView {
             // >= because 0 is also inside
             if (x >= width || y >= height) return;
         }
+
         x += offsetX;
         y += offsetY;
         if (scissorStack.isCutOff(x, y)) return;
 
+        if (x < 0 || y < 0) return;
+        if (x >= buffer.getWidth() || y >= buffer.getHeight()) return;
         buffer.setTransparent(x, y, character, foreground, background);
     }
 
