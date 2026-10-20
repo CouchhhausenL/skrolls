@@ -101,15 +101,15 @@ public class Inventory implements VerbSupplier {
     }
 
     public boolean equipItem(Item item) {
-        if (!(item instanceof Equipable equipable)) return false;
+        if (!(item instanceof Equippable equippable)) return false;
 
-        if (!backpack.contains(equipable)) {
+        if (!backpack.contains(equippable)) {
             return false;
         }
 
-        boolean equipped = equipment.equip(equipable);
+        boolean equipped = equipment.equip(equippable);
         if (equipped) {
-            backpack.remove(equipable);
+            backpack.remove(equippable);
             return true;
         }
 
@@ -118,10 +118,10 @@ public class Inventory implements VerbSupplier {
 
 
     public boolean unequipItem(Item item) {
-        if (!(item instanceof Equipable equipable)) return false;
+        if (!(item instanceof Equippable equippable)) return false;
 
-        if (equipment.unequip(equipable)) {
-            backpack.add(equipable);
+        if (equipment.unequip(equippable)) {
+            backpack.add(equippable);
             return true;
         }
         return false;
@@ -137,8 +137,8 @@ public class Inventory implements VerbSupplier {
 
         for (Item item : backpack) {
 
-            if (item instanceof Equipable equipable) {
-                String name = equipable.getName();
+            if (item instanceof Equippable equippable) {
+                String name = equippable.getName();
 
                 Verb.Builder builder = Verb.builder("equip")
                         .aliases("wear");
@@ -146,8 +146,8 @@ public class Inventory implements VerbSupplier {
                 builder.variant().choice("item", name).build().build();
 
                 verbs.add(builder.build(((executionContext, context) -> {
-                    if (equipItem(equipable)) {
-                        context.addMessage("Equiped " + name);
+                    if (equipItem(equippable)) {
+                        context.addMessage("Equipped " + name);
                     } else {
                         context.addMessage("Failed to equip " + name);
                     }

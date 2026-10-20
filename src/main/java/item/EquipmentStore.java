@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EquipmentStore implements VerbSupplier {
-    private final Map<EquipmentType<?>, List<Equipable>> items = new HashMap<>();
+    private final Map<EquipmentType<?>, List<Equippable>> items = new HashMap<>();
 
     public EquipmentStore() {
         for (EquipmentType<?> type : EquipmentType.values()) {
@@ -17,25 +17,25 @@ public class EquipmentStore implements VerbSupplier {
         }
     }
 
-    public boolean equip(Equipable equipable) {
-        EquipmentType<?> type = equipable.getEquipmentType();
-        if (equipable.getClass() != type.getClassType())
+    public boolean equip(Equippable equippable) {
+        EquipmentType<?> type = equippable.getEquipmentType();
+        if (equippable.getClass() != type.getClassType())
             throw new IllegalArgumentException("Equipable and EquipmentType classes do not match");
-        List<Equipable> list = items.get(type);
+        List<Equippable> list = items.get(type);
         if (list.size() == type.getMaxEquipable()) return false;
-        list.add(equipable);
+        list.add(equippable);
         return true;
     }
 
-    public boolean unequip(Equipable equipable) {
-        EquipmentType<?> type = equipable.getEquipmentType();
-        if (!equipable.getClass().equals(type.getClassType()))
+    public boolean unequip(Equippable equippable) {
+        EquipmentType<?> type = equippable.getEquipmentType();
+        if (!equippable.getClass().equals(type.getClassType()))
             throw new IllegalArgumentException("Equipable and EquipmentType classes do not match");
-        List<Equipable> list = items.get(type);
-        return list.remove(equipable);
+        List<Equippable> list = items.get(type);
+        return list.remove(equippable);
     }
 
-    public <T extends Equipable> List<T> getEquipables(EquipmentType<T> type) {
+    public <T extends Equippable> List<T> getEquipables(EquipmentType<T> type) {
         Class<T> clazz = type.getClassType();
         return items.get(type)
                 .stream()
@@ -43,7 +43,7 @@ public class EquipmentStore implements VerbSupplier {
                 .toList();
     }
 
-    public <T extends Equipable> T getEquipable(EquipmentType<T> type) {
+    public <T extends Equippable> T getEquipable(EquipmentType<T> type) {
         List<T> list = getEquipables(type);
         if (list.isEmpty()) return null;
         return list.getFirst();
@@ -54,15 +54,15 @@ public class EquipmentStore implements VerbSupplier {
         List<Verb> verbs = new ArrayList<>();
 
         for (EquipmentType<?> type : EquipmentType.values()) {
-            for (Equipable equipable : getEquipables(type)) {
-                String name = equipable.getName();
+            for (Equippable equippable : getEquipables(type)) {
+                String name = equippable.getName();
 
                 Verb.Builder builder = Verb.builder("unequip")
-                        .aliases("deequip");
+                        .aliases("de-equip");
                 builder.variant().choice("item", name).build().build();
                 verbs.add(builder.build(((executionContext, context) -> {
-                    if (context.unequipItem(equipable)) {
-                        context.addMessage("Unequiped " + name);
+                    if (context.unequipItem(equippable)) {
+                        context.addMessage("Unequipped " + name);
                     } else {
                         context.addMessage("Failed to unequip " + name);
                     }

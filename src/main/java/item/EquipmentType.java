@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class EquipmentType<T extends Equipable> {
+public final class EquipmentType<T extends Equippable> {
 
     private static final List<EquipmentType<?>> VALUES = new ArrayList<>();
 
@@ -33,7 +33,7 @@ public final class EquipmentType<T extends Equipable> {
         this.classType = classType;
     }
 
-    private static <T extends Equipable> EquipmentType<T> register(
+    private static <T extends Equippable> EquipmentType<T> register(
             int maxEquipable, Class<T> classType) {
 
         EquipmentType<T> type = new EquipmentType<>(maxEquipable, classType);
