@@ -5,6 +5,7 @@ import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
 import main.java.item.Item;
 import main.java.item.items.Potion;
+import main.java.scene.Scene;
 import main.java.screen.Screen;
 import main.java.spell.Spell;
 import main.java.verb.VerbSupplier;
@@ -42,4 +43,6 @@ public interface GameContext extends VerbSupplier {
     List<Spell> getSpells();
 
     List<Potion> getPotions();
+
+    void setScene(Scene scene);
 }

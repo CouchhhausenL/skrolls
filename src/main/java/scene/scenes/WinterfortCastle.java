@@ -5,7 +5,7 @@ import main.java.game.GameContext;
 import main.java.scene.LocationScene;
 
 public class WinterfortCastle extends LocationScene {
-    protected WinterfortCastle(GameContext gameContext) {
+    public WinterfortCastle(GameContext gameContext) {
         super(gameContext);
     }
 

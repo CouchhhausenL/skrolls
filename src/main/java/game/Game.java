@@ -10,6 +10,7 @@ import main.java.entity.player.Player;
 import main.java.item.Item;
 import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
+import main.java.scene.Scene;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.impl.InventoryScreen;
@@ -31,8 +32,10 @@ public class Game implements GameContext {
     private Screen screen = null;
 
     private Battle battle = null;
-
     private Player player = null;
+    private Scene scene = null;
+
+
     private final List<String> messages = new ArrayList<>();
 
     private final DrawContext drawContext;
@@ -119,6 +122,11 @@ public class Game implements GameContext {
     }
 
     @Override
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    @Override
     public List<Spell> getSpells() {
         return player.getInventory().getScrolls().stream().map(Scroll::getSpell).toList();
     }
@@ -182,6 +190,19 @@ public class Game implements GameContext {
                     if (type.equals("inventory"))
                         setScreen(new InventoryScreen());
                 })));
+
+        if (scene != null) {
+            scene.getExits().getExits().iterator().forEachRemaining(exit -> {
+                String name = exit.getDisplayName() + " [" + exit.getId() + "]";
+                verbs.add(Verb.builder("go")
+                        .aliases("move")
+                                .variant().choice("direction", name).build().build()
+                        .build((executionContext, context) -> {
+                            context.addMessage("Moved to " + name);
+                            context.setScene(exit.resolve(context));
+                        }));
+            });
+        }
 
         if (player != null)
             verbs.addAll(player.getInventory().getVerbs());

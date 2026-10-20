@@ -3,6 +3,7 @@ package main.java.scene.exit;
 import main.java.scene.Direction;
 import main.java.scene.SceneResolver;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,5 +20,9 @@ public class SceneExits {
 
     public void addExit(Direction direction, String displayName, SceneResolver resolver) {
         addExit(new DirectionalSceneExit(direction, displayName, resolver));
+    }
+
+    public Set<AbstractSceneExit> getExits() {
+        return Collections.unmodifiableSet(exits);
     }
 }

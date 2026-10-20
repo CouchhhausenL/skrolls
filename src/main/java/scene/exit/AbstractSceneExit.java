@@ -17,5 +17,9 @@ public abstract class AbstractSceneExit {
         return resolver.resolve(context);
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
     public abstract String getId();
 }

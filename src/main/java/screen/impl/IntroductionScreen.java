@@ -5,6 +5,7 @@ import main.java.entity.player.Player;
 import main.java.game.GameContext;
 import main.java.item.Inventory;
 import main.java.item.ItemType;
+import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.DialogWidget;
 
@@ -42,6 +43,7 @@ public class IntroductionScreen extends Screen {
             if (dialogWidget.getEnteredBoolean()) {
                 context.setScreen(new TutorialScene());
             } else {
+                context.setScene(new WinterfortCastle(context));
                 context.addItem(ItemType.COMMON_STAFF.create());
                 context.setScreen(new MainGameScreen());
             }
