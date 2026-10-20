@@ -150,13 +150,13 @@ public class Game implements GameContext {
     }
 
     @Override
-    public void equipItem(Item item) {
-        player.getInventory().equipItem(item);
+    public boolean equipItem(Item item) {
+        return player.getInventory().equipItem(item);
     }
 
     @Override
-    public void unequipItem(Item item) {
-        player.getInventory().unequipItem(item);
+    public boolean unequipItem(Item item) {
+        return player.getInventory().unequipItem(item);
     }
 
     @Override

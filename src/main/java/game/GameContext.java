@@ -28,8 +28,8 @@ public interface GameContext extends VerbSupplier {
     String getPlayerName();
     void setPlayer(Player player);
     void addItem(Item item);
-    void equipItem(Item item);
-    void unequipItem(Item item);
+    boolean equipItem(Item item);
+    boolean unequipItem(Item item);
 
     List<Spell> getSpells();
     List<Potion> getPotions();
