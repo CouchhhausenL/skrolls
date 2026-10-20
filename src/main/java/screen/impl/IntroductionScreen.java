@@ -39,7 +39,7 @@ public class IntroductionScreen extends Screen {
         if(dialogWidget.getEnteredBoolean()){
             context.setScreen(new TutorialScene());
         } else {
-            context.setScreen(new MapScreen()); ///TODO: CHANGE TO MAIN GAME SCENE
+            context.setScreen(new MainGameScreen());
         }
 
         });
