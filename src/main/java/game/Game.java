@@ -177,6 +177,16 @@ public class Game implements GameContext {
     public List<Verb> getVerbs() {
         List<Verb> verbs = new ArrayList<>();
 
+        verbs.add(Verb.builder("quit")
+                .aliases("leave", "stop", "end")
+                .variant()
+                .choice("game", "game")
+                .build()
+                .build()
+                .build((executionContext, context) -> {
+                    context.stop();
+                }));
+
         verbs.add(Verb.builder("open").aliases("show", "display")
                 .variant()
                 .choice("type", "map", "inventory")
