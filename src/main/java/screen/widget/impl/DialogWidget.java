@@ -1,7 +1,6 @@
 package main.java.screen.widget.impl;
 
 import main.java.console.input.KeyInputEvent;
-import main.java.screen.widget.Widget;
 import main.java.screen.widget.impl.container.AbstractContainerWidget;
 import main.java.util.Color;
 
@@ -20,7 +19,8 @@ public class DialogWidget extends AbstractContainerWidget {
     private LabelWidget questionLabel;
     private TextFieldWidget inputField;
     private OptionsWidget optionsWidget;
-    private Runnable onComplete = () -> {};
+    private Runnable onComplete = () -> {
+    };
 
     public DialogWidget(int x, int y, int width, int height) {
         super(x, y, width, height);

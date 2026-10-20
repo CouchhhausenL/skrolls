@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class Verbs {
-    private Verbs() {}
+    private Verbs() {
+    }
 
     public static List<VerbVariantAnalysisResult> findBestResults(List<VerbVariantAnalysisResult> results, boolean includePartial) {
 

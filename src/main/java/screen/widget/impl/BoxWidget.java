@@ -6,7 +6,7 @@ import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 
 public class BoxWidget extends Widget {
-    private int color;
+    private final int color;
 
     public BoxWidget(int x, int y, int width, int height, int color) {
         super(x, y, width, height);
@@ -29,8 +29,10 @@ public class BoxWidget extends Widget {
     }
 
     @Override
-    public void onKeyInput(KeyInputEvent event) {}
+    public void onKeyInput(KeyInputEvent event) {
+    }
 
     @Override
-    public void onMouseInput(MouseInputEvent event) {}
+    public void onMouseInput(MouseInputEvent event) {
+    }
 }

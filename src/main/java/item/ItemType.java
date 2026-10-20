@@ -1,18 +1,13 @@
 package main.java.item;
 
 
-
-import main.java.spell.spells.*;
-import main.java.item.items.Scroll;
 import main.java.MagicType;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
 import main.java.item.effects.ItemEffect;
 import main.java.item.effects.ItemEffectType;
-import main.java.item.items.Armor;
-import main.java.item.items.Artifact;
-import main.java.item.items.Potion;
-import main.java.item.items.Staff;
+import main.java.item.items.*;
+import main.java.spell.spells.*;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -458,7 +453,7 @@ public enum ItemType {
             new CombatEffect(CombatEffectType.STRENGTH, 3, 5)
     ))),
 
-                // ==========================================
+    // ==========================================
     // GENERATED SCROLLS (tools/generate_scroll_items.py)
     // ==========================================
     SCROLL_ABYSSAL_GRASP(() -> new Scroll(new AbyssalGrasp(), Quality.RARE)),

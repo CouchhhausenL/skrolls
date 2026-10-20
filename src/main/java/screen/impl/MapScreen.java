@@ -87,8 +87,8 @@ public class MapScreen extends Screen {
             double offsetFactor =
                     (double) zoom.getFactor() / this.zoom.getFactor();
 
-            xOffset *= offsetFactor;
-            yOffset *= offsetFactor;
+            xOffset = (int) (xOffset * offsetFactor);
+            yOffset = (int) (yOffset * offsetFactor);
         }
 
         this.zoom = zoom;
@@ -149,6 +149,7 @@ public class MapScreen extends Screen {
         IN(4);
 
         private final int factor;
+
         Zoom(int factor) {
             this.factor = factor;
         }

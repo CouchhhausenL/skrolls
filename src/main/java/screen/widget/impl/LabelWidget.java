@@ -6,8 +6,6 @@ import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 import main.java.util.Color;
 
-import java.util.List;
-
 public class LabelWidget extends Widget {
     private String content;
     private boolean fancyMode;
@@ -48,10 +46,10 @@ public class LabelWidget extends Widget {
         this.displayedCharCount = 0;
     }
 
-       public void setFancyMode(boolean fancyMode, int fancyCharDelayTime){
+    public void setFancyMode(boolean fancyMode, int fancyCharDelayTime) {
         this.fancyMode = fancyMode;
         this.fancyCharDelayTime = fancyCharDelayTime;
-   }
+    }
 
     @Override
     public void onDraw(DrawContextView context) {
@@ -72,7 +70,6 @@ public class LabelWidget extends Widget {
             y++;
         }
     }
-
 
 
     @Override

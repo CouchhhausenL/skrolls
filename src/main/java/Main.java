@@ -3,7 +3,6 @@ package main.java;
 import main.java.console.Console;
 import main.java.console.TerminalType;
 import main.java.game.Game;
-import main.java.screen.impl.MainGameScreen;
 import main.java.screen.impl.StartupScreen;
 
 import java.util.List;

@@ -9,6 +9,7 @@ public class Fireball extends Spell {
     public Fireball() {
         super("Fireball", "A strong elemental attack dealing high damage amounts.", MagicType.ELEMENTAL);
     }
+
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
@@ -19,6 +20,7 @@ public class Fireball extends Spell {
 
         }
     }
+
     @Override
     public String getAnimationName() {
         return "attack_ball.ska";

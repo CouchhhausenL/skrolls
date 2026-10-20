@@ -35,6 +35,7 @@ public record VerbVariantAnalysisResult(
         NONE_NO_MATCH(Validity.NONE);
 
         private final Validity validity;
+
         Type(Validity validity) {
             this.validity = validity;
         }

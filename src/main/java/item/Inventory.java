@@ -128,7 +128,6 @@ public class Inventory implements VerbSupplier {
     }
 
 
-
     @Override
     public List<Verb> getVerbs() {
         List<Verb> verbs = new ArrayList<>();

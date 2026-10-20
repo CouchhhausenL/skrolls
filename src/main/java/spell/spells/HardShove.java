@@ -9,6 +9,7 @@ public class HardShove extends Spell {
     public HardShove() {
         super("Hard Shove", "A blunt burst of force that knocks a target back a few steps.", MagicType.KINETIC);
     }
+
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
@@ -18,6 +19,7 @@ public class HardShove extends Spell {
 
         }
     }
+
     @Override
     public String getAnimationName() {
         return "attack_normal.ska";

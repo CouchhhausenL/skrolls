@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatMessageWidget extends Widget {
-    private String content;
+    private final String content;
 
     public ChatMessageWidget(int x, int y, int width, String content) {
         super(x, y, width, 1);

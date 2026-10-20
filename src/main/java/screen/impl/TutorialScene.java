@@ -45,16 +45,10 @@ public class TutorialScene extends Screen {
             context.equipItem(commonHealthAmulett);
 
         }));
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("Lets try fighting your first Battle", DialogWidget.AnswerType.NONE, () -> {
-            context.setBattle(MonsterType.ORK.create());
-        }));
+        dialogWidget.addDialogItem(new DialogWidget.DialogItem("Lets try fighting your first Battle", DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.ORK.create())));
 
 
-        dialogWidget.setOnComplete(() -> {
-            context.setScreen(new BattleScreen());
-
-
-        });
+        dialogWidget.setOnComplete(() -> context.setScreen(new BattleScreen()));
         addChild(dialogWidget);
 
 

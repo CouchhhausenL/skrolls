@@ -11,6 +11,7 @@ public class Rest extends Spell {
     public Rest() {
         super("Rest", "This heals you a little bit", MagicType.KINETIC);
     }
+
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
@@ -20,6 +21,7 @@ public class Rest extends Spell {
 
         }
     }
+
     @Override
     public String getAnimationName() {
         return "attack_normal.ska";

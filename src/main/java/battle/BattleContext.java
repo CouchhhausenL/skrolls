@@ -11,16 +11,20 @@ public interface BattleContext {
     int damageEnemy(int baseStrength, MagicType magicType);
 
     void applyCombatEffectYourself(CombatEffect combatEffect);
+
     void applyCombatEffectEnemy(CombatEffect combatEffect);
 
 
-
     String getPlayerName();
+
     String getEnemyName();
 
     int getPlayerHealth();
+
     int getPlayerMaxHealth();
+
     int getEnemyHealth();
+
     int getEnemyMaxHealth();
 
     boolean tryFlee();
@@ -28,6 +32,7 @@ public interface BattleContext {
     void drinkPotion(Potion potion);
 
     void sendMessage(String message);
+
     List<String> getBattleLog();
 
 }

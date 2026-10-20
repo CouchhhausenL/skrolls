@@ -3,30 +3,25 @@ package main.java.screen.widget.impl;
 import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
 import main.java.screen.DrawContextView;
-import main.java.screen.impl.MainMenuScreen;
 import main.java.screen.widget.Widget;
-import org.jline.builtins.Options;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public class OptionsWidget extends Widget {
-    private int color;
+    private final int color;
 
     private final List<OptionsWidget.Option> options = new ArrayList<Option>();
 
     private OptionsWidget.Option selectedOption;
 
 
-
     public OptionsWidget(int x, int y, int width, int height, int color, Map<String, Runnable> rawOptions) {
         super(x, y, width, height);
         this.color = color;
         int yIncr = 0;
-        for(Map.Entry<String, Runnable> rawOption : rawOptions.entrySet()){
+        for (Map.Entry<String, Runnable> rawOption : rawOptions.entrySet()) {
             LabelWidget widget = new LabelWidget(x, y + yIncr, rawOption.getKey());
 
             options.add(new Option(rawOption.getKey(), rawOption.getValue(), widget));
@@ -67,8 +62,8 @@ public class OptionsWidget extends Widget {
 
     private void offsetSelection(int offset) {
         int newIndex = options.indexOf(selectedOption) + offset;
-        if (newIndex < 0) newIndex= 0;
-        if (newIndex > options.size() - 1) newIndex = options.size()- 1;
+        if (newIndex < 0) newIndex = 0;
+        if (newIndex > options.size() - 1) newIndex = options.size() - 1;
         setSelectedOption(options.get(newIndex));
     }
 
@@ -77,29 +72,31 @@ public class OptionsWidget extends Widget {
         if (event.type() == MouseInputEvent.Type.SCROLL_UP) offsetSelection(-1);
         if (event.type() == MouseInputEvent.Type.SCROLL_DOWN) offsetSelection(1);
     }
-    public class Option {
 
+    public class Option {
 
 
         private final String name;
         private final Runnable runnable;
         private final LabelWidget labelWidget;
 
-        public Option(String name, Runnable runnable, LabelWidget labelWidget){
+        public Option(String name, Runnable runnable, LabelWidget labelWidget) {
             this.name = name;
             this.runnable = runnable;
             this.labelWidget = labelWidget;
         }
+
         public String getName() {
             return name;
         }
-        public Runnable getRunnable(){
+
+        public Runnable getRunnable() {
             return runnable;
-        };
-        public LabelWidget getLabelWidget(){
-            return labelWidget;
         }
 
+        public LabelWidget getLabelWidget() {
+            return labelWidget;
+        }
 
 
     }

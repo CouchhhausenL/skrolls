@@ -33,7 +33,7 @@ public class Game implements GameContext {
     private Battle battle = null;
 
     private Player player = null;
-    private List<String> messages = new ArrayList<>();
+    private final List<String> messages = new ArrayList<>();
 
     private final DrawContext drawContext;
 
@@ -102,20 +102,20 @@ public class Game implements GameContext {
 
 
     @Override
-    public void setBattle(Monster monster){
+    public void setBattle(Monster monster) {
         this.battle = new Battle(player, monster);
     }
 
     @Override
     public List<Potion> getPotions() {
         List<Potion> potions = new ArrayList<>();
-        for(Item item: player.getInventory().getBackpackItems()){
-            if(item instanceof Potion){
+        for (Item item : player.getInventory().getBackpackItems()) {
+            if (item instanceof Potion) {
                 potions.add((Potion) item);
             }
         }
 
-        return  potions;
+        return potions;
     }
 
     @Override
@@ -124,8 +124,8 @@ public class Game implements GameContext {
     }
 
     @Override
-    public void fleeFromBattle(){
-        if(battle.tryFlee()){
+    public void fleeFromBattle() {
+        if (battle.tryFlee()) {
             battle.sendMessage("You successfully fled from Battle!");
             setBattle(null);
             setScreen(new MapScreen());

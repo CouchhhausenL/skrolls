@@ -37,6 +37,7 @@ public abstract class Screen {
         initialized = true;
         init(context);
     }
+
     protected abstract void init(GameContext context);
 
     public void addChild(Widget widget) {
@@ -67,8 +68,11 @@ public abstract class Screen {
         }
     }
 
-    public void onKeyEvent(KeyInputEvent event) {}
-    public void onMouseEvent(MouseInputEvent event) {}
+    public void onKeyEvent(KeyInputEvent event) {
+    }
+
+    public void onMouseEvent(MouseInputEvent event) {
+    }
 
     public static void distributeKeyInputEvent(KeyInputEvent event, List<Widget> widgets) {
         for (Widget widget : new ArrayList<>(widgets)) {

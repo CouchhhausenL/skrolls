@@ -14,18 +14,19 @@ import main.java.util.SkaParser;
 import java.util.LinkedHashMap;
 
 public class MainMenuScreen extends Screen {
-   private OptionsWidget optionsWidget;
+    private OptionsWidget optionsWidget;
 
     @Override
     protected void init(GameContext context) {
         Animation animation = SkaParser.parse("title.ska");
-        addChild(new AnimationWidget(3, 2,  animation));
+        addChild(new AnimationWidget(3, 2, animation));
 
-        optionsWidget = new OptionsWidget(2,animation.getHeight() + 4, 80,20, Color.WHITE, new LinkedHashMap<>() {
+        optionsWidget = new OptionsWidget(2, animation.getHeight() + 4, 80, 20, Color.WHITE, new LinkedHashMap<>() {
             {
                 put("Start Game", () -> context.setScreen(new IntroductionScreen()));
                 put("Exit Game", context::stop);
-            }});
+            }
+        });
 
         addChild(optionsWidget);
         addChild(new LabelWidget(3, 11 + optionsWidget.getHeight() + 2, "Press [SPACE] to select"));

@@ -9,6 +9,7 @@ public class ShockwaveLance extends Spell {
     public ShockwaveLance() {
         super("Shockwave Lance", "Condenses force into a piercing line that punches through multiple targets.", MagicType.KINETIC);
     }
+
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
@@ -18,6 +19,7 @@ public class ShockwaveLance extends Spell {
 
         }
     }
+
     @Override
     public String getAnimationName() {
         return "attack_normal.ska";

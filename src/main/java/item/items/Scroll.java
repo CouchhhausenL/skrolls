@@ -1,8 +1,8 @@
 package main.java.item.items;
 
-import main.java.item.Equippable;
-import main.java.item.EquipmentType;
 import main.java.item.AbstractItem;
+import main.java.item.EquipmentType;
+import main.java.item.Equippable;
 import main.java.item.Quality;
 import main.java.spell.Spell;
 
@@ -16,7 +16,7 @@ public class Scroll extends AbstractItem implements Equippable {
         this.spell = spell;
     }
 
-    public Spell getSpell(){
+    public Spell getSpell() {
         return spell;
     }
 

@@ -11,6 +11,7 @@ public class LightRay extends Spell {
     public LightRay() {
         super("Light Ray", "A strong beam of Light that heals yourself", MagicType.PURITY);
     }
+
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
@@ -20,6 +21,7 @@ public class LightRay extends Spell {
 
         }
     }
+
     @Override
     public String getAnimationName() {
         return "attack_normal.ska";

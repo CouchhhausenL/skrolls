@@ -11,6 +11,7 @@ public class Deathbloom extends Spell {
     public Deathbloom() {
         super("Deathbloom", "Deals necrotic damage and steals a bit of Life", MagicType.NECROTIC);
     }
+
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
@@ -20,6 +21,7 @@ public class Deathbloom extends Spell {
 
         }
     }
+
     @Override
     public String getAnimationName() {
         return "attack_death.ska";

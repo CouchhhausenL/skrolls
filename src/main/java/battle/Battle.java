@@ -12,15 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Battle implements BattleContext {
-    private Player player;
-    private Monster enemy;
+    private final Player player;
+    private final Monster enemy;
     private int round;
 
     private final List<String> battleLog = new ArrayList<>();
 
-    public Battle(Player player, Monster monster){
-    this.player = player;
-    this.enemy = monster;
+    public Battle(Player player, Monster monster) {
+        this.player = player;
+        this.enemy = monster;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class Battle implements BattleContext {
     }
 
     @Override
-    public boolean tryFlee(){
+    public boolean tryFlee() {
         double fleeChance = (double) player.getSpeed() / player.getSpeed() + enemy.getSpeed();
 
         return Math.random() < fleeChance;
@@ -95,35 +95,37 @@ public class Battle implements BattleContext {
     }
 
     @Override
-    public List<String> getBattleLog(){
+    public List<String> getBattleLog() {
         return battleLog;
     }
 
 
-
-
     public String getPlayerName() {
-            return player.getName();
+        return player.getName();
     }
 
     public String getEnemyName() {
         return enemy.getName();
     }
-    public int getPlayerHealth(){
+
+    public int getPlayerHealth() {
         return player.getHealth();
     }
-    public int getPlayerMaxHealth(){
+
+    public int getPlayerMaxHealth() {
         return player.getMaxHealth();
     }
 
-    public int getEnemyHealth(){
+    public int getEnemyHealth() {
         return enemy.getHealth();
     }
-    public int getEnemyMaxHealth(){
+
+    public int getEnemyMaxHealth() {
         return enemy.getMaxHealth();
     }
 
-    public void sendStatusMessage(){}
+    public void sendStatusMessage() {
+    }
 
 
     public int damagePlayer() {

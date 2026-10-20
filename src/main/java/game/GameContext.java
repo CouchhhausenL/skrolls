@@ -14,11 +14,15 @@ import java.util.List;
 public interface GameContext extends VerbSupplier {
 
     void setScreen(Screen screen);
+
     BattleContext getCurrentBattle();
+
     void stop();
 
     void addMessage(String message);
+
     List<String> getMessages();
+
     int getMessagesHashCode();
 
     void setBattle(Monster monster);
@@ -26,11 +30,16 @@ public interface GameContext extends VerbSupplier {
     void fleeFromBattle();
 
     String getPlayerName();
+
     void setPlayer(Player player);
+
     void addItem(Item item);
+
     boolean equipItem(Item item);
+
     boolean unequipItem(Item item);
 
     List<Spell> getSpells();
+
     List<Potion> getPotions();
 }

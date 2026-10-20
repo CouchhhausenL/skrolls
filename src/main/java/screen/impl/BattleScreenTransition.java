@@ -29,11 +29,13 @@ public class BattleScreenTransition extends Screen {
         widget.onDone(endTransition);
 
     }
+
     @Override
     public void onKeyEvent(KeyInputEvent event) {
         if (event.isChar(KeyInputEvent.Letter.F))
             endTransition.onDone();
     }
+
     @Override
     public void onResize() {
 

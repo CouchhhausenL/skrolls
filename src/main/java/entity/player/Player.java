@@ -66,18 +66,20 @@ public class Player extends Entity {
         return DifficultyLevel.values()[inventory.getStaff().getQuality().ordinal()].getLevel();
     }
 
-    public void maxManaPercentageDrain(double percentage){
-        maxMana = (int) Math.floor(maxMana - maxMana *  percentage);
+    public void maxManaPercentageDrain(double percentage) {
+        maxMana = (int) Math.floor(maxMana - maxMana * percentage);
     }
 
 
-    public void gainMana(int amount){
+    public void gainMana(int amount) {
         mana = Math.min(mana + amount, maxMana);
     }
-    public void spendMana(int amount){
+
+    public void spendMana(int amount) {
         mana = Math.max(0, mana - amount);
     }
-    public void regenerateMana(double percentage){
+
+    public void regenerateMana(double percentage) {
         mana = (int) Math.min(Math.floor(mana + (maxMana * percentage / 100)), maxMana);
     }
 

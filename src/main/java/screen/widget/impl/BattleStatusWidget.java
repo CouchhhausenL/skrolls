@@ -48,13 +48,15 @@ public class BattleStatusWidget extends Widget {
     }
 
     @Override
-    public void onKeyInput(KeyInputEvent event) {}
+    public void onKeyInput(KeyInputEvent event) {
+    }
 
     @Override
-    public void onMouseInput(MouseInputEvent event) {}
+    public void onMouseInput(MouseInputEvent event) {
+    }
 
 
-    public void setHealth(int health){
+    public void setHealth(int health) {
         this.health = health;
     }
 }

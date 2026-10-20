@@ -16,7 +16,7 @@ public abstract class Entity {
     private final String name;
     private int health;
     private int maxHealth;
-    private int speed;
+    private final int speed;
     private final Map<Stat, Integer> statStages = new EnumMap<>(Stat.class);
     private final List<CombatEffect> combatEffects = new ArrayList<>();
 
@@ -36,7 +36,8 @@ public abstract class Entity {
 
         return (health > 0);
     }
-    public boolean takePercentualDamage(double percentage){
+
+    public boolean takePercentualDamage(double percentage) {
         health = (int) (health - (maxHealth * percentage / 100));
 
         return (health > 0);
@@ -54,24 +55,28 @@ public abstract class Entity {
             health = maxHealth;
         }
     }
-    public void healPercentage(double percentage){
+
+    public void healPercentage(double percentage) {
         health = (int) Math.floor(health + (maxHealth * percentage));
     }
-    public void maxHealthPercentageDrain(double percent){
-        maxHealth = (int) Math.min(0, Math.floor(maxHealth - maxHealth * percent / 100) );
+
+    public void maxHealthPercentageDrain(double percent) {
+        maxHealth = (int) Math.min(0, Math.floor(maxHealth - maxHealth * percent / 100));
     }
-   
-    
+
 
     public int getStatStage(Stat stat) {
         int baseStage = statStages.getOrDefault(stat, 0);
-        baseStage = baseStage + switch(stat){
-            case ATTACK -> getCombinedCombatEffect(CombatEffectType.STRENGTH) + getCombinedCombatEffect(CombatEffectType.WEAKNESS);
-            case DEFENSE -> getCombinedCombatEffect(CombatEffectType.RESISTANCE) + getCombinedCombatEffect(CombatEffectType.Vulnerability);
-            case SPEED -> getCombinedCombatEffect(CombatEffectType.SPEED) + getCombinedCombatEffect(CombatEffectType.SLOWNESS);
+        baseStage = baseStage + switch (stat) {
+            case ATTACK ->
+                    getCombinedCombatEffect(CombatEffectType.STRENGTH) + getCombinedCombatEffect(CombatEffectType.WEAKNESS);
+            case DEFENSE ->
+                    getCombinedCombatEffect(CombatEffectType.RESISTANCE) + getCombinedCombatEffect(CombatEffectType.Vulnerability);
+            case SPEED ->
+                    getCombinedCombatEffect(CombatEffectType.SPEED) + getCombinedCombatEffect(CombatEffectType.SLOWNESS);
         };
         baseStage = Math.clamp(baseStage, -6, 6);
-        return baseStage ;
+        return baseStage;
     }
 
     public void applyInstantEffects() {
@@ -90,7 +95,8 @@ public abstract class Entity {
                     }
                 }
                 case DAMAGE -> takeDamage((int) effect);
-                case DISPEL -> combatEffects.removeIf(specificEffect -> specificEffect.getCombatEffectType().isPeriodic());
+                case DISPEL ->
+                        combatEffects.removeIf(specificEffect -> specificEffect.getCombatEffectType().isPeriodic());
             }
 
             combatEffects.remove(instantEffect);
@@ -110,8 +116,6 @@ public abstract class Entity {
     }
 
 
-
-
     public void resetStatStages() {
         for (Stat stat : Stat.values()) {
             statStages.put(stat, 0);
@@ -123,12 +127,12 @@ public abstract class Entity {
         statStages.put(stat, 0);
     }
 
-    public void resetCombatEffects(){
+    public void resetCombatEffects() {
         combatEffects.clear();
     }
-    
-    public void drinkPotion(Potion potion){
-        for(CombatEffect combatEffect : potion.combatEffects){
+
+    public void drinkPotion(Potion potion) {
+        for (CombatEffect combatEffect : potion.combatEffects) {
             addCombatEffect(combatEffect);
         }
 
@@ -147,23 +151,23 @@ public abstract class Entity {
         combatEffects.removeIf(CombatEffect::tickDuration);
     }
 
-    public int getCombinedCombatEffect(CombatEffectType combatEffectType){
-     int combined = 0;
-        for (CombatEffect combatEffect : combatEffects){
-            if(combatEffect.getCombatEffectType() == combatEffectType){
+    public int getCombinedCombatEffect(CombatEffectType combatEffectType) {
+        int combined = 0;
+        for (CombatEffect combatEffect : combatEffects) {
+            if (combatEffect.getCombatEffectType() == combatEffectType) {
                 combined = (int) (combined + combatEffect.getEffectStrength());
             }
-     }
-      return combined;
+        }
+        return combined;
     }
 
 
-    public void applyPeriodicEffects(){
-        for (CombatEffect combatEffect : combatEffects){
+    public void applyPeriodicEffects() {
+        for (CombatEffect combatEffect : combatEffects) {
             CombatEffectType combatEffectType = combatEffect.getCombatEffectType();
-            if(combatEffectType.isPeriodic()){
+            if (combatEffectType.isPeriodic()) {
                 double effectStrength = combatEffect.getEffectStrength();
-                switch(combatEffectType){
+                switch (combatEffectType) {
                     case BURNED:
                         takePercentualDamage(Math.max(1, effectStrength - combatEffect.getCurrentRound()));
                         break;
@@ -171,7 +175,7 @@ public abstract class Entity {
                         takePercentualDamage(effectStrength + combatEffect.getCurrentRound());
                         break;
                     case CONFUSED:
-                        if(Math.random() > 0.5){
+                        if (Math.random() > 0.5) {
                             takePercentualDamage(effectStrength);
                         }
                         break;
@@ -180,16 +184,16 @@ public abstract class Entity {
                         break;
                     case CURSED:
                         maxHealthPercentageDrain(effectStrength);
-                        if(this instanceof Player){
+                        if (this instanceof Player) {
                             ((Player) this).maxManaPercentageDrain(effectStrength);
                         }
                         break;
-                        
+
                     case REGENERATION:
                         healPercentage(5);
                         break;
                     case MANA_REGEN:
-                        if(this instanceof Player){
+                        if (this instanceof Player) {
                             ((Player) this).regenerateMana(effectStrength);
                         }
                         break;
@@ -230,6 +234,6 @@ public abstract class Entity {
     }
 
     public int getMaxHealth() {
-    return maxHealth;
+        return maxHealth;
     }
 }
