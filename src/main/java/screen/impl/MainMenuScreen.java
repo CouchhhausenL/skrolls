@@ -27,7 +27,7 @@ public class MainMenuScreen extends Screen {
         Animation animation = SkaParser.parse("title.ska");
         addChild(new AnimationWidget(3, 2,  animation));
 
-        optionsWidget = new OptionsWidget(0,animation.getHeight() + 2, 80,20, Color.WHITE, new LinkedHashMap<>() {
+        optionsWidget = new OptionsWidget(2,animation.getHeight() + 4, 80,20, Color.WHITE, new LinkedHashMap<>() {
             {
                 put("Start Game", () -> context.setScreen(new TutorialScreen()));
                 put("Exit Game", context::stop);
@@ -35,8 +35,6 @@ public class MainMenuScreen extends Screen {
 
         addChild(optionsWidget);
         addChild(new LabelWidget(3, 11 + optionsWidget.getHeight() + 2, "Press [SPACE] to select"));
-
-        ;
     }
 
     @Override
