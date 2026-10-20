@@ -7,6 +7,8 @@ public class VerbExecutionContext {
     private final List<String> nonGlobalNames = new ArrayList<>();
 
     public VerbExecutionContext(Verb verb, VerbVariantAnalysisResult result) {
+        if (result == null) return;
+
         // Add all defaults to the map
         for (VerbParameter<?> parameter : result.verbVariant().getParameters()) {
             if (parameter.hasDefaultValue() && parameter.hasName())

@@ -96,11 +96,14 @@ public class Game implements GameContext {
                         .aliases("drink", "consume", "chug")
                         .variant()
                             .choice("item", "water", "healing potion", "resistance potion", "healing potion deluxe", "healing health boost potion").build()
-                            .integer("count", 1, 10).defaultValue(1).build()
-                            .choice("times", "times").defaultValue("times").build()
                             .build()
                         .variant()
-                            .integer("count", 1, 10).defaultValue(1).build()
+                            .choice("item", "water", "healing potion", "resistance potion", "healing potion deluxe", "healing health boost potion").build()
+                            .integer("count", 1, 10).build()
+                            .choice("times", "times").build()
+                            .build()
+                        .variant()
+                            .integer("count", 1, 10).build()
                             .choice("item", "healing potions", "resistance potions").build()
                             .build()
                         .build((executionContext, context) -> {
@@ -113,6 +116,11 @@ public class Game implements GameContext {
                             .build()
                         .build(((executionContext, context) -> {
 
+                        })),
+
+                Verb.builder("leave")
+                        .build(((executionContext, context) -> {
+                            context.stop();
                         }))
         );
     }

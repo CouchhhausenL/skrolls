@@ -1,6 +1,7 @@
 package main.java.verb;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +13,11 @@ public class VerbVariant {
     }
 
     public List<VerbVariantAnalysisResult> analyze(String input) {
-        String[] words = input.trim().split("\\s+");
+        String[] words = input.stripTrailing().split("\\s+");
+        if (input.endsWith(" ")) {
+            words = Arrays.copyOf(words, words.length + 1);
+            words[words.length - 1] = "";
+        }
         return analyze(words, parameters, new ArrayList<>());
     }
 

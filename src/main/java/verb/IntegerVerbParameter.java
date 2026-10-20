@@ -1,5 +1,6 @@
 package main.java.verb;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IntegerVerbParameter extends VerbParameter<Integer> {
@@ -34,6 +35,8 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
 
     @Override
     public VerbParameterMatchResult validate(String input) {
+        if (input.isEmpty())
+            return VerbParameterMatchResult.PARTIAL;
         try {
             int value = Integer.parseInt(input);
             return value >= min && value <= max
@@ -46,10 +49,13 @@ public class IntegerVerbParameter extends VerbParameter<Integer> {
 
     @Override
     public List<String> suggest(String prefix) {
-        Integer defaultValue = getDefaultValue();
-        if (defaultValue != null && String.valueOf(defaultValue).startsWith(prefix))
-            return List.of(String.valueOf(defaultValue));
-        return List.of();
+        List<String> list = new ArrayList<>();
+        for (int i = min; i < max; i++) {
+            String str = String.valueOf(i);
+            if (str.startsWith(prefix))
+                list.add(str);
+        }
+        return list;
     }
 
     public static class Builder {

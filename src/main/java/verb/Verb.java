@@ -29,6 +29,13 @@ public class Verb {
         return false;
     }
 
+    public List<String> getAllPossibleNames() {
+        List<String> result = new ArrayList<>();
+        result.add(name);
+        result.addAll(aliases);
+        return result;
+    }
+
     public boolean allVariantsHaveParameterName(String name) {
         for (VerbVariant variant : variants) {
             if (!variant.hasParameterWithName(name))
@@ -37,12 +44,26 @@ public class Verb {
         return true;
     }
 
+    public List<String> suggest(String prefix) {
+        String normalized = prefix.toLowerCase();
+
+        return getAllPossibleNames().stream()
+                .filter(option ->
+                        option.toLowerCase()
+                                .startsWith(normalized))
+                .toList();
+    }
+
     public List<VerbVariantAnalysisResult> analyze(String input) {
         List<VerbVariantAnalysisResult> results = new ArrayList<>();
         for (VerbVariant variant : variants) {
             results.addAll(variant.analyze(input));
         }
         return results;
+    }
+
+    public boolean hasNoVariants() {
+        return variants.isEmpty();
     }
 
     public void execute(VerbVariantAnalysisResult result, GameContext gameContext) {
