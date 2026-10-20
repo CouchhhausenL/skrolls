@@ -1,19 +1,6 @@
 package main.java.item;
 
-public abstract class Item {
-    private final String name;
-    private final String description;
-
-    public Item(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
+public interface Item {
+    String getName();
+    String getDescription();
 }

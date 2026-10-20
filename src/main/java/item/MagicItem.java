@@ -6,7 +6,7 @@ import main.java.item.effects.ItemEffectType;
 
 import java.util.List;
 
-public abstract class MagicItem extends Item {
+public abstract class MagicItem extends AbstractItem {
     private final Quality quality;
     private final MagicType magicType;
     private final List<ItemEffect> itemEffects;

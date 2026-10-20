@@ -29,7 +29,7 @@ public class MainMenuScreen extends Screen {
 
         optionsWidget = new OptionsWidget(2,animation.getHeight() + 4, 80,20, Color.WHITE, new LinkedHashMap<>() {
             {
-                put("Start Game", () -> context.setScreen(new TutorialScreen()));
+                put("Start Game", () -> context.setScreen(new MainGameScreen()));
                 put("Exit Game", context::stop);
             }});
 

@@ -129,38 +129,11 @@ public class Game implements GameContext {
 
     @Override
     public List<Verb> getVerbs() {
-        return List.of(
-                Verb.builder("use")
-                        .aliases("drink", "consume", "chug")
-                        .variant()
-                            .choice("item", "water", "healing potion", "resistance potion", "healing potion deluxe", "healing health boost potion").build()
-                            .build()
-                        .variant()
-                            .choice("item", "water", "healing potion", "resistance potion", "healing potion deluxe", "healing health boost potion").build()
-                            .integer("count", 1, 10).build()
-                            .choice("times", "times").build()
-                            .build()
-                        .variant()
-                            .integer("count", 1, 10).build()
-                            .choice("item", "healing potions", "resistance potions").build()
-                            .build()
-                        .build((executionContext, context) -> {
-                        }),
+        List<Verb> verbs = new ArrayList<>();
+        if (player != null)
+            verbs.addAll(player.getInventory().getVerbs());
 
-                Verb.builder("use")
-                        .aliases("eat", "consume")
-                        .variant()
-                            .choice("item", "pizza", "burger").build()
-                            .build()
-                        .build(((executionContext, context) -> {
-                            context.addMessage("Ate " + executionContext.getString("item"));
-                        })),
-
-                Verb.builder("leave")
-                        .build(((executionContext, context) -> {
-                            context.stop();
-                        }))
-        );
+        return verbs;
     }
 
     @Override

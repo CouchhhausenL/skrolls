@@ -1,13 +1,13 @@
 package main.java.item.items;
 
 import main.java.MagicType;
-import main.java.item.Item;
+import main.java.item.AbstractItem;
 import main.java.item.Quality;
 import main.java.item.effects.CombatEffect;
 
 import java.util.List;
 
-public class Potion extends Item {
+public class Potion extends AbstractItem {
     public final Quality quality;
     public final MagicType magicType;
     public final List<CombatEffect> combatEffects;

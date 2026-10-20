@@ -4,16 +4,15 @@ import main.java.battle.Battle;
 import main.java.battle.BattleContext;
 import main.java.entity.player.Player;
 import main.java.screen.Screen;
-import main.java.verb.Verb;
+import main.java.verb.VerbSupplier;
 
 import java.util.List;
 
-public interface GameContext {
+public interface GameContext extends VerbSupplier {
 
     void setScreen(Screen screen);
     BattleContext getCurrentBattle();
     void stop();
-    List<Verb> getVerbs();
 
     void addMessage(String message);
     List<String> getMessages();

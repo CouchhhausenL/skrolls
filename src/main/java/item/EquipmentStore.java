@@ -1,11 +1,14 @@
 package main.java.item;
 
+import main.java.verb.Verb;
+import main.java.verb.VerbSupplier;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EquipmentStore {
+public class EquipmentStore implements VerbSupplier {
     private final Map<EquipmentType<?>, List<Equipable>> items = new HashMap<>();
 
     public EquipmentStore() {
@@ -46,4 +49,22 @@ public class EquipmentStore {
         return list.getFirst();
     }
 
+    @Override
+    public List<Verb> getVerbs() {
+        List<Verb> verbs = new ArrayList<>();
+
+        for (EquipmentType<?> type : EquipmentType.values()) {
+            for (Equipable equipable : getEquipables(type)) {
+                Verb.Builder builder = Verb.builder("unequip")
+                        .aliases("deequip");
+                builder.variant().choice("item", equipable.getName());
+                verbs.add(builder.build(((executionContext, context) -> {
+                    unequip(equipable);
+                    context.getPlayer().getInventory().addItem(equipable);
+                })));
+            }
+        }
+
+        return verbs;
+    }
 }

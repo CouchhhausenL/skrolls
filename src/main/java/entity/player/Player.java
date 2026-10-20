@@ -12,7 +12,6 @@ public class Player extends Entity {
     private int magicShards;
     private final Inventory inventory;
 
-
     public Player(String name, int maxHealth, int speed, Inventory inventory) {
         super(name, maxHealth, speed);
         this.inventory = inventory;
@@ -81,7 +80,6 @@ public class Player extends Entity {
     public void regenerateMana(double percentage){
         mana = (int) Math.min(Math.floor(mana + (maxMana * percentage / 100)), maxMana);
     }
-
 
     public Inventory getInventory() {
         return inventory;

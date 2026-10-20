@@ -5,13 +5,20 @@ import main.java.item.items.Armor;
 import main.java.item.items.Artifact;
 import main.java.item.items.Scroll;
 import main.java.item.items.Staff;
+import main.java.verb.Verb;
+import main.java.verb.VerbSupplier;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Inventory {
+public class Inventory implements VerbSupplier {
     private final List<Item> backpack = new ArrayList<>();
+
+    public EquipmentStore getEquipment() {
+        return equipment;
+    }
+
     private final EquipmentStore equipment = new EquipmentStore();
 
     public Inventory() {
@@ -25,6 +32,10 @@ public class Inventory {
         for (Item item : items) {
             addItem(item);
         }
+    }
+
+    public void removeItem(Item item) {
+        backpack.remove(item);
     }
 
     public List<Item> getBackpackItems() {
@@ -87,5 +98,29 @@ public class Inventory {
         highestOrdinal = checkItemQuality(getArmor(), highestOrdinal);
         highestOrdinal = checkItemQuality(getStaff(), highestOrdinal);
         return Quality.values()[highestOrdinal];
+    }
+
+    @Override
+    public List<Verb> getVerbs() {
+        List<Verb> verbs = new ArrayList<>();
+
+        verbs.addAll(equipment.getVerbs());
+
+        for (Item item : backpack) {
+
+            if (item instanceof Equipable equipable) {
+                Verb.Builder builder = Verb.builder("equip")
+                        .aliases("wear");
+
+                builder.variant().choice("item", equipable.getName());
+
+                verbs.add(builder.build(((executionContext, context) -> {
+                    removeItem(equipable);
+                    equipment.equip(equipable);
+                })));
+            }
+        }
+
+        return verbs;
     }
 }
