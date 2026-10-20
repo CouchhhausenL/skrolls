@@ -138,13 +138,19 @@ public class Inventory implements VerbSupplier {
         for (Item item : backpack) {
 
             if (item instanceof Equipable equipable) {
+                String name = equipable.getName();
+
                 Verb.Builder builder = Verb.builder("equip")
                         .aliases("wear");
 
-                builder.variant().choice("item", equipable.getName()).build().build();
+                builder.variant().choice("item", name).build().build();
 
                 verbs.add(builder.build(((executionContext, context) -> {
-                    equipItem(equipable);
+                    if (equipItem(equipable)) {
+                        context.addMessage("Equiped " + name);
+                    } else {
+                        context.addMessage("Failed to equip " + name);
+                    }
                 })));
             }
         }
