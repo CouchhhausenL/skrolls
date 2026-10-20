@@ -2,6 +2,7 @@ package main.java.game;
 
 import main.java.battle.Battle;
 import main.java.battle.BattleContext;
+import main.java.entity.player.Player;
 import main.java.screen.Screen;
 import main.java.verb.Verb;
 
@@ -19,4 +20,9 @@ public interface GameContext {
     int getMessagesHashCode();
 
     void setBattle(Battle battle);
+
+    void fleeFromBattle();
+
+    Player getPlayer();
+    void setPlayer(Player player);
 }

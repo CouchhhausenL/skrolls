@@ -8,6 +8,12 @@ import main.java.util.Color;
 
 public class LabelWidget extends Widget {
     private String content;
+    private boolean fancyMode;
+
+
+    private int displayedCharCount = 0;
+    private long lastTime = 0;
+    private long fancyCharDelayTime = 100; // Zeit in Millisekunden pro Buchstabe
 
     public LabelWidget(int x, int y, int width, int height, String content) {
         super(x, y, width, height);
@@ -26,9 +32,23 @@ public class LabelWidget extends Widget {
         this.content = content;
     }
 
+   public void setFancyMode(boolean fancyMode){
+        this.fancyMode = fancyMode;
+   }
     @Override
     public void onDraw(DrawContextView context) {
-        context.drawString(0, 0, content, Color.WHITE);
+        if (fancyMode) {
+            long now = System.currentTimeMillis();
+            if (now - lastTime > fancyCharDelayTime && displayedCharCount < content.length()) {
+                displayedCharCount++;
+                lastTime = now;
+            }
+
+            String subContent = content.substring(0, displayedCharCount);
+            context.drawString(0,0, subContent, Color.WHITE);
+        } else {
+            context.drawString(0, 0, content, Color.WHITE);
+        }
     }
 
     @Override

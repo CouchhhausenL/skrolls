@@ -25,7 +25,9 @@ public abstract class Entity {
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.speed = speed;
-
+        for (Stat stat : Stat.values()) {
+            statStages.put(stat, 0);
+        }
     }
 
     public boolean takeDamage(int amount) {
@@ -61,7 +63,7 @@ public abstract class Entity {
     
 
     public int getStatStage(Stat stat) {
-        int baseStage = statStages.get(stat);
+        int baseStage = statStages.getOrDefault(stat, 0);
         baseStage = baseStage + switch(stat){
             case ATTACK -> getCombinedCombatEffect(CombatEffectType.STRENGTH) + getCombinedCombatEffect(CombatEffectType.WEAKNESS);
             case DEFENSE -> getCombinedCombatEffect(CombatEffectType.RESISTANCE) + getCombinedCombatEffect(CombatEffectType.Vulnerability);
@@ -110,12 +112,14 @@ public abstract class Entity {
 
 
     public void resetStatStages() {
-        statStages.replaceAll((s, v) -> 0);
+        for (Stat stat : Stat.values()) {
+            statStages.put(stat, 0);
+        }
     }
 
 
     public void resetStatStage(Stat stat) {
-        statStages.put(stat, 1);
+        statStages.put(stat, 0);
     }
 
     public void resetCombatEffects(){
@@ -126,6 +130,7 @@ public abstract class Entity {
 
     public void addCombatEffect(CombatEffect combatEffect) {
         combatEffects.add(combatEffect);
+        applyInstantEffects();
     }
 
     public void removeCombatEffect(CombatEffect combatEffect) {
@@ -151,7 +156,6 @@ public abstract class Entity {
         for (CombatEffect combatEffect : combatEffects){
             CombatEffectType combatEffectType = combatEffect.getCombatEffectType();
             if(combatEffectType.isPeriodic()){
-                combatEffect.tickDuration();
                 double effectStrength = combatEffect.getEffectStrength();
                 switch(combatEffectType){
                     case BURNED:

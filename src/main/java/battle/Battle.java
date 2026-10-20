@@ -4,15 +4,40 @@ import main.java.MagicType;
 import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
+import main.java.item.effects.CombatEffect;
+import main.java.item.effects.CombatEffectType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Battle implements BattleContext {
     private Player player;
     private Monster enemy;
     private int round;
 
+    private final List<String> battleLog = new ArrayList<>();
+
     public Battle(Player player, Monster monster){
     this.player = player;
     this.enemy = monster;
+    }
+
+    @Override
+    public void applyCombatEffectEnemy(CombatEffect combatEffect) {
+        enemy.addCombatEffect(combatEffect);
+    }
+
+    @Override
+    public void applyCombatEffectYourself(CombatEffect combatEffect) {
+        player.addCombatEffect(combatEffect);
+
+    }
+
+    @Override
+    public boolean tryFlee(){
+        double fleeChance = (double) player.getSpeed() / player.getSpeed() + enemy.getSpeed();
+
+        return Math.random() < fleeChance;
     }
 
     public void fight() {
@@ -27,6 +52,9 @@ public class Battle implements BattleContext {
 
     public boolean round() {
         player.applyPeriodicEffects();
+        enemy.applyPeriodicEffects();
+        player.tickAllCombatEffects();
+        enemy.tickAllCombatEffects();
         if (player.getSpeed() >= enemy.getSpeed()) {
             if (!playerTurn()) return false;
 
@@ -55,9 +83,17 @@ public class Battle implements BattleContext {
     }
 
 
-    public void updatePotionEffects() {
-
+    @Override
+    public void sendMessage(String message) {
+        battleLog.add(message);
     }
+
+    @Override
+    public List<String> getBattleLog(){
+        return battleLog;
+    }
+
+
 
 
     public String getPlayerName() {
@@ -81,6 +117,7 @@ public class Battle implements BattleContext {
         return enemy.getMaxHealth();
     }
 
+    public void sendStatusMessage(){}
 
 
     public void damagePlayer() {
@@ -92,11 +129,11 @@ public class Battle implements BattleContext {
         int level = enemy.getDifficulty().getLevel();
         double stab = 1.0;
 
-        int critLevel = 1;
+        int critLevel = enemy.getCombinedCombatEffect(CombatEffectType.CRITICAL_FOCUS);
 
-        double typeEffectivness = MagicType.getEffectiveness(enemy.getAttackingMagicType(), player.getDefendingMagicType());
+        double typeEffectiveness = MagicType.getEffectiveness(enemy.getAttackingMagicType(), player.getDefendingMagicType());
 
-        int damage = AttackHelper.calculateDamage(level, baseDamage, attackValue, defenseValue, stab, critLevel, typeEffectivness);
+        int damage = AttackHelper.calculateDamage(level, baseDamage, attackValue, defenseValue, stab, critLevel, typeEffectiveness);
         player.takeDamage(damage);
 
 
@@ -123,8 +160,7 @@ public class Battle implements BattleContext {
         if (player.getAttackingMagicType() == attackType) {
             stab = 1.5;
         }
-        int critLevel = 1;
-        // Here can go checking if potions increase critChance
+        int critLevel = player.getCombinedCombatEffect(CombatEffectType.CRITICAL_FOCUS);
 
 
         double typeEffectiveness = MagicType.getEffectiveness(attackType, enemy.getDefendingMagicType());
