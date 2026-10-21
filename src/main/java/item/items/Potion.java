@@ -20,4 +20,8 @@ public class Potion extends AbstractItem {
         this.magicType = magicType;
         this.combatEffects = combatEffects;
     }
+
+    public MagicType getMagicType() {
+        return magicType;
+    }
 }

@@ -13,7 +13,7 @@ import java.util.Objects;
 // Vertical list of selectable options. The selection is highlighted and
 // activated with SPACE; one option (the first) is selected by default.
 public class OptionsWidget extends Widget {
-    private final int color;
+    private int color;
 
     private final List<OptionsWidget.Option> options = new ArrayList<Option>();
 
@@ -34,6 +34,18 @@ public class OptionsWidget extends Widget {
         if (!options.isEmpty()) setSelectedOption(options.getFirst());
 
     }
+    public record ColoredString(String string, int color){};
+    public OptionsWidget(int x, int y, int width, int height, Map<ColoredString, Runnable> rawOptions){
+        super(x,y,width,height);
+        int yIncr = 0;
+        for (Map.Entry<ColoredString, Runnable> rawOption : rawOptions.entrySet()) {
+            LabelWidget widget = new LabelWidget(x, y + yIncr, rawOption.getKey().string);
+
+            options.add(new ColoredOption(rawOption.getKey().string, rawOption.getValue(), widget, rawOption.getKey().color));
+            yIncr++;
+        }
+
+    }
 
     public void removeOption(String string){
         options.removeIf(option -> Objects.equals(option.getName(), string));
@@ -44,7 +56,11 @@ public class OptionsWidget extends Widget {
     public void onDraw(DrawContextView context) {
         int yOffset = 0;
         for (Option option : options) {
-            context.drawString(0, yOffset, option.getLabelWidget().getContent(), color);
+            int thisColor = this.color;
+            if(option instanceof ColoredOption){
+                thisColor = ((ColoredOption) option).getColor();
+            }
+            context.drawString(0, yOffset, option.getLabelWidget().getContent(), thisColor);
             yOffset += 2;
         }
     }
@@ -85,8 +101,6 @@ public class OptionsWidget extends Widget {
     }
 
     public class Option {
-
-
         private final String name;
         private final Runnable runnable;
         private final LabelWidget labelWidget;
@@ -109,6 +123,20 @@ public class OptionsWidget extends Widget {
             return labelWidget;
         }
 
+
+    }
+
+    public class ColoredOption extends Option {
+        private final int color;
+        public ColoredOption(String name, Runnable runnable, LabelWidget labelWidget, int color){
+            super(name,runnable,labelWidget);
+            this.color = color;
+        }
+
+
+        public int getColor(){
+            return color;
+        }
 
     }
 }
