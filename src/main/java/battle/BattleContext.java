@@ -1,6 +1,7 @@
 package main.java.battle;
 
 import main.java.MagicType;
+import main.java.item.Item;
 import main.java.item.effects.CombatEffect;
 import main.java.item.items.Potion;
 
@@ -35,7 +36,7 @@ public interface BattleContext {
 
     boolean isEnemyAlive();
 
-
+    Item MobDrop();
 
     boolean tryFlee();
 

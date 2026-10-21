@@ -3,6 +3,9 @@ package main.java.entity.monster;
 import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;
+import main.java.item.Item;
+import main.java.item.ItemType;
+import main.java.item.Quality;
 
 // A single monster instance. The same MagicType is used for both attacking
 // and defending because monsters only have one affinity.
@@ -55,5 +58,9 @@ public class Monster extends Entity {
     @Override
     public MagicType getAttackingMagicType() {
         return magicType;
+    }
+
+    public Item getMobDrop(){
+        return ItemType.getItemByQuality(Quality.values()[this.getDifficulty().ordinal()]);
     }
 }

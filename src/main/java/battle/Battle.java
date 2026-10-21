@@ -4,6 +4,7 @@ import main.java.MagicType;
 import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
+import main.java.item.Item;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
 import main.java.item.items.Potion;
@@ -91,6 +92,12 @@ public class Battle implements BattleContext {
             battleState = BattleState.ENEMY_TURN;
             return new BattleStateOrder(BattleState.ENEMY_TURN, BattleState.PLAYER_TURN);
         }
+    }
+     @Override
+    public Item MobDrop(){
+        Item item = enemy.getMobDrop();
+        player.getInventory().addItem(item);
+        return item;
     }
 
 

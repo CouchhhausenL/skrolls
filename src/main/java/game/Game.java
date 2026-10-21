@@ -7,6 +7,7 @@ import main.java.console.input.InputEvent;
 import main.java.console.input.KeyInputEvent;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
+import main.java.item.Inventory;
 import main.java.item.Item;
 import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
@@ -172,6 +173,11 @@ public class Game implements GameContext {
     @Override
     public String getPlayerName() {
         return player.getName();
+    }
+
+    @Override
+    public Inventory getInventory(){
+        return player.getInventory();
     }
 
     @Override

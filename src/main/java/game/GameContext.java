@@ -3,6 +3,7 @@ package main.java.game;
 import main.java.battle.BattleContext;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
+import main.java.item.Inventory;
 import main.java.item.Item;
 import main.java.item.items.Potion;
 import main.java.scene.Scene;
@@ -44,6 +45,8 @@ public interface GameContext extends VerbSupplier {
     List<Spell> getSpells();
 
     List<Potion> getPotions();
+
+    Inventory getInventory();
 
     void setScene(Scene scene);
 }
