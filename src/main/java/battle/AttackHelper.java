@@ -5,10 +5,7 @@ package main.java.battle;
 // a random roll, same-type bonus (STAB) and type effectiveness.
 public final class AttackHelper {
 
-    // Placeholder for a future dedicated damage attack
-    public static void damageAttack() {
 
-    }
 
 
     // Applies the item multiplier (e.g. 1.10) to a move's base power
@@ -54,36 +51,28 @@ public final class AttackHelper {
 
 
     public static int calculateDamage(int level, int baseDamage, int attack, int defense, double stab, int critLevel, double typeEffectiveness) {
-        double crit = 0;
-        double requiredCritRandomness = 99;
-        // NOTE: no break statements, so these cases fall through and the
-        // default assignment below effectively wins for every crit level.
-        switch (critLevel) {
-            case 0:
-                requiredCritRandomness = 99 - 6.25;
-            case 1:
-                requiredCritRandomness = 99 - 12.5;
-            case 2:
-                requiredCritRandomness = 99 - 25;
-            case 3:
-                requiredCritRandomness = 99 - 33.33;
-            case 4:
-                requiredCritRandomness = 99 - 50;
-            default:
-                requiredCritRandomness = 99 - 6.25;
-        }
+        double crit = 1;
+        double requiredCritRandomness = switch (critLevel) {
+            case 0 -> 99 - 6.25;
+            case 1 -> 99 - 12.5;
+            case 2 -> 99 - 25;
+            case 3 -> 99 - 33.33;
+            case 4 -> 99 - 50;
+            default -> 99 - 6.25;
+        };
 
         // Roll 1..99; meeting the threshold grants a critical hit
         int critRandomness = (int) (Math.random() * 99) + 1;
         if (critRandomness >= requiredCritRandomness) {
-            crit = 0.5;
+            crit = 1.5;
         }
         // Random damage roll between 85% and 99%
         int zRandomness = (int) (Math.random() * 15);
         int z = 99 - zRandomness;
         // Core formula: level scaling, power, attack/defense, then modifiers
-        int damage = (int) Math.floor((((level * 1.0 / 5.0 + 2.0) * baseDamage * attack / (50.0 * defense)) + 2.0) * crit * (z / 100.0) * stab * typeEffectiveness);
-        return damage;
+        int effectiveDefense = Math.max(1, defense);
+        int damage = (int) Math.floor((((level * 1.0 / 5.0 + 2.0) * baseDamage * attack / (50.0 * effectiveDefense)) + 2.0) * crit * (z / 100.0) * stab * typeEffectiveness);
+        return Math.max(1, damage);
     }
 
 }

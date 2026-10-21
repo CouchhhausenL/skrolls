@@ -19,6 +19,8 @@ public class Battle implements BattleContext {
     private final Monster enemy;
     private int round;
 
+    private BattleState battleState;
+
     private final List<String> battleLog = new ArrayList<>();
 
     public Battle(Player player, Monster monster) {
@@ -45,42 +47,64 @@ public class Battle implements BattleContext {
         return Math.random() < fleeChance;
     }
 
-    // Clears lingering state from previous fights, then runs rounds until one
-    // side dies (round() returns false) or the player flees.
-    public void fight() {
-        player.resetCombatEffects();
-        player.resetStatStages();
-        while (round()) {
 
-        }
+
+    // Clears lingering state from previous fights,
+    public void fightInit() {
+        player.resetCombatEffects();
+        enemy.resetCombatEffects();
+        player.heal(player.getMaxHealth());
+        enemy.heal(enemy.getMaxHealth());
+
+
 
 
     }
 
     public boolean round() {
-        // Start-of-round upkeep: periodic damage/healing, then expire effects
-        player.applyPeriodicEffects();
-        enemy.applyPeriodicEffects();
-        player.tickAllCombatEffects();
-        enemy.tickAllCombatEffects();
+
         // Faster combatant acts first; ties favor the player
         if (player.getSpeed() >= enemy.getSpeed()) {
-            if (!playerTurn()) return false;
-
-            if (!monsterAttack()) return false;
+            battleState = BattleState.PLAYER_TURN;
         } else {
-            if (!monsterAttack()) return false;
-
-            if (!playerTurn()) return false;
+            battleState = BattleState.ENEMY_TURN;
         }
 
         return checkAllAlive();
     }
 
-    public boolean monsterAttack() {
-        damagePlayer();
-        return checkAllAlive();
+    public int monsterAttack() {
+        return damagePlayer();
     }
+    public void endRound(){
+        player.applyPeriodicEffects();
+        enemy.applyPeriodicEffects();
+        player.tickAllCombatEffects();
+        enemy.tickAllCombatEffects();
+
+        battleState = determineBattleStateOrder().first;
+    }
+
+    public void setBattleState(BattleState battleState) {
+        this.battleState = battleState;
+    }
+    public BattleState getBattleState(){
+        return battleState;
+    }
+
+    public record BattleStateOrder(BattleState first, BattleState second){}
+
+    public BattleStateOrder determineBattleStateOrder(){
+        if(player.getSpeed() >= enemy.getSpeed()) {
+            battleState = BattleState.PLAYER_TURN;
+            return new BattleStateOrder(BattleState.PLAYER_TURN, BattleState.ENEMY_TURN);
+        } else {
+            battleState = BattleState.ENEMY_TURN;
+            return new BattleStateOrder(BattleState.ENEMY_TURN, BattleState.PLAYER_TURN);
+        }
+    }
+
+
 
     public boolean playerTurn() {
         return checkAllAlive();
@@ -91,6 +115,11 @@ public class Battle implements BattleContext {
 
     }
 
+    @Override
+    public boolean isPlayerAlive() { return player.isAlive(); }
+
+    @Override
+    public boolean isEnemyAlive() { return enemy.isAlive(); }
 
     @Override
     public void drinkPotion(Potion potion) {
@@ -141,7 +170,7 @@ public class Battle implements BattleContext {
         int baseDamage = enemy.getDifficulty().getBaseDamage();
         int attackValue = AttackHelper.calculateAttackValue(enemy.getAttackStat(), enemy.getStatStage(Stat.ATTACK), 1.0);
 
-        int defenseValue = AttackHelper.calculateDefenseValue(enemy.getDefenseStat(), enemy.getStatStage(Stat.DEFENSE), 1.0);
+        int defenseValue = AttackHelper.calculateDefenseValue(player.getDefenseStat(), player.getStatStage(Stat.DEFENSE), player.getDefenseItemFactor(enemy.getAttackingMagicType()));
 
         int level = enemy.getDifficulty().getLevel();
         double stab = 1.0;
@@ -171,11 +200,11 @@ public class Battle implements BattleContext {
         int attackValue = AttackHelper.calculateAttackValue(attackStat, attackStatStage, damageItemFactor);
 
 
-        // Defensive side: NOTE this uses the player's own defense, not the enemy's,
+        // Defensive side:
         // plus resistance matching the spell's magic type
-        int defenseStat = player.getDefenseStat();
-        int defenseStatStage = player.getStatStage(Stat.DEFENSE);
-        double defenseItemFactor = player.getDefenseItemFactor(attackType);
+        int defenseStat = enemy.getDefenseStat();
+        int defenseStatStage = enemy.getStatStage(Stat.DEFENSE);
+        double defenseItemFactor = 1.0;
         int defenseValue = AttackHelper.calculateDefenseValue(defenseStat, defenseStatStage, defenseItemFactor);
 
         int level = player.getLevel();

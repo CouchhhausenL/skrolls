@@ -12,6 +12,8 @@ public interface BattleContext {
 
     int damageEnemy(int baseStrength, MagicType magicType);
 
+    int monsterAttack();
+
     void applyCombatEffectYourself(CombatEffect combatEffect);
 
     void applyCombatEffectEnemy(CombatEffect combatEffect);
@@ -29,6 +31,10 @@ public interface BattleContext {
 
     int getEnemyMaxHealth();
 
+    boolean isPlayerAlive();
+
+    boolean isEnemyAlive();
+
     boolean tryFlee();
 
     void drinkPotion(Potion potion);
@@ -36,5 +42,10 @@ public interface BattleContext {
     void sendMessage(String message);
 
     List<String> getBattleLog();
+    void setBattleState(BattleState battleState);
+    BattleState getBattleState();
+    Battle.BattleStateOrder determineBattleStateOrder();
 
+    void endRound();
+    void fightInit();
 }

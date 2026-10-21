@@ -56,8 +56,8 @@ public abstract class Entity {
 
         health += amount;
 
-        if (health > maxHealth) {
-            health = maxHealth;
+        if (health > getMaxHealth()) {
+            health = getMaxHealth();
         }
     }
 

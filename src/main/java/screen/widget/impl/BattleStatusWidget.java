@@ -43,10 +43,15 @@ public class BattleStatusWidget extends Widget {
     // Filled cells proportional to current/max health, clamped to the bar width
     private String calculateHealthBar() {
         int barWidth = 20;
-        int filled = maxHealth > 0 ? (health * barWidth) / maxHealth : 0;
+        int clampedHealth = Math.max(0, health);
+        int filled = maxHealth > 0 ? (clampedHealth * barWidth) / maxHealth : 0;
         filled = Math.clamp(filled, 0, barWidth);
         int unfilled = barWidth - filled;
         return "■".repeat(filled) + "□".repeat(unfilled);
+    }
+
+    public void update(int health){
+        this.health = health;
     }
 
     @Override

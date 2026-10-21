@@ -2,7 +2,10 @@ package main.java.screen.impl;
 
 
 import main.java.animation.Animation;
+import main.java.battle.Battle;
 import main.java.battle.BattleContext;
+import main.java.battle.BattleState;
+import main.java.console.input.KeyInputEvent;
 import main.java.game.GameContext;
 import main.java.item.items.Potion;
 import main.java.screen.Screen;
@@ -30,12 +33,17 @@ public class BattleScreen extends Screen {
     private OptionsWidget attackOptionsWidget;
     private OptionsWidget potionOptionsWidget;
 
+    private Battle.BattleStateOrder battleStateOrder;
+
+
+
 
     private ScrollableContainerWidget messagesHistoryWidget;
 
     @Override
     protected void init(GameContext context) {
         BattleContext battle = context.getCurrentBattle();
+        battle.fightInit();
         playerBox = new BattleStatusWidget(1, 1, battle.getPlayerName(), battle.getPlayerHealth(), battle.getPlayerMaxHealth());
         enemyBox = new BattleStatusWidget(67, 25, battle.getEnemyName(), battle.getEnemyHealth(), battle.getEnemyMaxHealth());
 
@@ -60,7 +68,9 @@ public class BattleScreen extends Screen {
         // 2. Attack menu: one entry per spell from equipped scrolls
         Map<String, Runnable> attackOptions = new LinkedHashMap<>();
         for (Spell spell : context.getSpells()) {
-            attackOptions.put(spell.getName(), () -> spell.cast(context));
+            attackOptions.put(spell.getName(), () -> {
+                playerAttack(context, spell);
+            });
         }
         attackOptions.put("Back", () -> switchMenu(optionsWidget));
         attackOptionsWidget = new OptionsWidget(0, 40, 40, 20, Color.WHITE, attackOptions);
@@ -87,8 +97,9 @@ public class BattleScreen extends Screen {
         addChild(playerBox);
         addChild(enemyBox);
 
-        // Show the main menu first
-        switchMenu(optionsWidget);
+        battleStateOrder = battle.determineBattleStateOrder();
+
+        setState(battle, battleStateOrder.first());
     }
 
     // Removes all option widgets and shows only the requested one
@@ -102,18 +113,110 @@ public class BattleScreen extends Screen {
         }
     }
 
-    public void playerAttack(String attackAnimationName) {
-        Animation playerAttackAnimation = SkaParser.parse("character/wizard/" + attackAnimationName);
-        playerAnimationWidget = new AnimationWidget(0, 0, playerAttackAnimation);
+
+    public void switchState(BattleContext battle){
+        BattleState currentBattleState = getCurrentState(battle);
+        if(currentBattleState == battleStateOrder.first()){
+            battle.setBattleState(battleStateOrder.second());
+        } else if (currentBattleState == battleStateOrder.second()){
+            battle.setBattleState(BattleState.END_ROUND);
+        }
+
+        setState(battle, battle.getBattleState());
     }
 
-    public void enemyAttack(String monster) {
+    public void setState(BattleContext battle, BattleState battleState){
+        if (!battle.isEnemyAlive()) {
+            battle.sendMessage(battle.getEnemyName() + " was defeated!");
+            switchMenu(null);
+            return;
+        }
+        if (!battle.isPlayerAlive()) {
+            battle.sendMessage("You were defeated!");
+            switchMenu(null);
+            return;
+        }
+
+        switch(battleState){
+            case PLAYER_TURN -> switchMenu(optionsWidget);
+            case ENEMY_TURN -> {
+                switchMenu(null);
+                enemyAttack(battle);
+            }
+            case END_ROUND -> {
+                switchMenu(null);
+                battle.endRound();
+                playerBox.update(battle.getPlayerHealth());
+                enemyBox.update(battle.getEnemyHealth());
+                if (!battle.isEnemyAlive() || !battle.isPlayerAlive()) {
+                    setState(battle, BattleState.END_ROUND);
+                } else {
+                    battleStateOrder = battle.determineBattleStateOrder();
+                    setState(battle, battleStateOrder.first());
+                }
+            }
+        }
+    }
+
+    public BattleState getCurrentState(BattleContext battle){
+        return battle.getBattleState();
+    }
+
+
+
+
+    public void playerAttack(GameContext context, Spell spell) {
+        BattleContext battle = context.getCurrentBattle();
+
+
+        switchMenu(null);
+
+        removeChild(playerAnimationWidget); //remove old widget
+        Animation playerAttackAnimation = SkaParser.parse("character/wizard/" + spell.getAnimationName());
+
+        AnimationWidget attackWidget  = new AnimationWidget(0, 0, playerAttackAnimation);
+        attackWidget.onDone(() -> {
+            spell.cast(context);
+            enemyBox.update(battle.getEnemyHealth());
+            removeChild(attackWidget);
+            addChild(playerAnimationWidget);
+            if (!battle.isEnemyAlive()) {
+                battle.sendMessage(battle.getEnemyName() + " was defeated!");
+                return;
+            }
+            switchState(battle);
+        });
+        addChild(attackWidget);
+    }
+
+
+
+
+    public void enemyAttack(BattleContext battle) {
+        String monster = battle.getEnemyName().toLowerCase().replace(" ", "_");
+        removeChild(enemyAnimationWidget);
+
+
         Animation enemyAttackAnimation = SkaParser.parse("character/" + monster + "/attack.ska");
-        enemyAnimationWidget = new AnimationWidget(0, 0, enemyAttackAnimation);
+        AnimationWidget enemyAttackWidget = new AnimationWidget(0, 0, enemyAttackAnimation);
+        enemyAttackWidget.onDone( () -> {
+            battle.monsterAttack();
+            playerBox.update(battle.getPlayerHealth());
+            removeChild(enemyAttackWidget);
+            addChild(enemyAnimationWidget);
+            if (!battle.isPlayerAlive()) {
+                battle.sendMessage("You were defeated!");
+                return;
+            }
+            switchState(battle);
+        });
+        addChild(enemyAttackWidget);
     }
 
     @Override
     public void onResize() {
 
     }
+
+
 }

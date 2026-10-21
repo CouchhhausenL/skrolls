@@ -28,8 +28,8 @@ public class IntroductionScreen extends Screen {
                 DialogWidget.AnswerType.INPUT,
                 () -> context.setPlayer(new Player(
                         dialogWidget.getEnteredAnswer(),
-                        50,
-                        30,
+                        150,
+                        60,
                         new Inventory()
                 ))));
         dialogWidget.addDialogItem(new DialogWidget.DialogItem(() -> "Hello " + context.getPlayerName() + " nice to Meet you!\n", DialogWidget.AnswerType.NONE, () -> {

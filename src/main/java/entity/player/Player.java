@@ -14,14 +14,24 @@ public class Player extends Entity {
     private int magicShards;
     private final Inventory inventory;
 
+    private int baseAttack = 40;
+    private int baseDefense = 40;
+
     public Player(String name, int maxHealth, int speed, Inventory inventory) {
         super(name, maxHealth, speed);
         this.inventory = inventory;
     }
 
+    public Player(String name, int maxHealth, int speed, int baseAttack, int baseDefense, Inventory inventory) {
+        super(name, maxHealth, speed);
+        this.baseAttack = baseAttack;
+        this.baseDefense = baseDefense;
+        this.inventory = inventory;
+    }
+
     @Override
     public int getAttackStat() {
-        return (int) inventory.getCombinedEffect(ItemEffectType.ATTACK);
+        return baseAttack + (int) inventory.getCombinedEffect(ItemEffectType.ATTACK);
     }
 
 
@@ -52,12 +62,24 @@ public class Player extends Entity {
             return 1.0;
         }
 
-        return inventory.getCombinedEffect(searchType);
+        double combined = inventory.getCombinedEffect(searchType);
+        return combined == 0.0 ? 1.0 : combined;
     }
 
     @Override
     public int getDefenseStat() {
-        return (int) Math.floor(inventory.getCombinedEffect(ItemEffectType.DEFENSE));
+        return baseDefense + (int) Math.floor(inventory.getCombinedEffect(ItemEffectType.DEFENSE));
+    }
+
+
+    @Override
+    public int getMaxHealth() {
+        return super.getMaxHealth() + (int) inventory.getCombinedEffect(ItemEffectType.MAX_HEALTH);
+    }
+
+    @Override
+    public int getSpeed() {
+        return super.getSpeed() + (int) inventory.getCombinedEffect(ItemEffectType.SPEED);
     }
 
     @Override

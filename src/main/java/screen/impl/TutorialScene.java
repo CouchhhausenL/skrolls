@@ -41,10 +41,13 @@ public class TutorialScene extends Screen {
         dialogWidget.addDialogItem(new DialogWidget.DialogItem("I also have an Old Armour and an Old Amulette for you", DialogWidget.AnswerType.NONE, () -> {
             Item commonArmour = ItemType.COMMON_ARMOUR.create();
             Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
+            Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
             context.addItem(commonArmour);
             context.addItem(commonHealthAmulett);
+            context.addItem(commonScroll);
             context.equipItem(commonArmour);
             context.equipItem(commonHealthAmulett);
+            context.equipItem(commonScroll);
 
         }));
         // Last step sets up the battle; completing the dialog enters the fight
