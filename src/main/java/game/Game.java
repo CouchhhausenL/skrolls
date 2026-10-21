@@ -10,14 +10,19 @@ import main.java.entity.player.Player;
 import main.java.item.Item;
 import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
+import main.java.scene.PathScene;
 import main.java.scene.Scene;
+import main.java.scene.scenes.Winterfort;
+import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
+import main.java.screen.impl.BattleScreen;
 import main.java.screen.impl.InventoryScreen;
 import main.java.screen.impl.MainGameScreen;
 import main.java.screen.impl.MapScreen;
 import main.java.spell.Spell;
 import main.java.util.Color;
+import main.java.util.SplashText;
 import main.java.verb.Verb;
 
 import java.util.ArrayList;
@@ -36,7 +41,7 @@ public class Game implements GameContext {
 
     private Battle battle = null;
     private Player player = null;
-    private Scene scene = null;
+    private Scene scene = new WinterfortCastle(this);
 
 
     private final List<String> messages = new ArrayList<>();
@@ -132,7 +137,14 @@ public class Game implements GameContext {
 
     @Override
     public void setScene(Scene scene) {
-        this.scene = scene;
+        if(player.getDifficultyLevel().ordinal() >= scene.getDifficulty().ordinal()){
+            this.scene = scene;
+        }
+        else {
+
+            addMessage(SplashText.getNo());
+            addMessage("This Scene is to difficult for you! " +"[" + scene.getDifficulty() + "]");
+        }
     }
 
     @Override
@@ -199,6 +211,16 @@ public class Game implements GameContext {
                     context.stop();
                 }));
 
+        verbs.add(Verb.builder("fight").aliases("battle", "engage")
+                        .build((executionContext, context) -> {
+                            if(scene instanceof PathScene){
+                                setBattle(((PathScene) scene).spawnMonster());
+                                setScreen(new BattleScreen());
+                            }else{
+                                context.addMessage(SplashText.getNo());
+                            }
+                        }));
+
         verbs.add(Verb.builder("open").aliases("show", "display")
                 .variant()
                 .choice("type", "map", "inventory")
@@ -216,7 +238,7 @@ public class Game implements GameContext {
         // One "go <exit>" verb per exit of the current scene
         if (scene != null) {
             scene.getExits().getExits().iterator().forEachRemaining(exit -> {
-                String name = exit.getDisplayName() + " [" + exit.getId() + "]";
+                String name = exit.getDisplayName() + " [" + exit.getId() + "]" + "[";
                 verbs.add(Verb.builder("go")
                         .aliases("move")
                                 .variant().choice("direction", name).build().build()

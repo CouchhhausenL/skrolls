@@ -47,8 +47,9 @@ public class IntroductionScreen extends Screen {
             if (dialogWidget.getEnteredBoolean()) {
                 context.setScreen(new TutorialScene());
             } else {
-                context.setScene(new WinterfortCastle(context));
+
                 // Give the player a basic weapon to start with
+                Item commonStaff = ItemType.COMMON_STAFF.create();
                 Item commonArmour = ItemType.COMMON_ARMOUR.create();
                 Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
                 Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
@@ -60,6 +61,7 @@ public class IntroductionScreen extends Screen {
                 context.equipItem(commonArmour);
                 context.equipItem(commonHealthAmulett);
                 context.equipItem(commonScroll);
+                context.equipItem(commonStaff);
 
                 context.setScreen(new MainGameScreen());
             }

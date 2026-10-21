@@ -18,6 +18,7 @@ import main.java.screen.widget.impl.container.ScrollableContainerWidget;
 import main.java.spell.Spell;
 import main.java.util.Color;
 import main.java.util.SkaParser;
+import main.java.util.SplashText;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -131,7 +132,11 @@ public class BattleScreen extends Screen {
 
         }else if(!battle.isPlayerAlive()){
             AnimationWidget looseAnimation = new AnimationWidget(0,0,80,30, SkaParser.parse(("utility/loose.ska")));
-            looseAnimation.onDone((() -> new MainGameScreen()));
+            looseAnimation.onDone((() -> {new MainGameScreen();
+                context.addMessage(SplashText.getDeath());
+
+            }));
+
         }
     }
 

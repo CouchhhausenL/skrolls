@@ -10,6 +10,7 @@ import main.java.screen.widget.impl.LabelWidget;
 import main.java.screen.widget.impl.OptionsWidget;
 import main.java.util.Color;
 import main.java.util.SkaParser;
+import main.java.util.SplashText;
 
 import java.util.LinkedHashMap;
 
@@ -19,6 +20,7 @@ public class MainMenuScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+
         Animation animation = SkaParser.parse("title.ska");
         addChild(new AnimationWidget(3, 2, animation));
 
