@@ -8,6 +8,7 @@ import main.java.screen.widget.Widget;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 // Vertical list of selectable options. The selection is highlighted and
 // activated with SPACE; one option (the first) is selected by default.
@@ -32,6 +33,11 @@ public class OptionsWidget extends Widget {
         }
         if (!options.isEmpty()) setSelectedOption(options.getFirst());
 
+    }
+
+    public void removeOption(String string){
+        options.removeIf(option -> Objects.equals(option.getName(), string));
+        setSelectedOption(options.getFirst());
     }
 
     @Override

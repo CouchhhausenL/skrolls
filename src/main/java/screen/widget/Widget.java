@@ -76,10 +76,10 @@ public abstract class Widget {
     // Limits translate drawing into this widget's space and also clip its size
     public void draw(DrawContext context) {
         try {
-            context.setLimits(getX(), getY(), getWidth(), getHeight());
+            context.pushLimits(getX(), getY(), getWidth(), getHeight());
             onDraw(context);
         } finally {
-            context.clearLimits();
+            context.popLimits();
         }
     }
 

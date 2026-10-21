@@ -11,6 +11,7 @@ import java.util.Stack;
 public class DrawContext implements DrawContextView {
     private final CellBuffer buffer;
     private final ScissorStack scissorStack = new ScissorStack();
+    private final Stack<LimitEntry> limitStack = new Stack<>();
 
     private int offsetX = 0;
     private int offsetY = 0;
@@ -27,10 +28,31 @@ public class DrawContext implements DrawContextView {
 
     public void clear() {
         buffer.clear();
+        limitStack.clear();
+        clearLimits();
     }
 
     public void resize(int width, int height) {
         buffer.resize(width, height);
+    }
+
+    public void pushLimits(int x, int y, int width, int height) {
+        limitStack.push(new LimitEntry(this.offsetX, this.offsetY, this.width, this.height));
+        this.offsetX += x;
+        this.offsetY += y;
+        this.width = width;
+        this.height = height;
+    }
+
+    public void popLimits() {
+        if (limitStack.isEmpty()) {
+            throw new IllegalStateException("LimitStack is empty");
+        }
+        LimitEntry previous = limitStack.pop();
+        this.offsetX = previous.offsetX();
+        this.offsetY = previous.offsetY();
+        this.width = previous.width();
+        this.height = previous.height();
     }
 
     public void setLimits(int offsetX, int offsetY, int width, int height) {
@@ -51,6 +73,10 @@ public class DrawContext implements DrawContextView {
         if (scissorStack.size() > 0) throw new IllegalStateException("ScissorStack is not empty");
     }
 
+    public void throwIfLimitStackInvalid() {
+        if (!limitStack.isEmpty()) throw new IllegalStateException("LimitStack is not empty");
+    }
+
     // All drawing funnels through here so limits, translation, scissor and
     // buffer bounds are enforced in one place
     @Override
@@ -58,7 +84,7 @@ public class DrawContext implements DrawContextView {
         // Reject coordinates outside the current widget's local size (0 disables)
         if (width != 0 && height != 0) {
             // >= because 0 is also inside
-            if (x >= width || y >= height) return;
+            if (x < 0 || y < 0 || x >= width || y >= height) return;
         }
 
         // Widget-local -> screen coordinates
@@ -127,6 +153,9 @@ public class DrawContext implements DrawContextView {
     @Override
     public void popScissor() {
         scissorStack.pop();
+    }
+
+    private record LimitEntry(int offsetX, int offsetY, int width, int height) {
     }
 
     static class ScissorStack {

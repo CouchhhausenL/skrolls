@@ -13,6 +13,7 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
     private int scroll = 0;
     private int allHeight = 0;
 
+    private boolean keyboardInput = true;
     public ScrollableContainerWidget(int x, int y, int width, int height, int gap) {
         super(x, y, width, height, gap);
     }
@@ -45,9 +46,15 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
 
     @Override
     public void onKeyInput(KeyInputEvent event) {
-        super.onKeyInput(event);
-        if (event.isArrow(KeyInputEvent.Direction.UP)) scroll++;
-        if (event.isArrow(KeyInputEvent.Direction.DOWN)) scroll--;
+        if(keyboardInput) {
+            super.onKeyInput(event);
+            if (event.isArrow(KeyInputEvent.Direction.UP)) scroll++;
+            if (event.isArrow(KeyInputEvent.Direction.DOWN)) scroll--;
+        }
+    }
+
+    public void setKeyboardInput(boolean keyboardInput) {
+        this.keyboardInput = keyboardInput;
     }
 
     @Override

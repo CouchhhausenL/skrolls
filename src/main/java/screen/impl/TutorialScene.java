@@ -42,16 +42,19 @@ public class TutorialScene extends Screen {
             Item commonArmour = ItemType.COMMON_ARMOUR.create();
             Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
             Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
+            Item potion = ItemType.COMMON_HEALTH_POTION.create();
             context.addItem(commonArmour);
             context.addItem(commonHealthAmulett);
             context.addItem(commonScroll);
+            context.addItem(potion);
             context.equipItem(commonArmour);
             context.equipItem(commonHealthAmulett);
             context.equipItem(commonScroll);
 
+
         }));
         // Last step sets up the battle; completing the dialog enters the fight
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("Lets try fighting your first Battle", DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.ORK.create())));
+        dialogWidget.addDialogItem(new DialogWidget.DialogItem("Lets try fighting your first Battle", DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.AXE_ROGUE.create())));
 
 
         dialogWidget.setOnComplete(() -> context.setScreen(new BattleScreen()));

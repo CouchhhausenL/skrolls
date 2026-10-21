@@ -142,12 +142,7 @@ public abstract class Entity {
         combatEffects.clear();
     }
 
-    public void drinkPotion(Potion potion) {
-        for (CombatEffect combatEffect : potion.combatEffects) {
-            addCombatEffect(combatEffect);
-        }
 
-    }
 
     // Instant effects are consumed immediately; periodic ones remain active
     public void addCombatEffect(CombatEffect combatEffect) {

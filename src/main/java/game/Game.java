@@ -14,6 +14,7 @@ import main.java.scene.Scene;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.impl.InventoryScreen;
+import main.java.screen.impl.MainGameScreen;
 import main.java.screen.impl.MapScreen;
 import main.java.spell.Spell;
 import main.java.util.Color;
@@ -145,7 +146,7 @@ public class Game implements GameContext {
         if (battle.tryFlee()) {
             battle.sendMessage("You successfully fled from Battle!");
             setBattle(null);
-            setScreen(new MapScreen());
+            setScreen(new MainGameScreen());
         } else {
             battle.sendMessage("You tried to flee, but it failed");
         }

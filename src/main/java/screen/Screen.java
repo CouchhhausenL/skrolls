@@ -58,6 +58,7 @@ public abstract class Screen {
         }
         // Every pushed scissor must have been popped by its widget
         context.throwIfScissorStackInvalid();
+        context.throwIfLimitStackInvalid();
         onPostDraw(context);
     }
 

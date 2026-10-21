@@ -35,6 +35,8 @@ public interface BattleContext {
 
     boolean isEnemyAlive();
 
+
+
     boolean tryFlee();
 
     void drinkPotion(Potion potion);
@@ -48,4 +50,6 @@ public interface BattleContext {
 
     void endRound();
     void fightInit();
+
+
 }

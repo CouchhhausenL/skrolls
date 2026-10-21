@@ -4,7 +4,9 @@ import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;
 import main.java.item.Inventory;
+import main.java.item.effects.CombatEffect;
 import main.java.item.effects.ItemEffectType;
+import main.java.item.items.Potion;
 
 // Player stats are derived from equipped items in the inventory;
 // base values come from Entity and item effects are added on top.
@@ -36,11 +38,13 @@ public class Player extends Entity {
 
 
     public double getDamageItemFactor() {
-        return inventory.getCombinedEffect(ItemEffectType.DAMAGE);
+        double combined = inventory.getCombinedEffect(ItemEffectType.DAMAGE);
+        return combined == 0.0 ? 1.0 : combined;
     }
 
     public double getBaseDamageItemFactor() {
-        return inventory.getCombinedEffect(ItemEffectType.OWN_MAGIC);
+        double combined =  inventory.getCombinedEffect(ItemEffectType.OWN_MAGIC);
+        return combined == 0.0 ? 1.0 : combined;
 
     }
 
@@ -118,7 +122,13 @@ public class Player extends Entity {
     public DifficultyLevel getDifficultyLevel() {
         return DifficultyLevel.values()[inventory.getHighestQualityItem().ordinal()];
     }
+    public void drinkPotion(Potion potion) {
+        for (CombatEffect combatEffect : potion.combatEffects) {
+            addCombatEffect(combatEffect);
+            inventory.removeItem(potion);
+        }
 
+    }
 
     @Override
     public MagicType getDefendingMagicType() {

@@ -9,6 +9,7 @@ import main.java.console.input.KeyInputEvent;
 import main.java.game.GameContext;
 import main.java.item.items.Potion;
 import main.java.screen.Screen;
+import main.java.screen.widget.Widget;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.BattleStatusWidget;
 import main.java.screen.widget.impl.LabelWidget;
@@ -19,6 +20,7 @@ import main.java.util.Color;
 import main.java.util.SkaParser;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 // Battle view: status boxes, idle animations and three switchable menus
@@ -35,6 +37,9 @@ public class BattleScreen extends Screen {
 
     private Battle.BattleStateOrder battleStateOrder;
 
+    private GameContext context;
+    private BattleContext battle;
+
 
 
 
@@ -42,7 +47,8 @@ public class BattleScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
-        BattleContext battle = context.getCurrentBattle();
+        this.context = context;
+        this.battle = context.getCurrentBattle();
         battle.fightInit();
         playerBox = new BattleStatusWidget(1, 1, battle.getPlayerName(), battle.getPlayerHealth(), battle.getPlayerMaxHealth());
         enemyBox = new BattleStatusWidget(67, 25, battle.getEnemyName(), battle.getEnemyHealth(), battle.getEnemyMaxHealth());
@@ -63,7 +69,7 @@ public class BattleScreen extends Screen {
         mainOptions.put("Attack", () -> switchMenu(attackOptionsWidget));
         mainOptions.put("Drink Potion", () -> switchMenu(potionOptionsWidget));
         mainOptions.put("Flee", context::fleeFromBattle);
-        optionsWidget = new OptionsWidget(0, 40, 40, 20, Color.WHITE, mainOptions);
+        optionsWidget = new OptionsWidget(0, 30, 40, 10, Color.WHITE, mainOptions);
 
         // 2. Attack menu: one entry per spell from equipped scrolls
         Map<String, Runnable> attackOptions = new LinkedHashMap<>();
@@ -73,22 +79,23 @@ public class BattleScreen extends Screen {
             });
         }
         attackOptions.put("Back", () -> switchMenu(optionsWidget));
-        attackOptionsWidget = new OptionsWidget(0, 40, 40, 20, Color.WHITE, attackOptions);
+        attackOptionsWidget = new OptionsWidget(0, 30, 40, 10, Color.WHITE, attackOptions);
 
         // 3. Potion menu
+
+
         Map<String, Runnable> potionOptions = new LinkedHashMap<>();
         for (Potion potion : context.getPotions()) {
-            potionOptions.put(potion.getName(), () -> context.getCurrentBattle().drinkPotion(potion));
+            potionOptions.put(potion.getName(), () -> {playerDrinkPotion(context, potion);
+            });
         }
         potionOptions.put("Back", () -> switchMenu(optionsWidget));
-        potionOptionsWidget = new OptionsWidget(0, 40, 40, 20, Color.WHITE, potionOptions);
+        potionOptionsWidget = new OptionsWidget(0, 30, 40, 10, Color.WHITE, potionOptions);
 
         // 4. Battle messages
-        messagesHistoryWidget = new ScrollableContainerWidget(0, 30, 40, 10, 0);
-        for (String message : battle.getBattleLog()) {
-            LabelWidget widget = new LabelWidget(0, 0, message);
-            messagesHistoryWidget.addChild(widget);
-        }
+        messagesHistoryWidget = new ScrollableContainerWidget(0, 40, 40, 10, 0);
+        updateMessagesWidget();
+        messagesHistoryWidget.setKeyboardInput(false);
         addChild(messagesHistoryWidget);
 
         // Register the base widgets
@@ -99,7 +106,7 @@ public class BattleScreen extends Screen {
 
         battleStateOrder = battle.determineBattleStateOrder();
 
-        setState(battle, battleStateOrder.first());
+        setState( battleStateOrder.first());
     }
 
     // Removes all option widgets and shows only the requested one
@@ -113,8 +120,33 @@ public class BattleScreen extends Screen {
         }
     }
 
+    public void checkEnd(){
+        if(!battle.isEnemyAlive()){
 
-    public void switchState(BattleContext battle){
+            AnimationWidget winAnimation = new AnimationWidget(0,0, 80, 30, SkaParser.parse("utility/win.ska"));
+            winAnimation.onDone(() -> {
+               context.setScreen(new MainGameScreen());
+            });
+            addChild(winAnimation);
+
+        }else if(!battle.isPlayerAlive()){
+            AnimationWidget looseAnimation = new AnimationWidget(0,0,80,30, SkaParser.parse(("utility/loose.ska")));
+            looseAnimation.onDone((() -> new MainGameScreen()));
+        }
+    }
+
+
+    public void updateMessagesWidget(){
+        List<String> battleLog = battle.getBattleLog();
+        messagesHistoryWidget.clearChildren();
+        for (String message : battleLog) {
+            LabelWidget widget = new LabelWidget(0, 0, message);
+            messagesHistoryWidget.addChild(widget);
+        }
+    }
+
+    public void switchState(){
+        updateMessagesWidget();
         BattleState currentBattleState = getCurrentState(battle);
         if(currentBattleState == battleStateOrder.first()){
             battle.setBattleState(battleStateOrder.second());
@@ -122,17 +154,19 @@ public class BattleScreen extends Screen {
             battle.setBattleState(BattleState.END_ROUND);
         }
 
-        setState(battle, battle.getBattleState());
+        setState(battle.getBattleState());
     }
 
-    public void setState(BattleContext battle, BattleState battleState){
+    public void setState(BattleState battleState){
         if (!battle.isEnemyAlive()) {
             battle.sendMessage(battle.getEnemyName() + " was defeated!");
+            updateMessagesWidget();
             switchMenu(null);
             return;
         }
         if (!battle.isPlayerAlive()) {
             battle.sendMessage("You were defeated!");
+            updateMessagesWidget();
             switchMenu(null);
             return;
         }
@@ -149,10 +183,10 @@ public class BattleScreen extends Screen {
                 playerBox.update(battle.getPlayerHealth());
                 enemyBox.update(battle.getEnemyHealth());
                 if (!battle.isEnemyAlive() || !battle.isPlayerAlive()) {
-                    setState(battle, BattleState.END_ROUND);
+                    setState(BattleState.END_ROUND);
                 } else {
                     battleStateOrder = battle.determineBattleStateOrder();
-                    setState(battle, battleStateOrder.first());
+                    setState(battleStateOrder.first());
                 }
             }
         }
@@ -168,7 +202,6 @@ public class BattleScreen extends Screen {
     public void playerAttack(GameContext context, Spell spell) {
         BattleContext battle = context.getCurrentBattle();
 
-
         switchMenu(null);
 
         removeChild(playerAnimationWidget); //remove old widget
@@ -180,16 +213,39 @@ public class BattleScreen extends Screen {
             enemyBox.update(battle.getEnemyHealth());
             removeChild(attackWidget);
             addChild(playerAnimationWidget);
-            if (!battle.isEnemyAlive()) {
-                battle.sendMessage(battle.getEnemyName() + " was defeated!");
-                return;
-            }
-            switchState(battle);
+            checkEnd();
+            switchState();
         });
         addChild(attackWidget);
     }
 
 
+
+
+    public void playerDrinkPotion(GameContext context, Potion potion) {
+        BattleContext battle = context.getCurrentBattle();
+
+        switchMenu(null);
+        potionOptionsWidget.removeOption(potion.getName());
+
+        removeChild(playerAnimationWidget); //remove old widget
+        Animation playerAttackAnimation = SkaParser.parse("character/wizard/drink_potion.ska");
+
+        AnimationWidget drinkWidget  = new AnimationWidget(0, 0, playerAttackAnimation);
+        drinkWidget.onDone(() -> {
+            battle.drinkPotion(potion);
+
+            enemyBox.update(battle.getEnemyHealth());
+            playerBox.update(battle.getPlayerHealth());
+            removeChild(drinkWidget);
+            addChild(playerAnimationWidget);
+
+                battle.sendMessage("You drank the potion: " + potion.getName());
+                checkEnd();
+            switchState();
+        });
+        addChild(drinkWidget);
+    }
 
 
     public void enemyAttack(BattleContext battle) {
@@ -204,11 +260,8 @@ public class BattleScreen extends Screen {
             playerBox.update(battle.getPlayerHealth());
             removeChild(enemyAttackWidget);
             addChild(enemyAnimationWidget);
-            if (!battle.isPlayerAlive()) {
-                battle.sendMessage("You were defeated!");
-                return;
-            }
-            switchState(battle);
+           checkEnd();
+            switchState();
         });
         addChild(enemyAttackWidget);
     }

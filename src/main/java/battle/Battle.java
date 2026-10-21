@@ -61,17 +61,6 @@ public class Battle implements BattleContext {
 
     }
 
-    public boolean round() {
-
-        // Faster combatant acts first; ties favor the player
-        if (player.getSpeed() >= enemy.getSpeed()) {
-            battleState = BattleState.PLAYER_TURN;
-        } else {
-            battleState = BattleState.ENEMY_TURN;
-        }
-
-        return checkAllAlive();
-    }
 
     public int monsterAttack() {
         return damagePlayer();
@@ -106,9 +95,6 @@ public class Battle implements BattleContext {
 
 
 
-    public boolean playerTurn() {
-        return checkAllAlive();
-    }
 
     public boolean checkAllAlive() {
         return player.isAlive() && enemy.isAlive();
@@ -181,10 +167,12 @@ public class Battle implements BattleContext {
 
         int damage = AttackHelper.calculateDamage(level, baseDamage, attackValue, defenseValue, stab, critLevel, typeEffectiveness);
         player.takeDamage(damage);
+        sendMessage("You got hit by " + getEnemyName() + "!");
         return damage;
 
 
     }
+
 
 
     @Override
@@ -221,6 +209,7 @@ public class Battle implements BattleContext {
 
         int damage = AttackHelper.calculateDamage(level, baseDamage, attackValue, defenseValue, stab, critLevel, typeEffectiveness);
         enemy.takeDamage(damage);
+        sendMessage("You damaged your enemy!");
         return damage;
     }
 

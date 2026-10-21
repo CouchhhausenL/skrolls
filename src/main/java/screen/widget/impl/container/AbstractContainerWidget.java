@@ -33,16 +33,20 @@ public abstract class AbstractContainerWidget extends Widget {
 
     @Override
     public void draw(DrawContext context) {
-        // super.draw installs this container's limits/offset
-        super.draw(context);
-        // Children are laid out before drawing, then clipped to the container
-        updateWidgetPositions();
-        context.pushScissor(0, 0, getWidth(), getHeight());
-        for (Widget widget : widgets) {
-            widget.draw(context);
+        try {
+            context.pushLimits(getX(), getY(), getWidth(), getHeight());
+            onDraw(context);
+            // Children are laid out before drawing, then clipped to the container
+            updateWidgetPositions();
+            context.pushScissor(0, 0, getWidth(), getHeight());
+            for (Widget widget : widgets) {
+                widget.draw(context);
+            }
+            context.popScissor();
+            onPostDraw(context);
+        } finally {
+            context.popLimits();
         }
-        context.popScissor();
-        onPostDraw(context);
     }
 
     @Override

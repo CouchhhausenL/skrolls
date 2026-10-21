@@ -15,7 +15,7 @@ public class HardShove extends Spell {
         if (context.getCurrentBattle() != null) {
             BattleContext battleContext = context.getCurrentBattle();
 
-            battleContext.damageEnemy(20, this.magicType);
+            battleContext.damageEnemy(40, this.magicType);
 
         }
     }

@@ -4,6 +4,7 @@ package main.java.screen.impl;
 import main.java.entity.player.Player;
 import main.java.game.GameContext;
 import main.java.item.Inventory;
+import main.java.item.Item;
 import main.java.item.ItemType;
 import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.Screen;
@@ -28,7 +29,7 @@ public class IntroductionScreen extends Screen {
                 DialogWidget.AnswerType.INPUT,
                 () -> context.setPlayer(new Player(
                         dialogWidget.getEnteredAnswer(),
-                        150,
+                        100,
                         60,
                         new Inventory()
                 ))));
@@ -48,7 +49,18 @@ public class IntroductionScreen extends Screen {
             } else {
                 context.setScene(new WinterfortCastle(context));
                 // Give the player a basic weapon to start with
-                context.addItem(ItemType.COMMON_STAFF.create());
+                Item commonArmour = ItemType.COMMON_ARMOUR.create();
+                Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
+                Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
+                Item potion = ItemType.COMMON_HEALTH_POTION.create();
+                context.addItem(commonArmour);
+                context.addItem(commonHealthAmulett);
+                context.addItem(commonScroll);
+                context.addItem(potion);
+                context.equipItem(commonArmour);
+                context.equipItem(commonHealthAmulett);
+                context.equipItem(commonScroll);
+
                 context.setScreen(new MainGameScreen());
             }
 

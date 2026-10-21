@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 // a fresh Monster with independent health/stat state.
 public enum MonsterType {
 
-    AXE_ROGUE(() -> new Monster("Axe Rogue", "He loves his axe so much, he has married it.", 200, 60, 70, 60, DifficultyLevel.LOW, MagicType.KINETIC)),
+    AXE_ROGUE(() -> new Monster("Axe Rogue", "He loves his axe so much, he has married it.", 80, 60, 70, 60, DifficultyLevel.LOW, MagicType.KINETIC)),
     ABSTRAY_ANGEL(() -> new Monster("Abstray Angel", "This Angel clearly left the holy path.", 100, 80, 100, 80, DifficultyLevel.MEDIUM, MagicType.PURITY)),
     BLADE_BRUTE(() -> new Monster("Blade Brute", "Straight from hell this brutal monster knows how to fight with an sword!", 150, 100, 120, 90, DifficultyLevel.MEDIUM, MagicType.ABYSSAL)),
     CHAOS_ABOMINATION(() -> new Monster("Chaos Abomination", "EVeN thIs deScription goT chAOt'c.", 200, 150, 140, 130, DifficultyLevel.HIGH, MagicType.CHAOS)),
@@ -24,7 +24,7 @@ public enum MonsterType {
     PURE_GRYPHON(() -> new Monster("Pure Gryphon", "This ancient and holy creature is always in a bad mood and regularly turns his opponent to dust using a pure beam of magic.", 130, 130, 110, 110, DifficultyLevel.MEDIUM, MagicType.PURITY)),
     SKELETON(() -> new Monster("Skeleton", "This leader of an skeleton regiment that rattles with every step.", 130, 100, 90, 100, DifficultyLevel.INTERMEDIATE, MagicType.KINETIC)),
     TONGUE_CRAWLER(() -> new Monster("Tongue Crawler", "Blind on both eyes it relies solely on his tongue for navigation.", 160, 100, 100, 90, DifficultyLevel.MEDIUM, MagicType.ABYSSAL)),
-    ZOMBIE(() -> new Monster("Zombie", "Frankenstein's Monster is an abomination that feeds on brains and yet is pretty dumb", 120, 80, 80, 80, DifficultyLevel.LOW, MagicType.NECROTIC)),
+    ZOMBIE(() -> new Monster("Zombie", "Frankenstein's Monster is an abomination that feeds on brains and yet is pretty dumb", 70, 80, 80, 80, DifficultyLevel.LOW, MagicType.NECROTIC)),
     FROST_JACKALOPE(() -> new Monster("Frost Jackalope", "Don't underestimate this quick bunny like, he can turn you into an cube of ice", 100, 160, 130, 60, DifficultyLevel.MEDIUM, MagicType.ELEMENTAL)),
 
     INFINITY_DRAGON(() -> new Monster("Infinity Dragon", "This ancient Creature is so powerful it can destroy the whole world with one tail-whip!", 300, 140, 200, 160, DifficultyLevel.EXTREME, MagicType.INFINITY));
