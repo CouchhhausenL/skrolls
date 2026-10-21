@@ -47,7 +47,6 @@ public class IntroductionScreen extends Screen {
             if (dialogWidget.getEnteredBoolean()) {
                 context.setScreen(new TutorialScene());
             } else {
-
                 // Give the player a basic weapon to start with
                 Item commonStaff = ItemType.COMMON_STAFF.create();
                 Item commonArmour = ItemType.COMMON_ARMOUR.create();
@@ -58,6 +57,7 @@ public class IntroductionScreen extends Screen {
                 context.addItem(commonHealthAmulett);
                 context.addItem(commonScroll);
                 context.addItem(potion);
+                context.addItem(commonStaff);
                 context.equipItem(commonArmour);
                 context.equipItem(commonHealthAmulett);
                 context.equipItem(commonScroll);

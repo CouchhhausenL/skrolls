@@ -6,7 +6,9 @@ import main.java.battle.Battle;
 import main.java.battle.BattleContext;
 import main.java.battle.BattleState;
 import main.java.console.input.KeyInputEvent;
+import main.java.entity.monster.Monster;
 import main.java.game.GameContext;
+import main.java.item.Item;
 import main.java.item.items.Potion;
 import main.java.screen.Screen;
 import main.java.screen.widget.Widget;
@@ -126,6 +128,8 @@ public class BattleScreen extends Screen {
 
             AnimationWidget winAnimation = new AnimationWidget(0,0, 80, 30, SkaParser.parse("utility/win.ska"));
             winAnimation.onDone(() -> {
+                Item item = battle.MobDrop();
+                context.addMessage(battle.getEnemyName() + " dropped "+ item.getName() + "! You stashed it in your backpack.");
                context.setScreen(new MainGameScreen());
             });
             addChild(winAnimation);
@@ -133,6 +137,7 @@ public class BattleScreen extends Screen {
         }else if(!battle.isPlayerAlive()){
             AnimationWidget looseAnimation = new AnimationWidget(0,0,80,30, SkaParser.parse(("utility/loose.ska")));
             looseAnimation.onDone((() -> {new MainGameScreen();
+
                 context.addMessage(SplashText.getDeath());
 
             }));
