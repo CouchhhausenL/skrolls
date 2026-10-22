@@ -4,15 +4,21 @@ package main.java.screen.impl;
 import main.java.MagicType;
 import main.java.console.input.KeyInputEvent;
 import main.java.game.GameContext;
-import main.java.item.Item;
-import main.java.item.MagicItem;
+import main.java.item.*;
+import main.java.item.effects.CombatEffect;
+import main.java.item.effects.ItemEffect;
 import main.java.item.items.*;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.screen.widget.impl.OptionsWidget;
+import main.java.screen.widget.impl.container.VerticalContainerWidget;
+import main.java.screen.widget.impl.options.ItemOption;
+import main.java.screen.widget.impl.options.Option;
 import main.java.util.Color;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 // Placeholder inventory screen; closing returns to the main game screen
 public class InventoryScreen extends Screen {
@@ -20,37 +26,59 @@ public class InventoryScreen extends Screen {
     private GameContext context;
     private OptionsWidget itemList;
     private LabelWidget detailedName;
+    private LabelWidget detailedSeperator;
     private LabelWidget detailedDescription;
+    private LabelWidget detailedMagicType;
+
+    private LabelWidget hintWidget;
+
+    private VerticalContainerWidget detailedEffectContainer;
+
 
     @Override
     protected void init(GameContext context) {
         this.context = context;
 
-        addChild(new LabelWidget(1, 1, "Very WIP! Exit with escape"));
-        itemList = new OptionsWidget(0,0,80,30,  new LinkedHashMap<>(){{
-            put(new OptionsWidget.ColoredString("----- Staff -----", Color.WHITE), ()->{});
-            put(renderItem(context.getInventory().getStaff()), ()->{});
-            put(new OptionsWidget.ColoredString( "----- Armor -----", Color.WHITE), ()->{});
+        detailedName = new LabelWidget(41, 0, "Select Something to see details!");
+        detailedDescription = new LabelWidget(41, 2, "You can press [Space] to select an item!");
+        detailedSeperator = new LabelWidget(41, 1, "---------------");
+        addChild(detailedName);
+        addChild(detailedDescription);
+        addChild(detailedSeperator);
 
-            put(renderItem(context.getInventory().getArmor()), ()->{});
-            put(new OptionsWidget.ColoredString( "----- Artifacts -----", Color.WHITE), ()->{});
-            for(Artifact artifact : context.getInventory().getArtifacts()){
-                put(renderItem(artifact), ()->{});
-            }
-            put(new OptionsWidget.ColoredString( "----- Scrolls -----", Color.WHITE), ()->{});
-            for(Scroll scroll : context.getInventory().getScrolls()){
-                put(renderItem(scroll), ()->{});
-            }
+        hintWidget = new LabelWidget(0,getHeight(),"Press [e] to equip and [u] to unequip!");
 
-            put(new OptionsWidget.ColoredString("----- Backpack -----", Color.WHITE), () -> {});
+        drawInventory();
+    }
 
-         for(Item item : context.getInventory().getBackpackItems()){
-             put(renderItem(item), () -> {
+    public void drawInventory() {
+        // Remove old itemList before replacing it
+        if (itemList != null) {
+            removeChild(itemList);
+        }
 
-             });
-         }
+        itemList = new OptionsWidget(0, 0, 40, getHeight() - 1);
+        itemList.addOption(new Option("----- Staff -----", 0x9e57b, null));
 
-        }});
+        ItemOption staffOption = renderItem(context.getInventory().getStaff(), () -> showDetails(context.getInventory().getStaff()));
+        if (staffOption != null) itemList.addOption(staffOption);
+
+        itemList.addOption(new Option("----- Armor -----", 0x9e57b, null));
+
+        ItemOption armorOption = renderItem(context.getInventory().getArmor(), () -> showDetails(context.getInventory().getArmor()));
+        if (armorOption != null) itemList.addOption(armorOption);
+
+        itemList.addOption(new Option("----- Artifacts -----", 0x9e57b, null));
+        for (Artifact artifact : context.getInventory().getArtifacts()) {
+            ItemOption artifactOption = renderItem(artifact, () -> showDetails(artifact));
+            if (artifactOption != null) itemList.addOption(artifactOption);
+        }
+
+        itemList.addOption(new Option("----- Backpack -----", 0x9e57b, null));
+        for (Item item : context.getInventory().getBackpackItems()) {
+            ItemOption backpackOption = renderItem(item, () -> showDetails(item));
+            if (backpackOption != null) itemList.addOption(backpackOption);
+        }
 
         addChild(itemList);
 
@@ -59,50 +87,81 @@ public class InventoryScreen extends Screen {
 
 
 
-    public OptionsWidget.ColoredString renderItem(Item item){
+    public void showDetails(Item item) {
+        removeChild(detailedName);
+        removeChild(detailedDescription);
+        removeChild(detailedSeperator);
+        removeChild(detailedMagicType);
+        removeChild(detailedEffectContainer);
 
+        detailedName = new LabelWidget(41, 0, item.getName(), ItemHelper.getItemColor(item));
+        detailedSeperator = new LabelWidget(41, 1, "-".repeat(item.getName().length()));
+        detailedDescription = new LabelWidget(41, 2, item.getDescription());
 
-        String string = "";
-        int color = Color.WHITE;
-        if(item instanceof Scroll){
-            string += "[~] ";
-            color = ((Scroll) item).getSpell().getMagicType().getColor();
-            string += ((Scroll) item).getSpell().getMagicType().getSymbol() + " ";
+        detailedEffectContainer = new VerticalContainerWidget(41, detailedDescription.getHeight() + 3, 40, 0, 0);
+        detailedEffectContainer.clearChildren();
+
+        if (item instanceof MagicItem) {
+            List<ItemEffect> itemEffects = ((MagicItem) item).getItemEffects();
+            detailedEffectContainer.setHeight(itemEffects.size());
+            int yIncrement = 0;
+            for (ItemEffect itemEffect : itemEffects) {
+                LabelWidget itemEffectLabel = new LabelWidget(0, yIncrement, itemEffect.itemEffectType().toString() + ", " + itemEffect.effectStrength());
+                detailedEffectContainer.addChild(itemEffectLabel);
+                yIncrement++;
+            }
+        } else if (item instanceof Potion) {
+            List<CombatEffect> potionEffects = ((Potion) item).getCombatEffects();
+            detailedEffectContainer.setHeight(potionEffects.size());
+            int yIncrement = 0;
+            for (CombatEffect combatEffect : potionEffects) {
+                LabelWidget combatEffectLabel = new LabelWidget(0, yIncrement, combatEffect.getCombatEffectType().toString() + ", " + combatEffect.getEffectStrength()
+                        + ", " + combatEffect.getDuration());
+                detailedEffectContainer.addChild(combatEffectLabel);
+                yIncrement++;
+            }
         }
-        if(item instanceof Armor){
-            string += "[=] ";
-        }
-        if(item instanceof Staff){
-            string += "/* ";
-        }
-        if(item instanceof Artifact){
-            string += "@ ";
-        }
+        detailedMagicType = new LabelWidget(41, detailedEffectContainer.getY() + detailedEffectContainer.getHeight() + 1, "MagicType:" + ItemHelper.getMagicTypeName(item));
 
-        if(item instanceof Potion){
-            string += "(o) ";
-            string += ((Potion) item).getMagicType().getSymbol() + " ";
-            color += ((Potion) item).getMagicType().getColor();
-        }
-
-        if(item instanceof MagicItem){
-            string += ((MagicItem) item).getMagicType().getSymbol() +" ";
-            color = ((MagicItem) item).getMagicType().getColor();
-        }
-
-
-
-
-
-
-        string += item.getName();
-        return new OptionsWidget.ColoredString(string , color);
+        addChild(detailedEffectContainer);
+        addChild(detailedName);
+        addChild(detailedDescription);
+        addChild(detailedSeperator);
+        addChild(detailedMagicType);
     }
+
+
+    public ItemOption renderItem(Item item, Runnable runnable) {
+        if (item == null) {
+            return null;
+        }
+        String string = ItemHelper.getItemTypeIcon(item) + " " + ItemHelper.getItemMagicTypeSymbol(item) + " " + item.getName();
+        return new ItemOption(string, ItemHelper.getItemColor(item), item, runnable);
+    }
+
 
     @Override
     public void onKeyEvent(KeyInputEvent event) {
         if (event.isEscape())
             context.setScreen(new MainGameScreen());
+
+        if (event.isChar('e') || event.isChar('E')) {
+            if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
+                if (itemOption.getItem() instanceof Equippable equippable) {
+                    context.equipItem(equippable);
+                    drawInventory();
+                }
+            }
+        }
+
+        if (event.isChar('u')) {
+            if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
+                if (itemOption.getItem() instanceof Equippable equippable) {
+                    context.unequipItem(equippable);
+                    drawInventory();
+                }
+            }
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.screen.widget.impl.OptionsWidget;
+import main.java.screen.widget.impl.options.Option;
 import main.java.util.Color;
 import main.java.util.SkaParser;
 import main.java.util.SplashText;
@@ -24,12 +25,11 @@ public class MainMenuScreen extends Screen {
         Animation animation = SkaParser.parse("title.ska");
         addChild(new AnimationWidget(3, 2, animation));
 
-        optionsWidget = new OptionsWidget(2, animation.getHeight() + 4, 80, 20, Color.WHITE, new LinkedHashMap<>() {
-            {
-                put("Start Game", () -> context.setScreen(new IntroductionScreen()));
-                put("Exit Game", context::stop);
-            }
-        });
+        optionsWidget = new OptionsWidget(2, animation.getHeight() + 4, 80, 20);
+        optionsWidget.addOption(new Option("Start Game", () -> context.setScreen(new IntroductionScreen())));
+        optionsWidget.addOption(new Option("Exit Game", context::stop));
+
+
 
         addChild(optionsWidget);
         addChild(new LabelWidget(3, 11 + optionsWidget.getHeight() + 2, "Press [SPACE] to select"));

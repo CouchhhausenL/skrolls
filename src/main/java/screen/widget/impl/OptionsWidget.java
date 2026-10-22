@@ -2,74 +2,106 @@ package main.java.screen.widget.impl;
 
 import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
+import main.java.item.Item;
 import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
+import main.java.screen.widget.impl.options.ItemOption;
+import main.java.screen.widget.impl.options.Option;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 // Vertical list of selectable options. The selection is highlighted and
 // activated with SPACE; one option (the first) is selected by default.
 public class OptionsWidget extends Widget {
-    private int color;
 
-    private final List<OptionsWidget.Option> options = new ArrayList<Option>();
+    private List<Option> options = new ArrayList<Option>();
 
-    private OptionsWidget.Option selectedOption;
+    private Option selectedOption;
+    private final int visibleLines;
 
-
-    public OptionsWidget(int x, int y, int width, int height, int color, Map<String, Runnable> rawOptions) {
-        super(x, y, width, height);
-        this.color = color;
-        // Insertion order of the map determines the display order
-        int yIncr = 0;
-        for (Map.Entry<String, Runnable> rawOption : rawOptions.entrySet()) {
-            LabelWidget widget = new LabelWidget(x, y + yIncr, rawOption.getKey());
-
-            options.add(new Option(rawOption.getKey(), rawOption.getValue(), widget));
-            yIncr++;
-        }
-        if (!options.isEmpty()) setSelectedOption(options.getFirst());
-
-    }
-    public record ColoredString(String string, int color){};
-    public OptionsWidget(int x, int y, int width, int height, Map<ColoredString, Runnable> rawOptions){
+    public OptionsWidget(int x, int y, int width, int height){
         super(x,y,width,height);
-        int yIncr = 0;
-        for (Map.Entry<ColoredString, Runnable> rawOption : rawOptions.entrySet()) {
-            LabelWidget widget = new LabelWidget(x, y + yIncr, rawOption.getKey().string);
+        this.visibleLines = height/2 + 1;
 
-            options.add(new ColoredOption(rawOption.getKey().string, rawOption.getValue(), widget, rawOption.getKey().color));
-            yIncr++;
+    }
+
+    public void addOption(Option option){
+        options.add(option);
+        if (selectedOption == null) {
+            selectFirstNavigable();
+        } else {
+            setSelectedOption(selectedOption);
         }
-
     }
 
-    public void removeOption(String string){
-        options.removeIf(option -> Objects.equals(option.getName(), string));
-        setSelectedOption(options.getFirst());
+    /** Selects the first option that has a non-null runnable. */
+    private void selectFirstNavigable() {
+        for (Option option : options) {
+            if (option.getRunnable() != null) {
+                setSelectedOption(option);
+                return;
+            }
+        }
+        selectedOption = null;
     }
+
+    public void removeOption(Option option){
+        options.removeIf(option1 -> option1 == option);
+        if (!options.isEmpty()) {
+            selectFirstNavigable();
+        } else {
+            selectedOption = null;
+        }
+    }
+
+    public void removeByItem(Item item){
+        options.removeIf(option -> option instanceof ItemOption io && io.getItem() == item);
+        if (!options.isEmpty()) {
+            selectFirstNavigable();
+        } else {
+            selectedOption = null;
+        }
+    }
+
+    public void removeByName(String name){
+        options.removeIf(option -> name.equals(option.getName()));
+        if (!options.isEmpty()) {
+            selectFirstNavigable();
+        } else {
+            selectedOption = null;
+        }
+    }
+
+
 
     @Override
     public void onDraw(DrawContextView context) {
+        if (options.isEmpty()) return;
+        int currentIndex = selectedOption != null ? options.indexOf(selectedOption) : 0;
+
+        int start = currentIndex - (visibleLines / 2 - 1);
+        if (start < 0) start = 0;
+
+        int end = start + visibleLines;
+        if (end > options.size()) {
+            end = options.size();
+            start = Math.max(0, end - visibleLines);
+        }
+
         int yOffset = 0;
-        for (Option option : options) {
-            int thisColor = this.color;
-            if(option instanceof ColoredOption){
-                thisColor = ((ColoredOption) option).getColor();
-            }
-            context.drawString(0, yOffset, option.getLabelWidget().getContent(), thisColor);
+        for (Option option : options.subList(start, end)) {
+            context.drawString(0, yOffset, option.getLabelWidget().getContent(), option.getLabelWidget().getColor());
             yOffset += 2;
         }
     }
 
     @Override
     public void onKeyInput(KeyInputEvent event) {
+        if (selectedOption == null) return;
         if (event.isArrow(KeyInputEvent.Direction.UP) || event.isChar(KeyInputEvent.Letter.W)) offsetSelection(-1);
         if (event.isArrow(KeyInputEvent.Direction.DOWN) || event.isChar(KeyInputEvent.Letter.S)) offsetSelection(1);
-        if (event.isSpace()) selectedOption.getRunnable().run();
+        if (event.isSpace() && selectedOption.getRunnable() != null) selectedOption.getRunnable().run();
     }
 
     // Rebuilds the marker prefix of every option to show the selection
@@ -86,11 +118,28 @@ public class OptionsWidget extends Widget {
         selectedOption = option;
     }
 
-    // Moves the selection, clamped to the ends of the list
+    public Option getSelectedOption(){
+        return selectedOption;
+    }
+
+    // Moves the selection, skipping over non-navigable (null runnable) header entries.
+    // Uses iteration instead of recursion to avoid any edge-case stack issues.
     private void offsetSelection(int offset) {
-        int newIndex = options.indexOf(selectedOption) + offset;
-        if (newIndex < 0) newIndex = 0;
-        if (newIndex > options.size() - 1) newIndex = options.size() - 1;
+        if (options.isEmpty() || selectedOption == null) return;
+        int currentIndex = options.indexOf(selectedOption);
+        int newIndex = currentIndex;
+
+        // Step one at a time in the given direction, skipping null-runnable headers
+        int step = offset > 0 ? 1 : -1;
+        while (true) {
+            int next = newIndex + step;
+            // Hit the boundary — stay where we are
+            if (next < 0 || next >= options.size()) break;
+            newIndex = next;
+            // Found a navigable option — select it and stop
+            if (options.get(newIndex).getRunnable() != null) break;
+        }
+
         setSelectedOption(options.get(newIndex));
     }
 
@@ -98,45 +147,5 @@ public class OptionsWidget extends Widget {
     public void onMouseInput(MouseInputEvent event) {
         if (event.type() == MouseInputEvent.Type.SCROLL_UP) offsetSelection(-1);
         if (event.type() == MouseInputEvent.Type.SCROLL_DOWN) offsetSelection(1);
-    }
-
-    public class Option {
-        private final String name;
-        private final Runnable runnable;
-        private final LabelWidget labelWidget;
-
-        public Option(String name, Runnable runnable, LabelWidget labelWidget) {
-            this.name = name;
-            this.runnable = runnable;
-            this.labelWidget = labelWidget;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Runnable getRunnable() {
-            return runnable;
-        }
-
-        public LabelWidget getLabelWidget() {
-            return labelWidget;
-        }
-
-
-    }
-
-    public class ColoredOption extends Option {
-        private final int color;
-        public ColoredOption(String name, Runnable runnable, LabelWidget labelWidget, int color){
-            super(name,runnable,labelWidget);
-            this.color = color;
-        }
-
-
-        public int getColor(){
-            return color;
-        }
-
     }
 }

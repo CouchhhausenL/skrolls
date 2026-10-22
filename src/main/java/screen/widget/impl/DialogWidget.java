@@ -2,6 +2,7 @@ package main.java.screen.widget.impl;
 
 import main.java.console.input.KeyInputEvent;
 import main.java.screen.widget.impl.container.AbstractContainerWidget;
+import main.java.screen.widget.impl.options.Option;
 import main.java.util.Color;
 
 import java.util.ArrayList;
@@ -66,10 +67,10 @@ public class DialogWidget extends AbstractContainerWidget {
             addChild(inputField);
         }
         if (current.answerField() == AnswerType.BOOLEAN) {
-            optionsWidget = new OptionsWidget(0, questionLabel.getHeight() + 1, getWidth(), 3, Color.WHITE, new LinkedHashMap<>() {{
-                put("YES", () -> selectBooleanAnswer(true));
-                put("NO", () -> selectBooleanAnswer(false));
-            }});
+            optionsWidget = new OptionsWidget(0, questionLabel.getHeight() + 1, getWidth(), 3);
+                optionsWidget.addOption(new Option("YES", () -> selectBooleanAnswer(true)));
+                optionsWidget.addOption(new Option("NO", () -> selectBooleanAnswer(false)));
+
             addChild(optionsWidget);
         }
     }

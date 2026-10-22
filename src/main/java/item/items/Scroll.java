@@ -1,5 +1,6 @@
 package main.java.item.items;
 
+import main.java.MagicType;
 import main.java.item.AbstractItem;
 import main.java.item.EquipmentType;
 import main.java.item.Equippable;
@@ -20,6 +21,10 @@ public class Scroll extends AbstractItem implements Equippable {
 
     public Spell getSpell() {
         return spell;
+    }
+
+    public MagicType getMagictype(){
+        return spell.getMagicType();
     }
 
     @Override

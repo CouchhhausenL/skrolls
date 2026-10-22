@@ -24,4 +24,8 @@ public class Potion extends AbstractItem {
     public MagicType getMagicType() {
         return magicType;
     }
+
+    public List<CombatEffect> getCombatEffects(){
+        return combatEffects;
+    }
 }

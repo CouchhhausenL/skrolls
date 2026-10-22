@@ -12,6 +12,7 @@ public class LabelWidget extends Widget {
     private String content;
     private boolean fancyMode;
 
+    private int color = Color.WHITE;
 
     private int displayedCharCount = 0;
     private long lastTime = 0;
@@ -25,6 +26,10 @@ public class LabelWidget extends Widget {
     public LabelWidget(int x, int y, String content) {
         this(x, y, calculateWidth(content), calculateHeight(content), content);
     }
+    public LabelWidget(int x, int y, String content, int color){
+        this(x,y,calculateWidth(content), calculateHeight(content), content);
+        this.color = color;
+    };
 
     private static int calculateWidth(String text) {
         int max = 0;
@@ -46,6 +51,10 @@ public class LabelWidget extends Widget {
         this.content = content;
         setDimensions(calculateWidth(content), calculateHeight(content));
         this.displayedCharCount = 0;
+    }
+
+    public int getColor() {
+        return color;
     }
 
     public void setFancyMode(boolean fancyMode, int fancyCharDelayTime) {
@@ -70,7 +79,7 @@ public class LabelWidget extends Widget {
         String[] lines = textToDraw.split("\n", -1);
         int y = 0;
         for (String line : lines) {
-            context.drawString(0, y, line, Color.WHITE);
+            context.drawString(0, y, line, color);
             y++;
         }
     }

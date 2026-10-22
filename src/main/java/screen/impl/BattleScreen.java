@@ -9,6 +9,7 @@ import main.java.console.input.KeyInputEvent;
 import main.java.entity.monster.Monster;
 import main.java.game.GameContext;
 import main.java.item.Item;
+import main.java.item.ItemHelper;
 import main.java.item.items.Potion;
 import main.java.screen.Screen;
 import main.java.screen.widget.Widget;
@@ -17,11 +18,14 @@ import main.java.screen.widget.impl.BattleStatusWidget;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.screen.widget.impl.OptionsWidget;
 import main.java.screen.widget.impl.container.ScrollableContainerWidget;
+import main.java.screen.widget.impl.options.ItemOption;
+import main.java.screen.widget.impl.options.Option;
 import main.java.spell.Spell;
 import main.java.util.Color;
 import main.java.util.SkaParser;
 import main.java.util.SplashText;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,32 +72,24 @@ public class BattleScreen extends Screen {
         enemyAnimationWidget.setLooping(true);
 
         // 1. Main menu
-        Map<String, Runnable> mainOptions = new LinkedHashMap<>();
-        mainOptions.put("Attack", () -> switchMenu(attackOptionsWidget));
-        mainOptions.put("Drink Potion", () -> switchMenu(potionOptionsWidget));
-        mainOptions.put("Flee", context::fleeFromBattle);
-        optionsWidget = new OptionsWidget(0, 30, 40, 10, Color.WHITE, mainOptions);
+        optionsWidget = new OptionsWidget(0, 30, 40, 10);
+        optionsWidget.addOption(new Option("Attack", () -> switchMenu(attackOptionsWidget)));
+        optionsWidget.addOption(new Option("Drink Potion", () -> switchMenu(potionOptionsWidget)));
+        optionsWidget.addOption(new Option("Flee", context::fleeFromBattle));
 
         // 2. Attack menu: one entry per spell from equipped scrolls
-        Map<String, Runnable> attackOptions = new LinkedHashMap<>();
-        for (Spell spell : context.getSpells()) {
-            attackOptions.put(spell.getName(), () -> {
-                playerAttack(context, spell);
-            });
+        attackOptionsWidget = new OptionsWidget(0, 30, 40, 10);
+        for(Spell spell : context.getSpells()){
+            attackOptionsWidget.addOption(new Option(spell.getName(), () -> {playerAttack(context, spell);}));
         }
-        attackOptions.put("Back", () -> switchMenu(optionsWidget));
-        attackOptionsWidget = new OptionsWidget(0, 30, 40, 10, Color.WHITE, attackOptions);
+        attackOptionsWidget.addOption(new Option("Back", () -> switchMenu(optionsWidget)));
 
         // 3. Potion menu
-
-
-        Map<String, Runnable> potionOptions = new LinkedHashMap<>();
+        potionOptionsWidget = new OptionsWidget(0, 30, 40, 10);
         for (Potion potion : context.getPotions()) {
-            potionOptions.put(potion.getName(), () -> {playerDrinkPotion(context, potion);
-            });
+            potionOptionsWidget.addOption(new ItemOption(potion.getName(), ItemHelper.getItemColor(potion), potion, () -> {playerDrinkPotion(context, potion);}));
         }
-        potionOptions.put("Back", () -> switchMenu(optionsWidget));
-        potionOptionsWidget = new OptionsWidget(0, 30, 40, 10, Color.WHITE, potionOptions);
+        potionOptionsWidget.addOption(new Option("Back", () -> switchMenu(optionsWidget)));
 
         // 4. Battle messages
         messagesHistoryWidget = new ScrollableContainerWidget(0, 40, 40, 10, 0);
@@ -109,7 +105,7 @@ public class BattleScreen extends Screen {
 
         battleStateOrder = battle.determineBattleStateOrder();
 
-        setState( battleStateOrder.first());
+        setState(battleStateOrder.first());
     }
 
     // Removes all option widgets and shows only the requested one
@@ -236,7 +232,7 @@ public class BattleScreen extends Screen {
         BattleContext battle = context.getCurrentBattle();
 
         switchMenu(null);
-        potionOptionsWidget.removeOption(potion.getName());
+        potionOptionsWidget.removeByItem(potion);
 
         removeChild(playerAnimationWidget); //remove old widget
         Animation playerAttackAnimation = SkaParser.parse("character/wizard/drink_potion.ska");
