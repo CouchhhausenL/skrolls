@@ -5,6 +5,8 @@ import main.java.console.input.MouseInputEvent;
 import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 
+import java.util.Objects;
+
 // Single-line editable text: cursor movement, backspace, character insertion
 // and a horizontally scrolled viewport when the text is wider than the widget.
 public abstract class AbstractTextFieldWidget extends Widget {
@@ -46,29 +48,32 @@ public abstract class AbstractTextFieldWidget extends Widget {
 
     @Override
     public void onKeyInput(KeyInputEvent event) {
-        if (event.isArrow(KeyInputEvent.Direction.LEFT))
-            cursor = Math.max(0, cursor - 1);
-        if (event.isArrow(KeyInputEvent.Direction.RIGHT))
-            cursor = Math.min(cursor + 1, content.length());
+        if (event.isArrow(KeyInputEvent.Direction.LEFT)) cursor--;
+        if (event.isArrow(KeyInputEvent.Direction.RIGHT)) cursor++;
+
+        if (cursor < 0) cursor = 0;
+        if (cursor > content.length()) cursor = content.length();
 
         // Delete the character before the cursor and shift it left
         if (event.isBackspace() && cursor > 0) {
+            String old = getContent();
             setContent(
                     content.substring(0, cursor - 1) +
                             content.substring(cursor)
             );
-            cursor--;
+            if (!Objects.equals(old, getContent())) cursor--;
             return;
         }
 
         // Insert the typed character at the cursor
         if (event.isChar()) {
+            String old = getContent();
             setContent(
                     content.substring(0, cursor) +
                             event.asChar() +
                             content.substring(cursor)
             );
-            cursor++;
+            if (!Objects.equals(old, getContent())) cursor++;
         }
     }
 

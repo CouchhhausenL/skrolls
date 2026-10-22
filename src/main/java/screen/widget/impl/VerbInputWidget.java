@@ -77,7 +77,9 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
     // Leading spaces are ignored; recompute suggestions on every change
     @Override
     public void setContent(String content) {
-        super.setContent(content.stripLeading());
+        String newContent = content.strip();
+        if (!newContent.isEmpty() && content.endsWith(" ")) newContent += ' ';
+        super.setContent(newContent);
         update();
     }
 
