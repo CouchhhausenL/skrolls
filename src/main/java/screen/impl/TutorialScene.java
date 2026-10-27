@@ -13,6 +13,11 @@ public class TutorialScene extends Screen {
 
 
     private DialogWidget dialogWidget;
+    private int startIndex = 0;
+
+    public void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
+    }
 
     @Override
     protected void init(GameContext context) {
@@ -34,7 +39,14 @@ public class TutorialScene extends Screen {
                         context.addItem(commonStaff);
                         context.equipItem(commonStaff);
                     } else {
-                        dialogWidget.goToIndex(1);
+                        MessageScreen messageScreen = new MessageScreen();
+                        messageScreen.setMessage("Good try, but you need to have an Staff! Lets try it again...");
+                        context.setScreen(messageScreen);
+                        messageScreen.setOnComplete(() -> {
+                            TutorialScene tutorialScene = new TutorialScene();
+                            tutorialScene.setStartIndex(1);
+                            context.setScreen(tutorialScene);
+                        });
                     }
                 }
         ));
@@ -54,10 +66,17 @@ public class TutorialScene extends Screen {
 
         }));
         // Last step sets up the battle; completing the dialog enters the fight
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("On every Path you can fight Monsters by typing \"fight\"! Lets try fighting your first Battle", DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.AXE_ROGUE.create())));
+        dialogWidget.addDialogItem(new DialogWidget.DialogItem("On every Path you can fight Monsters by typing \"fight\"! Lets try fighting your first Battle",
+                DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.INFINITY_DRAGON.create())));
 
 
-        dialogWidget.setOnComplete(() -> context.setScreen(new BattleScreen()));
+
+
+        // Jump to the requested start index after all items are registered
+        if (startIndex > 0) {
+            dialogWidget.goToIndex(startIndex);
+        }
+
         addChild(dialogWidget);
 
 

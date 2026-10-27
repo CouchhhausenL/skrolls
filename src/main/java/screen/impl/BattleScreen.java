@@ -5,14 +5,11 @@ import main.java.animation.Animation;
 import main.java.battle.Battle;
 import main.java.battle.BattleContext;
 import main.java.battle.BattleState;
-import main.java.console.input.KeyInputEvent;
-import main.java.entity.monster.Monster;
 import main.java.game.GameContext;
 import main.java.item.Item;
 import main.java.item.ItemHelper;
 import main.java.item.items.Potion;
 import main.java.screen.Screen;
-import main.java.screen.widget.Widget;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.BattleStatusWidget;
 import main.java.screen.widget.impl.LabelWidget;
@@ -21,14 +18,10 @@ import main.java.screen.widget.impl.container.ScrollableContainerWidget;
 import main.java.screen.widget.impl.options.ItemOption;
 import main.java.screen.widget.impl.options.Option;
 import main.java.spell.Spell;
-import main.java.util.Color;
 import main.java.util.SkaParser;
 import main.java.util.SplashText;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 // Battle view: status boxes, idle animations and three switchable menus
 // (main actions, attack spells, potions) plus the scrolling battle log.
@@ -55,6 +48,7 @@ public class BattleScreen extends Screen {
     @Override
     protected void init(GameContext context) {
         this.context = context;
+
         this.battle = context.getCurrentBattle();
         battle.fightInit();
         playerBox = new BattleStatusWidget(1, 1, battle.getPlayerName(), battle.getPlayerHealth(), battle.getPlayerMaxHealth());
@@ -119,26 +113,31 @@ public class BattleScreen extends Screen {
         }
     }
 
-    public void checkEnd(){
+    public boolean checkEnd(){
         if(!battle.isEnemyAlive()){
 
             AnimationWidget winAnimation = new AnimationWidget(0,0, 80, 30, SkaParser.parse("utility/win.ska"));
             winAnimation.onDone(() -> {
                 Item item = battle.MobDrop();
+                context.setScreen(new MainGameScreen());
                 context.addMessage(battle.getEnemyName() + " dropped "+ item.getName() + "! You stashed it in your backpack.");
-               context.setScreen(new MainGameScreen());
             });
             addChild(winAnimation);
-
+            return true;
         }else if(!battle.isPlayerAlive()){
             AnimationWidget looseAnimation = new AnimationWidget(0,0,80,30, SkaParser.parse(("utility/loose.ska")));
-            looseAnimation.onDone((() -> {new MainGameScreen();
+            looseAnimation.onDone((() -> {
+                MessageScreen messageScreen = new MessageScreen();
+                messageScreen.setMessage(SplashText.getDeath());
+                context.setScreen(messageScreen);
+                messageScreen.setOnComplete(()->context.setScreen(new MainGameScreen()));
 
-                context.addMessage(SplashText.getDeath());
 
             }));
-
+            addChild(looseAnimation);
+            return true;
         }
+        return false;
     }
 
 
@@ -164,18 +163,10 @@ public class BattleScreen extends Screen {
     }
 
     public void setState(BattleState battleState){
-        if (!battle.isEnemyAlive()) {
-            battle.sendMessage(battle.getEnemyName() + " was defeated!");
-            updateMessagesWidget();
-            switchMenu(null);
+        if (checkEnd()) {
             return;
         }
-        if (!battle.isPlayerAlive()) {
-            battle.sendMessage("You were defeated!");
-            updateMessagesWidget();
-            switchMenu(null);
-            return;
-        }
+
 
         switch(battleState){
             case PLAYER_TURN -> switchMenu(optionsWidget);
