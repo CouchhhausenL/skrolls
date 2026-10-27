@@ -1,5 +1,6 @@
 package main.java.game;
 
+import main.java.DifficultyLevel;
 import main.java.battle.BattleContext;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
@@ -49,4 +50,8 @@ public interface GameContext extends VerbSupplier {
     Inventory getInventory();
 
     void setScene(Scene scene);
+    String getSceneName();
+
+    DifficultyLevel getSceneDifficulty();
+    DifficultyLevel getPlayerDifficultyLevel();
 }

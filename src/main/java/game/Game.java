@@ -1,5 +1,6 @@
 package main.java.game;
 
+import main.java.DifficultyLevel;
 import main.java.battle.Battle;
 import main.java.battle.BattleContext;
 import main.java.console.Console;
@@ -17,10 +18,7 @@ import main.java.scene.scenes.Winterfort;
 import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
-import main.java.screen.impl.BattleScreen;
-import main.java.screen.impl.InventoryScreen;
-import main.java.screen.impl.MainGameScreen;
-import main.java.screen.impl.MapScreen;
+import main.java.screen.impl.*;
 import main.java.spell.Spell;
 import main.java.util.Color;
 import main.java.util.SplashText;
@@ -122,6 +120,7 @@ public class Game implements GameContext {
     @Override
     public void setBattle(Monster monster) {
         this.battle = new Battle(player, monster);
+        setScreen(new BattleScreenTransition());
     }
 
     @Override
@@ -137,6 +136,11 @@ public class Game implements GameContext {
     }
 
     @Override
+    public DifficultyLevel getPlayerDifficultyLevel() {
+        return player.getDifficultyLevel();
+    }
+
+    @Override
     public void setScene(Scene scene) {
         if(player.getDifficultyLevel().ordinal() >= scene.getDifficulty().ordinal()){
             this.scene = scene;
@@ -146,6 +150,16 @@ public class Game implements GameContext {
             addMessage(SplashText.getNo());
             addMessage("This Scene is to difficult for you! " +"[" + scene.getDifficulty() + "]");
         }
+    }
+
+    @Override
+    public String getSceneName(){
+        return scene.getName();
+    }
+
+    @Override
+    public DifficultyLevel getSceneDifficulty() {
+        return scene.getDifficulty();
     }
 
     @Override
@@ -226,6 +240,11 @@ public class Game implements GameContext {
                                 context.addMessage(SplashText.getNo());
                             }
                         }));
+        verbs.add(Verb.builder("fastfetch").aliases("neofetch")
+                .build((executionContext, context) -> {
+                    setScreen(new Fastfetch());
+                })
+        );
 
         verbs.add(Verb.builder("open").aliases("show", "display")
                 .variant()
@@ -240,6 +259,7 @@ public class Game implements GameContext {
                     if (type.equals("inventory"))
                         setScreen(new InventoryScreen());
                 })));
+
 
         // One "go <exit>" verb per exit of the current scene
         if (scene != null) {
