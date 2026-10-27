@@ -15,6 +15,7 @@ import main.java.screen.widget.impl.container.VerticalContainerWidget;
 import main.java.screen.widget.impl.options.ItemOption;
 import main.java.screen.widget.impl.options.Option;
 import main.java.util.Color;
+import main.java.util.SplashText;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -143,7 +144,14 @@ public class InventoryScreen extends Screen {
     @Override
     public void onKeyEvent(KeyInputEvent event) {
         if (event.isEscape())
-            context.setScreen(new MainGameScreen());
+            if( context.getInventory().getStaff() == null || context.getInventory().getArmor() == null){
+                MessageScreen messageScreen = new MessageScreen();
+                messageScreen.setMessage(SplashText.getNo() +"\n"+"You have to equip a Staff and a Armour!");
+                context.setScreen(messageScreen);
+                messageScreen.setOnComplete(()-> context.setScreen(new InventoryScreen()));
+            }else {
+                context.setScreen(new MainGameScreen());
+            }
 
         if (event.isChar('e') || event.isChar('E')) {
             if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
