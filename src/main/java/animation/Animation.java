@@ -50,9 +50,10 @@ public class Animation {
         getFrame(frame).overlayOntoBuffer(buffer);
     }
 
-    // Resets the playback buffer to a blank canvas with the animation background
+    // Resets the playback buffer to fully transparent so that pixels not
+    // explicitly set by any frame are invisible (terminal background shows through).
     public void initBuffer(CellBuffer buffer) {
-        buffer.fill(CellBuffer.EMPTY_CELL, 0xFFFFFF, background);
+        buffer.fill(CellBuffer.EMPTY_CELL, 0xFFFFFF, CellBuffer.TRANSPARENT_BACKGROUND);
     }
 
     // Mutable builder used by SkaParser while frames are read
