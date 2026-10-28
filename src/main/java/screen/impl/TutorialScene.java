@@ -67,7 +67,7 @@ public class TutorialScene extends Screen {
         }));
         // Last step sets up the battle; completing the dialog enters the fight
         dialogWidget.addDialogItem(new DialogWidget.DialogItem("On every Path you can fight Monsters by typing \"fight\"! Lets try fighting your first Battle",
-                DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.INFINITY_DRAGON.create())));
+                DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.AXE_ROGUE.create())));
 
 
 
