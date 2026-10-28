@@ -100,7 +100,7 @@ public class Player extends Entity {
 
     }
 
-    
+
     @Override
     public int getLevel() {
         return playerLevel.getLevel();

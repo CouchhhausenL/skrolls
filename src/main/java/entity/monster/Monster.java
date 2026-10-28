@@ -1,5 +1,6 @@
 package main.java.entity.monster;
 
+import main.java.Converter;
 import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;
@@ -61,6 +62,6 @@ public class Monster extends Entity {
     }
 
     public Item getMobDrop(){
-        return ItemType.getItemByQuality(Quality.values()[this.getDifficulty().ordinal()]);
+        return ItemType.getItemByQuality(Converter.DifficultyLevelToQuality(this.difficulty));
     }
 }

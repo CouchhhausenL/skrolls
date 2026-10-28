@@ -140,7 +140,8 @@ public class OptionsWidget extends Widget {
             if (options.get(newIndex).getRunnable() != null) break;
         }
 
-        setSelectedOption(options.get(newIndex));
+        // Only move if the final candidate is actually navigable
+        if (options.get(newIndex).getRunnable() != null) setSelectedOption(options.get(newIndex));
     }
 
     @Override

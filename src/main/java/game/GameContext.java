@@ -1,6 +1,7 @@
 package main.java.game;
 
 import main.java.DifficultyLevel;
+import main.java.PlayerLevel;
 import main.java.battle.BattleContext;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
@@ -34,6 +35,9 @@ public interface GameContext extends VerbSupplier {
     void fleeFromBattle();
 
     String getPlayerName();
+    PlayerLevel getPlayerLevel();
+
+    void upgradePlayerLevel();
 
     void setPlayer(Player player);
 
@@ -42,6 +46,16 @@ public interface GameContext extends VerbSupplier {
     boolean equipItem(Item item);
 
     boolean unequipItem(Item item);
+
+    int getMagicShards();
+
+    void sacrificeItem(Item item);
+    void addMagicShards(int amount);
+    boolean spendMagicShards(int amount);
+    int getPlayerSpeed();
+
+    int getAttackValue();
+    int getDefenseStat();
 
     List<Spell> getSpells();
 

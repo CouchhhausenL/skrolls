@@ -1,6 +1,7 @@
 package main.java.screen.impl;
 
 
+import main.java.PlayerLevel;
 import main.java.entity.player.Player;
 import main.java.game.GameContext;
 import main.java.item.Inventory;
@@ -29,8 +30,7 @@ public class IntroductionScreen extends Screen {
                 DialogWidget.AnswerType.INPUT,
                 () -> context.setPlayer(new Player(
                         dialogWidget.getEnteredAnswer(),
-                        100,
-                        60,
+                        PlayerLevel.NOVICE,
                         new Inventory()
                 ))));
         dialogWidget.addDialogItem(new DialogWidget.DialogItem(() -> "Hello " + context.getPlayerName() + " nice to Meet you!\n", DialogWidget.AnswerType.NONE, () -> {
@@ -52,16 +52,19 @@ public class IntroductionScreen extends Screen {
                 Item commonArmour = ItemType.COMMON_ARMOUR.create();
                 Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
                 Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
+                Item healScroll = ItemType.SCROLL_IRON_FORTRESS.create();
                 Item potion = ItemType.COMMON_HEALTH_POTION.create();
                 context.addItem(commonArmour);
                 context.addItem(commonHealthAmulett);
                 context.addItem(commonScroll);
                 context.addItem(potion);
                 context.addItem(commonStaff);
+                context.addItem(healScroll);
                 context.equipItem(commonArmour);
                 context.equipItem(commonHealthAmulett);
                 context.equipItem(commonScroll);
                 context.equipItem(commonStaff);
+                context.equipItem(healScroll);
 
                 context.setScreen(new MainGameScreen());
             }

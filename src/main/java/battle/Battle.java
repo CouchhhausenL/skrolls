@@ -42,8 +42,8 @@ public class Battle implements BattleContext {
 
     @Override
     public boolean tryFlee() {
-        // NOTE: the division cancels the player's speed, leaving 1 + enemy speed
-        double fleeChance = (double) player.getSpeed() / player.getSpeed() + enemy.getSpeed();
+        // calculate flee chance, gets bigger if player has a higher speed than enemy
+        double fleeChance = (double) player.getSpeed() / (player.getSpeed() + enemy.getSpeed());
 
         return Math.random() < fleeChance;
     }
@@ -71,6 +71,7 @@ public class Battle implements BattleContext {
         enemy.applyPeriodicEffects();
         player.tickAllCombatEffects();
         enemy.tickAllCombatEffects();
+        player.roundlyRegenerateMana();
 
         battleState = determineBattleStateOrder().first;
     }
@@ -100,8 +101,10 @@ public class Battle implements BattleContext {
         return item;
     }
 
-
-
+    @Override
+    public int getMagicShards() {
+        return enemy.getDifficulty().getReward();
+    }
 
     public boolean checkAllAlive() {
         return player.isAlive() && enemy.isAlive();
@@ -163,7 +166,9 @@ public class Battle implements BattleContext {
         int baseDamage = enemy.getDifficulty().getBaseDamage();
         int attackValue = AttackHelper.calculateAttackValue(enemy.getAttackStat(), enemy.getStatStage(Stat.ATTACK), 1.0);
 
-        int defenseValue = AttackHelper.calculateDefenseValue(player.getDefenseStat(), player.getStatStage(Stat.DEFENSE), player.getDefenseItemFactor(enemy.getAttackingMagicType()));
+        int defenseValue = AttackHelper.calculateDefenseValue(player.getDefenseStat(),
+                player.getStatStage(Stat.DEFENSE),
+                player.getDefenseItemFactor(enemy.getAttackingMagicType()));
 
         int level = enemy.getDifficulty().getLevel();
         double stab = 1.0;

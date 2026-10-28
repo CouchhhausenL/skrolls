@@ -126,7 +126,7 @@ public abstract class Screen {
     public abstract void onResize();
 
     // Centers a widget on the screen
-    protected void autoPositionWidget(AnimationWidget widget) {
+    protected void autoPositionWidget(Widget widget) {
         final int width = widget.getWidth();
         final int height = widget.getHeight();
         final int screenWidth = getWidth();

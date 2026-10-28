@@ -18,8 +18,8 @@ import java.util.Map;
 public abstract class Entity {
     private final String name;
     private int health;
-    private int maxHealth;
-    private final int speed;
+    protected int maxHealth;
+    protected final int speed;
     private final Map<Stat, Integer> statStages = new EnumMap<>(Stat.class);
     private final List<CombatEffect> combatEffects = new ArrayList<>();
 

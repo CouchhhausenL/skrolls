@@ -12,13 +12,13 @@ public class Option{
     public Option(String name, Runnable runnable) {
         this.name = name;
         this.runnable = runnable;
-        this.labelWidget = new LabelWidget(0,0,name);
+        this.labelWidget = new LabelWidget(name);
         this.color = Color.WHITE;
     }
     public Option(String name, int color, Runnable runnable){
         this.name = name;
         this.runnable = runnable;
-        this.labelWidget = new LabelWidget(0,0,name, color);
+        this.labelWidget = new LabelWidget(name, color);
         this.color = color;
     }
 

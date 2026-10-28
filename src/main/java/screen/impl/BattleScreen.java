@@ -5,6 +5,7 @@ import main.java.animation.Animation;
 import main.java.battle.Battle;
 import main.java.battle.BattleContext;
 import main.java.battle.BattleState;
+import main.java.console.input.KeyInputEvent;
 import main.java.game.GameContext;
 import main.java.item.Item;
 import main.java.item.ItemHelper;
@@ -74,7 +75,8 @@ public class BattleScreen extends Screen {
         // 2. Attack menu: one entry per spell from equipped scrolls
         attackOptionsWidget = new OptionsWidget(0, 30, 40, 10);
         for(Spell spell : context.getSpells()){
-            attackOptionsWidget.addOption(new Option(spell.getName(), () -> {playerAttack(context, spell);}));
+            attackOptionsWidget.addOption(new Option(spell.getMagicType().getSymbol()+ spell.getName(),
+                    spell.getMagicType().getColor(), () -> {playerAttack(context, spell);}));
         }
         attackOptionsWidget.addOption(new Option("Back", () -> switchMenu(optionsWidget)));
 
@@ -119,8 +121,11 @@ public class BattleScreen extends Screen {
             AnimationWidget winAnimation = new AnimationWidget(0,0, 80, 30, SkaParser.parse("utility/win.ska"));
             winAnimation.onDone(() -> {
                 Item item = battle.MobDrop();
+                int reward = battle.getMagicShards();
+                context.addMagicShards(reward);
                 context.setScreen(new MainGameScreen());
-                context.addMessage(battle.getEnemyName() + " dropped "+ item.getName() + "! You stashed it in your backpack.");
+                context.addMessage(battle.getEnemyName() + " dropped "+ item.getName() + " and "+reward +" Magic Shards! You stashed it in your backpack.");
+
             });
             addChild(winAnimation);
             return true;
@@ -210,7 +215,6 @@ public class BattleScreen extends Screen {
             enemyBox.update(battle.getEnemyHealth());
             removeChild(attackWidget);
             addChild(playerAnimationWidget);
-            checkEnd();
             switchState();
         });
         addChild(attackWidget);
@@ -238,7 +242,6 @@ public class BattleScreen extends Screen {
             addChild(playerAnimationWidget);
 
                 battle.sendMessage("You drank the potion: " + potion.getName());
-                checkEnd();
             switchState();
         });
         addChild(drinkWidget);
@@ -257,10 +260,15 @@ public class BattleScreen extends Screen {
             playerBox.update(battle.getPlayerHealth());
             removeChild(enemyAttackWidget);
             addChild(enemyAnimationWidget);
-           checkEnd();
             switchState();
         });
         addChild(enemyAttackWidget);
+    }
+
+    @Override
+    public void onKeyEvent(KeyInputEvent event) {
+
+        super.onKeyEvent(event);
     }
 
     @Override

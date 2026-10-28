@@ -1,20 +1,23 @@
 package main.java.game;
 
 import main.java.DifficultyLevel;
+import main.java.PlayerLevel;
+import main.java.battle.AttackHelper;
 import main.java.battle.Battle;
 import main.java.battle.BattleContext;
 import main.java.console.Console;
 import main.java.console.input.InputEvent;
 import main.java.console.input.KeyInputEvent;
+import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
 import main.java.item.Inventory;
 import main.java.item.Item;
+import main.java.item.Sacrificeable;
 import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
 import main.java.scene.PathScene;
 import main.java.scene.Scene;
-import main.java.scene.scenes.Winterfort;
 import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
@@ -136,6 +139,50 @@ public class Game implements GameContext {
     }
 
     @Override
+    public int getMagicShards() {
+        return player.getMagicShards();
+    }
+
+    @Override
+    public void addMagicShards(int amount) {
+        if(amount > 0){
+            player.setMagicShards(player.getMagicShards() + amount);
+        }
+    }
+
+    @Override
+    public boolean spendMagicShards(int amount) {
+        if(amount > getMagicShards()){
+            return false;
+        }else{
+            player.setMagicShards(getMagicShards() - amount);
+            return true;
+        }
+
+    }
+
+    @Override
+    public int getAttackValue() {
+        int attackStat = player.getAttackStat();
+        int attackStatStage = player.getStatStage(Stat.ATTACK);
+        double damageItemFactor = player.getDamageItemFactor();
+        return AttackHelper.calculateAttackValue(attackStat, attackStatStage, damageItemFactor);
+    }
+
+    @Override
+    public int getDefenseStat() {
+        return  AttackHelper.calculateDefenseValue(player.getDefenseStat(),
+                player.getStatStage(Stat.DEFENSE), 1.0);
+    }
+
+    @Override
+    public int getPlayerSpeed() {
+        return player.getSpeed();
+    }
+
+
+
+    @Override
     public DifficultyLevel getPlayerDifficultyLevel() {
         return player.getDifficultyLevel();
     }
@@ -171,11 +218,21 @@ public class Game implements GameContext {
     @Override
     public void fleeFromBattle() {
         if (battle.tryFlee()) {
-            battle.sendMessage("You successfully fled from Battle!");
-            setBattle(null);
-            setScreen(new MainGameScreen());
+            MessageScreen messageScreen = new MessageScreen();
+            messageScreen.setMessage("You successfully fled from Battle!");
+            setScreen(messageScreen);
+            messageScreen.setOnComplete(() -> {
+                battle = null;
+                setScreen(new MainGameScreen());
+            });
+
         } else {
-            battle.sendMessage("You tried to flee, but it failed");
+            MessageScreen messageScreen = new MessageScreen();
+            messageScreen.setMessage("You tried to flee but it failed");
+            setScreen(messageScreen);
+            messageScreen.setOnComplete(()->{
+                setScreen(new BattleScreen());
+            });
         }
     }
 
@@ -187,6 +244,16 @@ public class Game implements GameContext {
     @Override
     public String getPlayerName() {
         return player.getName();
+    }
+
+    @Override
+    public PlayerLevel getPlayerLevel() {
+        return player.getPlayerLevel();
+    }
+
+    @Override
+    public void upgradePlayerLevel() {
+        player.upgradePlayerLevel();
     }
 
     @Override
@@ -208,6 +275,39 @@ public class Game implements GameContext {
     public boolean unequipItem(Item item) {
         return player.getInventory().unequipItem(item);
     }
+
+    @Override
+    public void sacrificeItem(Item item) {
+        if (item instanceof Sacrificeable sacrificeableItem) {
+            ConfirmationScreen confirmationScreen = new ConfirmationScreen();
+            confirmationScreen.setMessage("Do you really want to sell "+item.getName()+" for "+sacrificeableItem.getQuality().getSacrificeValue()+ " Magic Shards");
+            setScreen(confirmationScreen);
+            confirmationScreen.setOnCancel(() -> setScreen(new InventoryScreen()));
+
+            confirmationScreen.setOnConfirm(()-> {
+
+                int price = player.getInventory().sacrificeItem(sacrificeableItem);
+                addMagicShards(price);
+                MessageScreen messageScreen = new MessageScreen();
+                messageScreen.setMessage("You sacrificed " + sacrificeableItem.getName() + " for " + price + " Magic Shards.\n" +
+                        "You now have " + getMagicShards() + " Magic Shards.");
+                setScreen(messageScreen);
+
+                messageScreen.setOnComplete(() -> setScreen(new InventoryScreen()));
+
+
+            });
+
+
+        } else {
+            MessageScreen messageScreen = new MessageScreen();
+            messageScreen.setMessage("This item is not sacrificeable!");
+            setScreen(messageScreen);
+            messageScreen.setOnComplete(() -> setScreen(new InventoryScreen()));
+        }
+
+    }
+
 
     @Override
     public BattleContext getCurrentBattle() {
@@ -235,8 +335,9 @@ public class Game implements GameContext {
                         .build((executionContext, context) -> {
                             if(scene instanceof PathScene){
                                 setBattle(((PathScene) scene).spawnMonster());
-                                setScreen(new BattleScreen());
+                                setScreen(new BattleScreenTransition());
                             }else{
+                                context.addMessage("This is not a Path scene!");
                                 context.addMessage(SplashText.getNo());
                             }
                         }));
@@ -248,7 +349,7 @@ public class Game implements GameContext {
 
         verbs.add(Verb.builder("open").aliases("show", "display")
                 .variant()
-                .choice("type", "map", "inventory")
+                .choice("type", "map", "inventory", "ascension")
                 .build()
                 .build()
                 .build(((executionContext, context) -> {
@@ -257,14 +358,18 @@ public class Game implements GameContext {
                         setScreen(new MapScreen());
 
                     if (type.equals("inventory"))
-                        setScreen(new InventoryScreen());
+                        setScreen(new InventoryScreenOpenTransition());
+                    if(type.equals("ascension")){
+                        setScreen(new UpgradeScreen());
+                    }
                 })));
 
 
         // One "go <exit>" verb per exit of the current scene
         if (scene != null) {
             scene.getExits().getExits().iterator().forEachRemaining(exit -> {
-                String name = exit.getDisplayName() + " [" + exit.getId() + "]" + "[";
+                String difficulty = exit.resolve(this).getDifficulty().name();
+                String name = exit.getDisplayName() + " [" + exit.getId() + "]" + "["+difficulty+"]";
                 verbs.add(Verb.builder("go")
                         .aliases("move")
                                 .variant().choice("direction", name).build().build()

@@ -14,12 +14,28 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
     private int allHeight = 0;
 
     private boolean keyboardInput = true;
+    private boolean onlyScrollOnOverflow = false;
+    private boolean overflow = false;
+
     public ScrollableContainerWidget(int x, int y, int width, int height, int gap) {
         super(x, y, width, height, gap);
     }
 
     @Override
     protected void onPostDraw(DrawContextView context) {
+        int contentHeight = 0;
+        for(Widget widget : widgets){
+            contentHeight += widget.getHeight() + gap;
+        }
+        if(contentHeight > getHeight()){
+            overflow = true;
+        } else {
+            overflow = false;
+        }
+
+        if(onlyScrollOnOverflow && !overflow){
+            return;
+        }
         // Draw the scrollbar track
         context.fill(getWidth() - 1, 0, getWidth(), getHeight(), 0x202020);
         // Map the scroll position onto the track height
@@ -46,6 +62,9 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
 
     @Override
     public void onKeyInput(KeyInputEvent event) {
+        if(onlyScrollOnOverflow && !overflow){
+            return;
+        }
         if(keyboardInput) {
             super.onKeyInput(event);
             if (event.isArrow(KeyInputEvent.Direction.UP)) scroll++;
@@ -56,9 +75,16 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
     public void setKeyboardInput(boolean keyboardInput) {
         this.keyboardInput = keyboardInput;
     }
+    public void setOnlyScrollOnOverflow(boolean onlyScrollOnOverflow) {
+        this.onlyScrollOnOverflow = onlyScrollOnOverflow;
+    }
 
     @Override
     public void onMouseInput(MouseInputEvent event) {
+        if(onlyScrollOnOverflow && !overflow){
+            return;
+        }
+
         if (event.type() == MouseInputEvent.Type.SCROLL_UP) scroll++;
         if (event.type() == MouseInputEvent.Type.SCROLL_DOWN) scroll--;
 

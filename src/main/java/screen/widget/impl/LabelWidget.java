@@ -22,7 +22,13 @@ public class LabelWidget extends Widget {
         super(x, y, width, height);
         this.content = content;
     }
-
+    public LabelWidget(String content, int color){
+        this(0,0,calculateWidth(content),calculateHeight(content),content);
+        this.color = color;
+    }
+    public LabelWidget(String content){
+        this(0,0,calculateWidth(content),calculateHeight(content),content);
+    }
     public LabelWidget(int x, int y, String content) {
         this(x, y, calculateWidth(content), calculateHeight(content), content);
     }
@@ -31,7 +37,7 @@ public class LabelWidget extends Widget {
         this.color = color;
     };
 
-    private static int calculateWidth(String text) {
+    public static int calculateWidth(String text) {
         int max = 0;
         for (String line : text.split("\n", -1)) {
             max = Math.max(max, line.length());
@@ -39,7 +45,7 @@ public class LabelWidget extends Widget {
         return Math.max(1, max);
     }
 
-    private static int calculateHeight(String text) {
+    public static int calculateHeight(String text) {
         return Math.max(1, text.split("\n", -1).length);
     }
 

@@ -16,7 +16,7 @@ public class MessageScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
-        messageWidget = new DialogWidget(getWidth()/2 - message.length()/2, getHeight()/2, getWidth(), getHeight());
+        messageWidget = new DialogWidget(getWidth()/2 - LabelWidget.calculateWidth(message)/2, getHeight()/2, getWidth(), getHeight());
         messageWidget.addDialogItem(new DialogWidget.DialogItem(message, DialogWidget.AnswerType.NONE, () -> {}));
 
         addChild(messageWidget);
@@ -31,7 +31,7 @@ public class MessageScreen extends Screen {
 
     @Override
     public void onResize() {
-        messageWidget.setPosition(getWidth() / 2 - message.length() / 2, getHeight()/2);
+        messageWidget.setPosition(getWidth() / 2 - LabelWidget.calculateWidth(message) / 2, getHeight()/2);
 
     }
 }

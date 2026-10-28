@@ -7,7 +7,7 @@ import main.java.item.effects.ItemEffectType;
 import java.util.List;
 
 // Item with a quality tier, a magic affinity and a list of stat effects
-public abstract class MagicItem extends AbstractItem {
+public abstract class MagicItem extends AbstractItem implements Sacrificeable {
     private final Quality quality;
     private final MagicType magicType;
     private final List<ItemEffect> itemEffects;
