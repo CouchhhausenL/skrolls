@@ -7,16 +7,35 @@ import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
 import main.java.spell.Spell;
 
+import java.util.List;
+
 public class JudgmentGlares extends Spell {
     public JudgmentGlares() {
-        super("Judgment Glares", "Pierces the target with blinding divine rays, stripping away all ongoing beneficial effects.", MagicType.PURITY);
+        super("Judgment Glares", "Pierces the target with harsh divine judgment glares. Deals 85 Purity damage and dispels all enemy periodic buffs. Costs 40 Mana.", MagicType.PURITY);
+    }
+
+    @Override
+    public int getBaseDamage() {
+        return 85;
+    }
+
+    @Override
+    public int getManaCost() {
+        return 40;
+    }
+
+    @Override
+    public List<CombatEffect> getEnemyEffects() {
+        return List.of(
+                new CombatEffect(CombatEffectType.DISPEL, 0, 0)
+        );
     }
 
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
             BattleContext battleContext = context.getCurrentBattle();
-            battleContext.damageEnemy(85, this.magicType);
+            battleContext.damageEnemy(getBaseDamage(), this.magicType);
             battleContext.applyCombatEffectEnemy(new CombatEffect(CombatEffectType.DISPEL, 0, 0));
         }
     }

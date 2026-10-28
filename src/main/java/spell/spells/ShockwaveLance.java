@@ -7,16 +7,24 @@ import main.java.spell.Spell;
 
 public class ShockwaveLance extends Spell {
     public ShockwaveLance() {
-        super("Shockwave Lance", "Condenses force into a piercing line that punches through multiple targets.", MagicType.KINETIC);
+        super("Shockwave Lance", "Condenses kinetic shock into a piercing frontal thrust. Deals 60 Kinetic damage. Costs 20 Mana.", MagicType.KINETIC);
+    }
+
+    @Override
+    public int getBaseDamage() {
+        return 60;
+    }
+
+    @Override
+    public int getManaCost() {
+        return 20;
     }
 
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
             BattleContext battleContext = context.getCurrentBattle();
-
-            battleContext.damageEnemy(60, this.magicType);
-
+            battleContext.damageEnemy(getBaseDamage(), this.magicType);
         }
     }
 

@@ -7,16 +7,42 @@ import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
 import main.java.spell.Spell;
 
+import java.util.List;
+
 public class ChainLightning extends Spell {
     public ChainLightning() {
-        super("Chain Lightning", "A crackling bolt of electricity that zaps the enemy, boosting your speed while slowing the foe.", MagicType.ELEMENTAL);
+        super("Chain Lightning", "Discharges a crackling surge of electricity that siphons kinetic energy. Deals 85 Elemental damage, increases your Speed (+2 for 2 rounds), and slows the enemy (-1 Speed for 2 rounds). Costs 40 Mana.", MagicType.ELEMENTAL);
+    }
+
+    @Override
+    public int getBaseDamage() {
+        return 85;
+    }
+
+    @Override
+    public int getManaCost() {
+        return 40;
+    }
+
+    @Override
+    public List<CombatEffect> getEnemyEffects() {
+        return List.of(
+                new CombatEffect(CombatEffectType.SLOWNESS, 1, 2)
+        );
+    }
+
+    @Override
+    public List<CombatEffect> getPlayerEffects() {
+        return List.of(
+                new CombatEffect(CombatEffectType.SPEED, 2, 2)
+        );
     }
 
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
             BattleContext battleContext = context.getCurrentBattle();
-            battleContext.damageEnemy(85, this.magicType);
+            battleContext.damageEnemy(getBaseDamage(), this.magicType);
             battleContext.applyCombatEffectYourself(new CombatEffect(CombatEffectType.SPEED, 2, 2));
             battleContext.applyCombatEffectEnemy(new CombatEffect(CombatEffectType.SLOWNESS, 1, 2));
         }

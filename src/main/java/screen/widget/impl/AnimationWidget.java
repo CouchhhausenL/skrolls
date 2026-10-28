@@ -36,7 +36,9 @@ public class AnimationWidget extends Widget {
 
     @Override
     public void onKeyInput(KeyInputEvent event) {
+
     }
+
 
     @Override
     public void onMouseInput(MouseInputEvent event) {
@@ -69,6 +71,8 @@ public class AnimationWidget extends Widget {
     public void setPaused(boolean paused) {
         player.setPaused(paused);
     }
+
+
 
     public interface OnDone {
         void onDone();

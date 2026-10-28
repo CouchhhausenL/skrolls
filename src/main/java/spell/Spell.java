@@ -3,6 +3,9 @@ package main.java.spell;
 import main.java.MagicType;
 import main.java.battle.BattleContext;
 import main.java.game.GameContext;
+import main.java.item.effects.CombatEffect;
+
+import java.util.List;
 
 public abstract class Spell {
     private final String name;
@@ -32,4 +35,15 @@ public abstract class Spell {
     }
 
     public abstract String getAnimationName();
+    public int getBaseDamage(){
+        return 0;
+    }
+    public List<CombatEffect> getPlayerEffects(){
+        return List.of();
+    }
+    public List<CombatEffect> getEnemyEffects(){
+        return List.of();
+    }
+    public abstract int getManaCost();
+
 }

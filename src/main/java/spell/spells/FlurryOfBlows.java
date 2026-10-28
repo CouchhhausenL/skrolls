@@ -7,16 +7,35 @@ import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
 import main.java.spell.Spell;
 
+import java.util.List;
+
 public class FlurryOfBlows extends Spell {
     public FlurryOfBlows() {
-        super("Flurry of Blows", "Rapid physical strikes that tear into the foe, causing bleeding wounds.", MagicType.KINETIC);
+        super("Flurry of Blows", "Delivers rapid physical strikes that rip into enemy flesh. Deals 45 Kinetic damage and inflicts Bleeding (10% damage/round for 3 rounds). Costs 10 Mana.", MagicType.KINETIC);
+    }
+
+    @Override
+    public int getBaseDamage() {
+        return 45;
+    }
+
+    @Override
+    public int getManaCost() {
+        return 10;
+    }
+
+    @Override
+    public List<CombatEffect> getEnemyEffects() {
+        return List.of(
+                new CombatEffect(CombatEffectType.BLEEDING, 10, 3)
+        );
     }
 
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
             BattleContext battleContext = context.getCurrentBattle();
-            battleContext.damageEnemy(45, this.magicType);
+            battleContext.damageEnemy(getBaseDamage(), this.magicType);
             battleContext.applyCombatEffectEnemy(new CombatEffect(CombatEffectType.BLEEDING, 10, 3));
         }
     }

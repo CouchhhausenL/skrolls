@@ -7,9 +7,37 @@ import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
 import main.java.spell.Spell;
 
+import java.util.List;
+
 public class Sanctuary extends Spell {
     public Sanctuary() {
-        super("Sanctuary", "Creates a sacred haven that fortifies resistance, bestows prolonged regeneration, and restores mana.", MagicType.PURITY);
+        super("Sanctuary", "Creates a sacred haven of protection. Grants Regeneration (25 HP/round for 4 rounds), Mana Regeneration (+15/round for 4 rounds), Resistance (+2 Defense for 3 rounds), and dispels all enemy periodic buffs. Costs 45 Mana.", MagicType.PURITY);
+    }
+
+    @Override
+    public int getBaseDamage() {
+        return 0;
+    }
+
+    @Override
+    public int getManaCost() {
+        return 45;
+    }
+
+    @Override
+    public List<CombatEffect> getEnemyEffects() {
+        return List.of(
+                new CombatEffect(CombatEffectType.DISPEL, 0, 0)
+        );
+    }
+
+    @Override
+    public List<CombatEffect> getPlayerEffects() {
+        return List.of(
+                new CombatEffect(CombatEffectType.REGENERATION, 25, 4),
+                new CombatEffect(CombatEffectType.MANA_REGEN, 15, 4),
+                new CombatEffect(CombatEffectType.RESISTANCE, 2, 3)
+        );
     }
 
     @Override
@@ -25,6 +53,6 @@ public class Sanctuary extends Spell {
 
     @Override
     public String getAnimationName() {
-        return "magic.ska";
+        return "attack_buff.ska";
     }
 }
