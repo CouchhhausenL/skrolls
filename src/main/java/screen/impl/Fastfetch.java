@@ -78,16 +78,16 @@ public class Fastfetch extends Screen {
             }
         }
         if(minutes > 0){
-            if(minutes == 0){
-                string += minutes + " minute";
+            if(minutes == 1){
+                string += " "+ minutes + " minute";
             }else {
-                string += minutes + " minutes";
+                string += " "+ (minutes % 60) + " minutes";
             }
         }
-        if(seconds == 0){
-            string += seconds + " second";
+        if(seconds == 1){
+            string += " " + seconds + " second";
         }else {
-            string += seconds + " seconds";
+            string += " " + (seconds % 60) + " seconds";
         }
         return string;
     }
