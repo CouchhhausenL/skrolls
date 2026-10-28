@@ -9,11 +9,14 @@ import main.java.item.effects.CombatEffect;
 import main.java.item.effects.ItemEffect;
 import main.java.item.items.*;
 import main.java.screen.Screen;
+import main.java.screen.widget.impl.ChatMessageWidget;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.screen.widget.impl.OptionsWidget;
+import main.java.screen.widget.impl.container.ScrollableContainerWidget;
 import main.java.screen.widget.impl.container.VerticalContainerWidget;
 import main.java.screen.widget.impl.options.ItemOption;
 import main.java.screen.widget.impl.options.Option;
+import main.java.spell.Spell;
 import main.java.util.Color;
 import main.java.util.SplashText;
 
@@ -26,28 +29,37 @@ public class InventoryScreen extends Screen {
 
     private GameContext context;
     private OptionsWidget itemList;
+
+    private ScrollableContainerWidget detailContainer;
     private LabelWidget detailedName;
+
     private LabelWidget detailedSeperator;
-    private LabelWidget detailedDescription;
+    private ChatMessageWidget detailedDescription;
     private LabelWidget detailedMagicType;
 
     private LabelWidget hintWidget;
 
-    private VerticalContainerWidget detailedEffectContainer;
+
 
 
     @Override
     protected void init(GameContext context) {
         this.context = context;
+        detailContainer = new ScrollableContainerWidget(41,0,40,30,0);
+        detailContainer.setKeyboardInput(false);
+        detailContainer.setOnlyScrollOnOverflow(true);
 
         detailedName = new LabelWidget(41, 0, "Select Something to see details!");
-        detailedDescription = new LabelWidget(41, 2, "You can press [Space] to select an item!");
+        detailedDescription = new ChatMessageWidget(41, 2, 40,"You can press [Space] to select an item!");
         detailedSeperator = new LabelWidget(41, 1, "---------------");
-        addChild(detailedName);
-        addChild(detailedDescription);
-        addChild(detailedSeperator);
 
-        hintWidget = new LabelWidget(0,getHeight(),"Press [e] to equip and [u] to unequip!");
+        addChild(detailContainer);
+        detailContainer.addChild(detailedName);
+        detailContainer.addChild(detailedSeperator);
+        detailContainer.addChild(detailedDescription);
+
+        hintWidget = new LabelWidget(0,getHeight() - 1,"Press [e] to equip, [u] to unequip, and [s] to sacrifice!");
+        addChild(hintWidget);
 
         drawInventory();
     }
@@ -74,6 +86,11 @@ public class InventoryScreen extends Screen {
             ItemOption artifactOption = renderItem(artifact, () -> showDetails(artifact));
             if (artifactOption != null) itemList.addOption(artifactOption);
         }
+        itemList.addOption(new Option("----- Skrolls -----", 0x9e57b, null));
+        for (Scroll scroll : context.getInventory().getScrolls()) {
+            ItemOption artifactOption = renderItem(scroll, () -> showDetails(scroll));
+            if (artifactOption != null) itemList.addOption(artifactOption);
+        }
 
         itemList.addOption(new Option("----- Backpack -----", 0x9e57b, null));
         for (Item item : context.getInventory().getBackpackItems()) {
@@ -89,46 +106,69 @@ public class InventoryScreen extends Screen {
 
 
     public void showDetails(Item item) {
-        removeChild(detailedName);
-        removeChild(detailedDescription);
-        removeChild(detailedSeperator);
-        removeChild(detailedMagicType);
-        removeChild(detailedEffectContainer);
+
+        detailContainer.clearChildren();
+        removeChild(detailContainer);
+
+        detailContainer = new ScrollableContainerWidget(40,0,40, 30, 0);
+        detailContainer.setKeyboardInput(false);
+        detailContainer.setOnlyScrollOnOverflow(true);
+
 
         detailedName = new LabelWidget(41, 0, item.getName(), ItemHelper.getItemColor(item));
         detailedSeperator = new LabelWidget(41, 1, "-".repeat(item.getName().length()));
-        detailedDescription = new LabelWidget(41, 2, item.getDescription());
+        detailedDescription = new ChatMessageWidget(41, 2, 40, item.getDescription());
 
-        detailedEffectContainer = new VerticalContainerWidget(41, detailedDescription.getHeight() + 3, 40, 0, 0);
-        detailedEffectContainer.clearChildren();
+
+        detailedMagicType = new LabelWidget(41, detailContainer.getY() + detailContainer.getHeight() + 1, "MagicType:" + ItemHelper.getMagicTypeName(item));
+
+        addChild(detailContainer);
+
+        detailContainer.addChild(detailedName);
+        detailContainer.addChild(detailedDescription);
+        detailContainer.addChild(detailedSeperator);
+        detailContainer.addChild(detailedMagicType);
+
 
         if (item instanceof MagicItem) {
             List<ItemEffect> itemEffects = ((MagicItem) item).getItemEffects();
-            detailedEffectContainer.setHeight(itemEffects.size());
-            int yIncrement = 0;
+
+
             for (ItemEffect itemEffect : itemEffects) {
-                LabelWidget itemEffectLabel = new LabelWidget(0, yIncrement, itemEffect.itemEffectType().toString() + ", " + itemEffect.effectStrength());
-                detailedEffectContainer.addChild(itemEffectLabel);
-                yIncrement++;
+                LabelWidget itemEffectLabel = new LabelWidget(0, 0, itemEffect.itemEffectType().toString() + ", " + itemEffect.effectStrength());
+                detailContainer.addChild(itemEffectLabel);
             }
         } else if (item instanceof Potion) {
             List<CombatEffect> potionEffects = ((Potion) item).getCombatEffects();
-            detailedEffectContainer.setHeight(potionEffects.size());
-            int yIncrement = 0;
-            for (CombatEffect combatEffect : potionEffects) {
-                LabelWidget combatEffectLabel = new LabelWidget(0, yIncrement, combatEffect.getCombatEffectType().toString() + ", " + combatEffect.getEffectStrength()
-                        + ", " + combatEffect.getDuration());
-                detailedEffectContainer.addChild(combatEffectLabel);
-                yIncrement++;
-            }
-        }
-        detailedMagicType = new LabelWidget(41, detailedEffectContainer.getY() + detailedEffectContainer.getHeight() + 1, "MagicType:" + ItemHelper.getMagicTypeName(item));
 
-        addChild(detailedEffectContainer);
-        addChild(detailedName);
-        addChild(detailedDescription);
-        addChild(detailedSeperator);
-        addChild(detailedMagicType);
+
+            for (CombatEffect combatEffect : potionEffects) {
+                LabelWidget combatEffectLabel = new LabelWidget(0, 0, combatEffect.getCombatEffectType().toString() + ", " + combatEffect.getEffectStrength()
+                        + ", " + combatEffect.getDuration());
+                detailContainer.addChild(combatEffectLabel);
+
+            }
+        }else if(item instanceof Scroll scroll){
+            Spell spell = scroll.getSpell();
+            detailContainer.addChild(new LabelWidget(0,0, "Base Damage: " + spell.getBaseDamage()));
+            detailContainer.addChild(new LabelWidget(0,0, "Mana Cost: " + spell.getManaCost()));
+
+                for (CombatEffect playerEffect : spell.getPlayerEffects()) {
+                    detailContainer.addChild(new LabelWidget(0, 0, playerEffect.getCombatEffectType().toString() + ", " + playerEffect.getEffectStrength(), Color.GREEN));
+                }
+
+
+                for (CombatEffect enemyEffect : spell.getEnemyEffects()) {
+                    detailContainer.addChild(new LabelWidget(0, 0, enemyEffect.getCombatEffectType().toString() + ", " + enemyEffect.getEffectStrength(), Color.RED));
+
+                }
+
+
+        }
+
+
+
+
     }
 
 
@@ -143,15 +183,11 @@ public class InventoryScreen extends Screen {
 
     @Override
     public void onKeyEvent(KeyInputEvent event) {
-        if (event.isEscape())
-            if( context.getInventory().getStaff() == null || context.getInventory().getArmor() == null){
-                MessageScreen messageScreen = new MessageScreen();
-                messageScreen.setMessage(SplashText.getNo() +"\n"+"You have to equip a Staff and a Armour!");
-                context.setScreen(messageScreen);
-                messageScreen.setOnComplete(()-> context.setScreen(new InventoryScreen()));
-            }else {
-                context.setScreen(new MainGameScreen());
+        if (event.isEscape()){
+                context.setScreen(new InventoryScreenCloseTransition());
             }
+
+
 
         if (event.isChar('e') || event.isChar('E')) {
             if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
@@ -162,6 +198,14 @@ public class InventoryScreen extends Screen {
             }
         }
 
+
+        if (event.isChar('s')) {
+            if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
+                    context.sacrificeItem(itemOption.getItem());
+                    drawInventory();
+
+            }
+        }
         if (event.isChar('u')) {
             if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
                 if (itemOption.getItem() instanceof Equippable equippable) {

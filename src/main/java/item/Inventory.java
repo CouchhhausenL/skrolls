@@ -40,8 +40,30 @@ public class Inventory implements VerbSupplier {
         backpack.remove(item);
     }
 
+    // Removes an item regardless of where it is stored —
+    // backpack or any equipment slot. Returns true if the item was found and removed.
+    public void removeItemAnywhere(Item item) {
+        if (backpack.remove(item)) {
+            return;
+        }
+        if (item instanceof Equippable equippable) {
+            equipment.unequip(equippable);
+        }
+    }
+
+    public int sacrificeItem(Sacrificeable item){
+            int price = item.getQuality().getSacrificeValue();
+            removeItemAnywhere(item);
+            return price;
+    }
+
     public List<Item> getBackpackItems() {
         return Collections.unmodifiableList(backpack);
+    }
+
+    // Returns true if the given item is currently in the backpack (unequipped).
+    public boolean backpackContainsItem(Item item) {
+        return backpack.contains(item);
     }
 
     public Staff getStaff() {
