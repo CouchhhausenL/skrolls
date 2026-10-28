@@ -23,7 +23,7 @@ public class GopherByway extends PathScene {
 
     @Override
     public DifficultyLevel getDifficulty() {
-        return DifficultyLevel.LOW;
+        return DifficultyLevel.NONE;
     }
 
 }
