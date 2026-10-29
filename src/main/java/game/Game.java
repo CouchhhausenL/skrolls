@@ -314,6 +314,15 @@ public class Game implements GameContext {
         return battle;
     }
 
+    @Override
+    public int getPlayerMaxHealth() {
+        return player.getMaxHealth();
+    }
+
+    @Override
+    public int getPlayerMaxMana() {
+        return player.getMaxMana();
+    }
 
     // Rebuilt every keystroke by the verb input widget: global verbs,
     // scene exits (when a scene is active) and inventory equip/unequip verbs

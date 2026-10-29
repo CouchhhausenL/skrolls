@@ -19,6 +19,7 @@ import main.java.screen.widget.impl.container.ScrollableContainerWidget;
 import main.java.screen.widget.impl.options.ItemOption;
 import main.java.screen.widget.impl.options.Option;
 import main.java.spell.Spell;
+import main.java.util.Color;
 import main.java.util.SkaParser;
 import main.java.util.SplashText;
 
@@ -35,6 +36,7 @@ public class BattleScreen extends Screen {
     private OptionsWidget optionsWidget;
     private OptionsWidget attackOptionsWidget;
     private OptionsWidget potionOptionsWidget;
+    private LabelWidget manaBar;
 
     private Battle.BattleStateOrder battleStateOrder;
 
@@ -55,6 +57,11 @@ public class BattleScreen extends Screen {
         playerBox = new BattleStatusWidget(1, 1, battle.getPlayerName(), battle.getPlayerHealth(), battle.getPlayerMaxHealth());
         enemyBox = new BattleStatusWidget(67, 25, battle.getEnemyName(), battle.getEnemyHealth(), battle.getEnemyMaxHealth());
 
+        manaBar = new LabelWidget(0,30,
+                "Mana: ",
+                0x8eaff0);
+        updateManaBar();
+        addChild(manaBar);
 
         // Enemy assets are named after the monster ("Axe Rogue" -> "axe_rogue")
         Animation playerIdleAnimation = SkaParser.parse("character/wizard/idle.ska");
@@ -66,22 +73,33 @@ public class BattleScreen extends Screen {
         enemyAnimationWidget = new AnimationWidget(0, 0, enemyIdleAnimation);
         enemyAnimationWidget.setLooping(true);
 
+
+
         // 1. Main menu
-        optionsWidget = new OptionsWidget(0, 30, 40, 10);
+        optionsWidget = new OptionsWidget(0, 31, 40, 10);
         optionsWidget.addOption(new Option("Attack", () -> switchMenu(attackOptionsWidget)));
         optionsWidget.addOption(new Option("Drink Potion", () -> switchMenu(potionOptionsWidget)));
-        optionsWidget.addOption(new Option("Flee", context::fleeFromBattle));
+        optionsWidget.addOption(new Option("Flee", () -> {context.fleeFromBattle();
+        switchState();}));
 
         // 2. Attack menu: one entry per spell from equipped scrolls
-        attackOptionsWidget = new OptionsWidget(0, 30, 40, 10);
+        attackOptionsWidget = new OptionsWidget(0, 31, 40, 10);
         for(Spell spell : context.getSpells()){
-            attackOptionsWidget.addOption(new Option(spell.getMagicType().getSymbol()+ spell.getName(),
-                    spell.getMagicType().getColor(), () -> {playerAttack(context, spell);}));
+            attackOptionsWidget.addOption(new Option(spell.getMagicType().getSymbol()+ spell.getName() + spell.getManaCost(),
+                    spell.getMagicType().getColor(), () -> {
+                if(battle.spendMana(spell.getManaCost())) {
+                    playerAttack(context, spell);
+                    updateManaBar();
+                }else {
+                    battle.sendMessage("You don't have enough Mana for this spell!");
+                    updateMessagesWidget();
+                }
+            }));
         }
         attackOptionsWidget.addOption(new Option("Back", () -> switchMenu(optionsWidget)));
 
         // 3. Potion menu
-        potionOptionsWidget = new OptionsWidget(0, 30, 40, 10);
+        potionOptionsWidget = new OptionsWidget(0, 31, 40, 10);
         for (Potion potion : context.getPotions()) {
             potionOptionsWidget.addOption(new ItemOption(potion.getName(), ItemHelper.getItemColor(potion), potion, () -> {playerDrinkPotion(context, potion);}));
         }
@@ -115,6 +133,11 @@ public class BattleScreen extends Screen {
         }
     }
 
+    private void updateManaBar(){
+        manaBar.setContent("Mana: "+
+                BattleStatusWidget.calculateStatBar(battle.getMana(), battle.getMaxMana(), 30)
+                + " ("+ battle.getMana()+"/"+battle.getMaxMana()+")");
+    }
     public boolean checkEnd(){
         if(!battle.isEnemyAlive()){
 
@@ -182,6 +205,7 @@ public class BattleScreen extends Screen {
             case END_ROUND -> {
                 switchMenu(null);
                 battle.endRound();
+                updateManaBar();
                 playerBox.update(battle.getPlayerHealth());
                 enemyBox.update(battle.getEnemyHealth());
                 if (!battle.isEnemyAlive() || !battle.isPlayerAlive()) {

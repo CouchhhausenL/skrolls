@@ -37,14 +37,26 @@ public class BattleStatusWidget extends Widget {
         context.drawString(1, 1, name, Color.WHITE);
 
 
-        context.drawString(1, 2, calculateHealthBar(), Color.GREEN);
+        context.drawString(1, 2, calculateStatBar(health, maxHealth, 20), Color.GREEN);
     }
 
     // Filled cells proportional to current/max health, clamped to the bar width
-    private String calculateHealthBar() {
-        int barWidth = 20;
-        int clampedHealth = Math.max(0, health);
-        int filled = maxHealth > 0 ? (clampedHealth * barWidth) / maxHealth : 0;
+    public static String calculateStatBar(int stat, int maxStat, int barWidth) {
+
+        int clampedStat = Math.clamp(stat, 0, Math.max(maxStat, 0));
+
+        int filled = 0;
+        if (maxStat > 0) {
+            filled = Math.round((float) clampedStat / maxStat * barWidth);
+
+            if (clampedStat > 0 && filled == 0) {
+                filled = 1;                       // alive -> atleast 1 bar
+            }
+            if (clampedStat < maxStat && filled == barWidth) {
+                filled = barWidth - 1;            //not full hp -> no full health bar
+            }
+        }
+
         filled = Math.clamp(filled, 0, barWidth);
         int unfilled = barWidth - filled;
         return "■".repeat(filled) + "□".repeat(unfilled);

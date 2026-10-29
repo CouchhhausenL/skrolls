@@ -115,13 +115,21 @@ public class Player extends Entity {
         maxMana = (int) Math.floor(maxMana - maxMana * percentage);
     }
 
+    public int getMana(){
+        return this.mana;
+    }
 
     public void gainMana(int amount) {
         mana = Math.min(mana + amount, maxMana);
     }
 
-    public void spendMana(int amount) {
-        mana = Math.max(0, mana - amount);
+    public boolean spendMana(int amount) {
+        if(mana - amount >= 0){
+            mana = Math.max(0, mana - amount);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void roundlyRegenerateMana() {

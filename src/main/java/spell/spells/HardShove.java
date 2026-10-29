@@ -7,7 +7,7 @@ import main.java.spell.Spell;
 
 public class HardShove extends Spell {
     public HardShove() {
-        super("Hard Shove", "A blunt burst of physical force that shoves the target backward. Deals 40 Kinetic damage. Costs 0 Mana.", MagicType.KINETIC);
+        super("Hard Shove", "A blunt burst of physical force that shoves the target backward. Deals 40 Kinetic damage. Costs 10 Mana.", MagicType.KINETIC);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class HardShove extends Spell {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 10;
     }
 
     @Override

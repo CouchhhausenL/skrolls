@@ -53,6 +53,8 @@ public class Fastfetch extends Screen {
         addModule("Attack: ", String.valueOf(context.getAttackValue()));
         addModule("Defense: ", String.valueOf(context.getDefenseStat()));
         addModule("Speed: ", String.valueOf(context.getPlayerSpeed()));
+        addModule("Max Health: ", String.valueOf(context.getPlayerMaxHealth()));
+        addModule("Max Mana: ", String.valueOf(context.getPlayerMaxMana()));
 
         addChild(container);
     }

@@ -68,4 +68,7 @@ public interface GameContext extends VerbSupplier {
 
     DifficultyLevel getSceneDifficulty();
     DifficultyLevel getPlayerDifficultyLevel();
+
+    int getPlayerMaxHealth();
+    int getPlayerMaxMana();
 }

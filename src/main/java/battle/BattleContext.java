@@ -53,5 +53,9 @@ public interface BattleContext {
     void endRound();
     void fightInit();
 
+    int getMana();
+    int getMaxMana();
+    boolean spendMana(int amount);
+
 
 }

@@ -56,10 +56,27 @@ public class Battle implements BattleContext {
         enemy.resetCombatEffects();
         player.heal(player.getMaxHealth());
         enemy.heal(enemy.getMaxHealth());
+        player.gainMana(player.getMaxMana());
 
 
 
 
+
+    }
+
+    @Override
+    public int getMana() {
+        return player.getMana();
+    }
+
+    @Override
+    public int getMaxMana() {
+        return player.getMaxMana();
+    }
+
+    @Override
+    public boolean spendMana(int amount) {
+        return player.spendMana(amount);
     }
 
 
@@ -72,6 +89,7 @@ public class Battle implements BattleContext {
         player.tickAllCombatEffects();
         enemy.tickAllCombatEffects();
         player.roundlyRegenerateMana();
+
 
         battleState = determineBattleStateOrder().first;
     }
@@ -217,6 +235,13 @@ public class Battle implements BattleContext {
 
 
         double typeEffectiveness = MagicType.getEffectiveness(attackType, enemy.getDefendingMagicType());
+        if(typeEffectiveness == 0.5){
+            sendMessage("You're attack was not very effective!");
+        }
+        else if (typeEffectiveness == 2.0){
+            sendMessage("You're attack was very effective!");
+        }
+
 
 
         int damage = AttackHelper.calculateDamage(level, baseDamage, attackValue, defenseValue, stab, critLevel, typeEffectiveness);
