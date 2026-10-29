@@ -2,6 +2,8 @@ package main.java.screen.widget.impl;
 
 import main.java.console.input.KeyInputEvent;
 import main.java.screen.widget.impl.container.AbstractContainerWidget;
+import main.java.screen.widget.impl.dialog.AnswerType;
+import main.java.screen.widget.impl.dialog.DialogItem;
 import main.java.screen.widget.impl.options.Option;
 import main.java.util.Color;
 
@@ -26,6 +28,7 @@ public class DialogWidget extends AbstractContainerWidget {
     private OptionsWidget optionsWidget;
     private Runnable onComplete = () -> {
     };
+    private Runnable onEachAnswer = ()->{};
 
     public DialogWidget(int x, int y, int width, int height) {
         super(x, y, width, height);
@@ -42,11 +45,16 @@ public class DialogWidget extends AbstractContainerWidget {
         this.onComplete = onComplete;
     }
 
+    public void setOnEachAnswer(Runnable onEachAnswer) {
+        this.onEachAnswer = onEachAnswer;
+    }
+
     // Rebuilds the child widgets for the item at the current index
     private void setupCurrentItem() {
         widgets.clear();
         inputField = null;
         optionsWidget = null;
+        onEachAnswer.run();
 
         if (index >= dialogItems.size()) return;
 
@@ -181,15 +189,7 @@ public class DialogWidget extends AbstractContainerWidget {
     protected void updateWidgetPositions() {
     }
 
-    public enum AnswerType {
-        NONE,
-        INPUT,
-        BOOLEAN
-    }
 
-    public record DialogItem(Supplier<String> questionSupplier, AnswerType answerField, Runnable onEnter) {
-        public DialogItem(String staticQuestion, AnswerType answerField, Runnable onEnter) {
-            this(() -> staticQuestion, answerField, onEnter);
-        }
-    }
+
+
 }

@@ -7,6 +7,8 @@ import main.java.item.Item;
 import main.java.item.ItemType;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.DialogWidget;
+import main.java.screen.widget.impl.dialog.AnswerType;
+import main.java.screen.widget.impl.dialog.DialogItem;
 
 // Step-by-step tutorial dialog that hands out starter gear and a test battle
 public class TutorialScene extends Screen {
@@ -22,15 +24,15 @@ public class TutorialScene extends Screen {
     @Override
     protected void init(GameContext context) {
         dialogWidget = new DialogWidget(0, 0, 80, 30);
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("This is your Tutorial \n" +
+        dialogWidget.addDialogItem(new DialogItem("This is your Tutorial \n" +
                 "It will explain the game Step by Step!",
-                DialogWidget.AnswerType.NONE,
+                AnswerType.NONE,
                 () -> {
                 }));
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("First lets give you some Items! \n " +
+        dialogWidget.addDialogItem(new DialogItem("First lets give you some Items! \n " +
                 "Here I have an Old Wooden Cane laying around, I don't need it anymore.\n" +
                 "Do you want to equip it?",
-                DialogWidget.AnswerType.BOOLEAN,
+                AnswerType.BOOLEAN,
                 () -> {
                     // "No" sends the dialog back so the question repeats
                     if (dialogWidget.getEnteredBoolean()) {
@@ -50,7 +52,7 @@ public class TutorialScene extends Screen {
                     }
                 }
         ));
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("I also have an Old Armour and an Old Amulette for you", DialogWidget.AnswerType.NONE, () -> {
+        dialogWidget.addDialogItem(new DialogItem("I also have an Old Armour and an Old Amulette for you", AnswerType.NONE, () -> {
             Item commonArmour = ItemType.COMMON_ARMOUR.create();
             Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
             Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
@@ -66,8 +68,8 @@ public class TutorialScene extends Screen {
 
         }));
         // Last step sets up the battle; completing the dialog enters the fight
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("On every Path you can fight Monsters by typing \"fight\"! Lets try fighting your first Battle",
-                DialogWidget.AnswerType.NONE, () -> context.setBattle(MonsterType.AXE_ROGUE.create())));
+        dialogWidget.addDialogItem(new DialogItem("On every Path you can fight Monsters by typing \"fight\"! Lets try fighting your first Battle",
+                AnswerType.NONE, () -> context.setBattle(MonsterType.AXE_ROGUE.create())));
 
 
 
