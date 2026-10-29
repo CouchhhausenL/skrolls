@@ -147,7 +147,6 @@ public class BattleScreen extends Screen {
                 int reward = battle.getMagicShards();
                 context.addMagicShards(reward);
                 context.setScreen(new MainGameScreen());
-                context.addMessage(battle.getEnemyName() + " dropped "+ item.getName() + " and "+reward +" Magic Shards! You stashed it in your backpack.");
 
             });
             addChild(winAnimation);

@@ -10,6 +10,8 @@ import main.java.item.ItemType;
 import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.DialogWidget;
+import main.java.screen.widget.impl.dialog.AnswerType;
+import main.java.screen.widget.impl.dialog.DialogItem;
 
 // Opening dialog: welcome message, name input and a choice between the
 // tutorial or starting directly in Winterfort Castle.
@@ -21,23 +23,23 @@ public class IntroductionScreen extends Screen {
     @Override
     protected void init(GameContext context) {
         dialogWidget = new DialogWidget(0, 0, 80, 30);
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("Hello Dear Traveler! \n" +
+        dialogWidget.addDialogItem(new DialogItem("Hello Dear Traveler! \n" +
                 "Thank you for playing this Game,\nit was a hell amount of Work so please sit back and enjoy this:\n\nTEXT ADVENTURE!!",
-                DialogWidget.AnswerType.NONE,
+                AnswerType.NONE,
                 () -> {
                 }));
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("But excuse me, what is your name?",
-                DialogWidget.AnswerType.INPUT,
+        dialogWidget.addDialogItem(new DialogItem("But excuse me, what is your name?",
+                AnswerType.INPUT,
                 () -> context.setPlayer(new Player(
                         dialogWidget.getEnteredAnswer(),
                         PlayerLevel.NOVICE,
                         new Inventory()
                 ))));
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem(() -> "Hello " + context.getPlayerName() + " nice to Meet you!\n", DialogWidget.AnswerType.NONE, () -> {
+        dialogWidget.addDialogItem(new DialogItem(() -> "Hello " + context.getPlayerName() + " nice to Meet you!\n", AnswerType.NONE, () -> {
         }));
 
 
-        dialogWidget.addDialogItem(new DialogWidget.DialogItem("Do you need an Introduction?", DialogWidget.AnswerType.BOOLEAN, () -> {
+        dialogWidget.addDialogItem(new DialogItem("Do you need an Introduction?", AnswerType.BOOLEAN, () -> {
         }));
 
         dialogWidget.setOnComplete(() -> {
@@ -53,6 +55,7 @@ public class IntroductionScreen extends Screen {
                 Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
                 Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
                 Item healScroll = ItemType.SCROLL_IRON_FORTRESS.create();
+                Item teleportScroll = ItemType.SCROLL_TELEPORT.create();
                 Item potion = ItemType.COMMON_HEALTH_POTION.create();
                 context.addItem(commonArmour);
                 context.addItem(commonHealthAmulett);
@@ -60,11 +63,13 @@ public class IntroductionScreen extends Screen {
                 context.addItem(potion);
                 context.addItem(commonStaff);
                 context.addItem(healScroll);
+                context.addItem(teleportScroll);
                 context.equipItem(commonArmour);
                 context.equipItem(commonHealthAmulett);
                 context.equipItem(commonScroll);
                 context.equipItem(commonStaff);
                 context.equipItem(healScroll);
+                context.equipItem(teleportScroll);
 
                 context.setScreen(new MainGameScreen());
             }

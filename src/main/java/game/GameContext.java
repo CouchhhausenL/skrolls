@@ -14,6 +14,7 @@ import main.java.spell.Spell;
 import main.java.verb.VerbSupplier;
 
 import java.util.List;
+import java.util.Set;
 
 // Access point for screens and verbs to the running Game's state
 public interface GameContext extends VerbSupplier {
@@ -71,4 +72,9 @@ public interface GameContext extends VerbSupplier {
 
     int getPlayerMaxHealth();
     int getPlayerMaxMana();
+
+    Set<Scene> getVisitedScenes();
+
+    boolean hasInteracted(String id);
+    void markInteracted(String id);
 }

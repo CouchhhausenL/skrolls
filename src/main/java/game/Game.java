@@ -1,6 +1,7 @@
 package main.java.game;
 
 import main.java.DifficultyLevel;
+import main.java.Interactable.Interactable;
 import main.java.PlayerLevel;
 import main.java.battle.AttackHelper;
 import main.java.battle.Battle;
@@ -18,6 +19,7 @@ import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
 import main.java.scene.PathScene;
 import main.java.scene.Scene;
+import main.java.scene.SettlementScene;
 import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
@@ -26,10 +28,9 @@ import main.java.spell.Spell;
 import main.java.util.Color;
 import main.java.util.SplashText;
 import main.java.verb.Verb;
+import main.java.verb.VerbVariant;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 // Central game loop and state holder. Owns the active screen, battle,
 // player, scene and the message log, and pumps input/render each tick.
@@ -44,11 +45,11 @@ public class Game implements GameContext {
     private Battle battle = null;
     private Player player = null;
     private Scene scene = new WinterfortCastle(this);
-
-
     private final List<String> messages = new ArrayList<>();
-
     private final DrawContext drawContext;
+    private Set<Scene> visitedScenes = new HashSet<>();
+
+    private final Set<String> interactedIds = new HashSet<>();
 
     public Game(Console console) {
         this.console = console;
@@ -147,6 +148,7 @@ public class Game implements GameContext {
     public void addMagicShards(int amount) {
         if(amount > 0){
             player.setMagicShards(player.getMagicShards() + amount);
+            addMessage("You optained "+ amount + " Magic Shards");
         }
     }
 
@@ -160,6 +162,8 @@ public class Game implements GameContext {
         }
 
     }
+
+
 
     @Override
     public int getAttackValue() {
@@ -213,6 +217,9 @@ public class Game implements GameContext {
     public List<Spell> getSpells() {
         return player.getInventory().getScrolls().stream().map(Scroll::getSpell).toList();
     }
+    public List<Spell> getOutsideSpells(){
+        return player.getInventory().getScrolls().stream().map(Scroll::getSpell).filter(Spell::usableOutside).toList();
+    }
 
     // Leaving a battle successfully returns the player to the map
     @Override
@@ -264,6 +271,7 @@ public class Game implements GameContext {
     @Override
     public void addItem(Item item) {
         player.getInventory().addItem(item);
+        addMessage("You optained the Item "+item.getName()+" and stashed it in your Inventory!");
     }
 
     @Override
@@ -324,6 +332,26 @@ public class Game implements GameContext {
         return player.getMaxMana();
     }
 
+    @Override
+    public Set<Scene> getVisitedScenes() {
+        return visitedScenes;
+    }
+    public void visitScene(Scene targetScene){
+        if(visitedScenes.stream().noneMatch(scene -> scene.getName().equals(targetScene.getName()))){
+            visitedScenes.add(targetScene);
+        }
+    }
+
+    @Override
+    public boolean hasInteracted(String id) {
+        return interactedIds.contains(id);
+    }
+
+    @Override
+    public void markInteracted(String id) {
+        interactedIds.add(id);
+    }
+
     // Rebuilt every keystroke by the verb input widget: global verbs,
     // scene exits (when a scene is active) and inventory equip/unequip verbs
     @Override
@@ -356,6 +384,16 @@ public class Game implements GameContext {
                 })
         );
 
+            getOutsideSpells().forEach(spell -> {
+                verbs.add(Verb.builder("cast")
+                        .aliases("spell")
+                        .variant().choice("spell", spell.getName()).build().build()
+                        .build((executionContext, context) -> {
+                            context.addMessage("Casted spell " + spell.getName());
+                            spell.cast(context);
+                        }));
+            });
+
         verbs.add(Verb.builder("open").aliases("show", "display")
                 .variant()
                 .choice("type", "map", "inventory", "ascension")
@@ -384,9 +422,24 @@ public class Game implements GameContext {
                                 .variant().choice("direction", name).build().build()
                         .build((executionContext, context) -> {
                             context.addMessage("Moved to " + name);
+                            visitScene(exit.resolve(context));
                             context.setScene(exit.resolve(context));
                         }));
             });
+
+                for (Interactable interactable : scene.getInteractables()){
+                        VerbVariant.Builder verbBuilder = Verb.builder(interactable.getVerb()).variant();
+                            if(interactable.getPreposition() != null) {
+                                verbBuilder.choice("preposition", interactable.getPreposition()).build();
+                            }
+                            verbBuilder.choice("interactables",interactable.getName()).build();
+
+                            verbs.add(verbBuilder.build()
+                            .build((executionContext, context) -> {
+                              interactable.onInteract(context);
+                            }));
+
+            }
         }
 
         if (player != null)
