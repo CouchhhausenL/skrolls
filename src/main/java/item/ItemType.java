@@ -1,6 +1,8 @@
 package main.java.item;
 
 
+
+import main.java.item.items.Scroll;
 import main.java.MagicType;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
@@ -457,7 +459,7 @@ public enum ItemType {
             new CombatEffect(CombatEffectType.STRENGTH, 3, 5)
     ))),
 
-    // ==========================================
+        // ==========================================
     // GENERATED SCROLLS (tools/generate_scroll_items.py)
     // ==========================================
     SCROLL_ABYSSAL_GRASP(() -> new Scroll(new AbyssalGrasp(), Quality.RARE)),
@@ -503,6 +505,7 @@ public enum ItemType {
     SCROLL_SHATTER_STRIKE(() -> new Scroll(new ShatterStrike(), Quality.COMMON)),
     SCROLL_SHOCKWAVE_LANCE(() -> new Scroll(new ShockwaveLance(), Quality.COMMON)),
     SCROLL_SINGULARITY(() -> new Scroll(new Singularity(), Quality.MYTHIC)),
+    SCROLL_TELEPORT(() -> new Scroll(new Teleport(), Quality.COMMON)),
     SCROLL_THUNDER_SPARK(() -> new Scroll(new ThunderSpark(), Quality.UNCOMMON)),
     SCROLL_TITAN_GRIT(() -> new Scroll(new TitanGrit(), Quality.COMMON)),
     SCROLL_VOID_CURSE(() -> new Scroll(new VoidCurse(), Quality.RARE)),

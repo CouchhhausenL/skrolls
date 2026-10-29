@@ -1,7 +1,6 @@
 package main.java.spell;
 
 import main.java.MagicType;
-import main.java.battle.BattleContext;
 import main.java.game.GameContext;
 import main.java.item.effects.CombatEffect;
 
@@ -43,6 +42,10 @@ public abstract class Spell {
     }
     public List<CombatEffect> getEnemyEffects(){
         return List.of();
+    }
+
+    public boolean usableOutside(){
+        return false;
     }
     public abstract int getManaCost();
 
