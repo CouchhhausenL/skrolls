@@ -17,6 +17,14 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
     private final GameContext context;
     private final List<VerbSuggestion> suggestions = new ArrayList<>();
     private final Colors colors;
+
+    // Static so history survives screen transitions (opening map, inventory, combat, etc.)
+    private static final List<String> history = new ArrayList<>();
+    // -1 means "not browsing history" (current live input)
+    private int historyIndex = -1;
+    // Saves the live input while the user browses history
+    private String savedInput = "";
+
     private Consumer<GameContext> executionConsumer = null;
 
     public static final Colors DEFAULT_COLORS = new Colors(
@@ -95,11 +103,49 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
                 break;
             }
         }
-        // ENTER runs the command and clears the field on success
+        // ENTER runs the command, saves to history, and resets history browsing
         if (event.isEnter()) {
+            String cmd = getContent();
+            if (!cmd.isBlank()) {
+                if (history.isEmpty() || !history.get(history.size() - 1).equals(cmd)) {
+                    history.add(cmd);
+                }
+            }
+            historyIndex = -1;
+            savedInput = "";
             if (execute()) {
                 cursor = 0;
                 setContent("");
+            }
+        }
+        // Arrow UP — go back in history
+        if (event.isArrow(KeyInputEvent.Direction.UP)) {
+            if (history.isEmpty()) return;
+            if (historyIndex == -1) {
+                // Save live input before browsing
+                savedInput = getContent();
+            }
+            if (historyIndex + 1 < history.size()) {
+                historyIndex++;
+                String entry = history.get(history.size() - 1 - historyIndex);
+                setContent(entry);
+                cursor = getContent().length();
+            }
+        }
+        // Arrow DOWN — go forward in history
+        if (event.isArrow(KeyInputEvent.Direction.DOWN)) {
+            if (historyIndex == -1) return; // not browsing history
+            if (historyIndex > 0) {
+                historyIndex--;
+                String entry = history.get(history.size() - 1 - historyIndex);
+                setContent(entry);
+                cursor = getContent().length();
+            } else {
+                // Reached the live input again
+                historyIndex = -1;
+                setContent(savedInput);
+                cursor = getContent().length();
+                savedInput = "";
             }
         }
     }
@@ -113,7 +159,7 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
 
     // Recomputes suggestions and executability from the current text.
     // Before the first space only verb names are completed; afterwards the
-    // named verb's parameters are analyzed and completed.
+    // relaxation and completion of parameters begins.
     private void update() {
         suggestions.clear();
         executionConsumer = null;
