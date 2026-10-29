@@ -18,12 +18,13 @@ public class OptionsWidget extends Widget {
     private List<Option> options = new ArrayList<Option>();
 
     private Option selectedOption;
-    private final int visibleLines;
 
     public OptionsWidget(int x, int y, int width, int height){
         super(x,y,width,height);
-        this.visibleLines = height/2 + 1;
+    }
 
+    public int getVisibleLines() {
+        return getHeight() / 2 + 1;
     }
 
     public void addOption(Option option){
@@ -79,6 +80,7 @@ public class OptionsWidget extends Widget {
     public void onDraw(DrawContextView context) {
         if (options.isEmpty()) return;
         int currentIndex = selectedOption != null ? options.indexOf(selectedOption) : 0;
+        int visibleLines = getVisibleLines();
 
         int start = currentIndex - (visibleLines / 2 - 1);
         if (start < 0) start = 0;
