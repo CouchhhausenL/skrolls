@@ -23,7 +23,8 @@ public class MainGameScreen extends Screen {
         this.context = context;
         verbInputWidget = new VerbInputWidget(context, 0, 0, 1, 1);
         messageContainerWidget = new ScrollableContainerWidget(0, 0, 1, 1, 2);
-
+        messageContainerWidget.setOnlyScrollOnOverflow(true);
+        messageContainerWidget.setKeyboardInput(false);
         positionWidgets();
         addChild(messageContainerWidget);
         addChild(verbInputWidget);

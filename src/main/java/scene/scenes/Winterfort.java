@@ -9,6 +9,7 @@ import main.java.item.ItemType;
 import main.java.scene.Direction;
 import main.java.scene.SettlementScene;
 import main.java.screen.widget.impl.DialogWidget;
+import main.java.screen.widget.impl.dialog.AnswerType;
 import main.java.screen.widget.impl.dialog.DialogItem;
 
 import java.util.ArrayList;
@@ -16,14 +17,15 @@ import java.util.List;
 
 public class Winterfort extends SettlementScene {
     private final NPC dario;
+    private final NPC trader;
 
     @Override
     public List<Interactable> getInteractables() {
-        return List.of(dario);
+        return List.of(dario,trader);
     }
     protected Winterfort(GameContext gameContext) {
         super(gameContext);
-        dario = new NPC("winterfort_npc_1","Dario the Backpacker",NPCType.BACKPACKER);
+        dario = new NPC("winterfort_npc_1","Dario the Backpacker",NPCType.BACKPACKER, this);
         dario.addDialogItem(new DialogItem("Hello"));
         dario.addDialogItem(new DialogItem("Whats Up?"));
         dario.addDialogItem(new DialogItem("Oh.. I see you are a new Adventurer!"));
@@ -32,6 +34,31 @@ public class Winterfort extends SettlementScene {
 
         }));
         dario.addInteractedDialog(new DialogItem("I have nothing more to tell to you."));
+
+        trader = new NPC("winterfort_npc_2", "Salesman",NPCType.SALESMAN, this);
+        trader.addDialogItem(new DialogItem("Hi"));
+        trader.addDialogItem(new DialogItem("Do you want to buy a Sparrow Feather for 10 Magic Crystals?", AnswerType.BOOLEAN, ()->{
+            if(trader.getEnteredBoolean()){
+                if(gameContext.spendMagicShards(10)){
+                gameContext.addItem(ItemType.COMMON_SWIFT_FEATHER.create());}else{
+                    gameContext.markUnInteracted("winterfort_npc_2");
+                }
+
+            }else{
+                gameContext.markUnInteracted("winterfort_npc_2");
+            }
+        }));
+        trader.addDialogItem(new DialogItem(
+                () -> trader.getEnteredBoolean()
+                    ? "Thank you!"
+                        : "Then, because of their stinginess, my children won't have anything to eat tonight.",
+
+                AnswerType.NONE,
+                ()->{}
+
+                )
+        );
+        trader.addInteractedDialog(new DialogItem("It was nice doing business with you!"));
 
     }
 

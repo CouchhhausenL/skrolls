@@ -12,20 +12,24 @@ import main.java.util.SkaParser;
 import java.util.List;
 public class NPCDialogScreen extends Screen {
 
-    private final DialogWidget dialogWidget = new DialogWidget(40, 0, Math.max(40,(getWidth()-40)), 30);
+    private DialogWidget dialogWidget;
     private final NPCType npcType;
     private AnimationWidget idleAnimation;
     private AnimationWidget talkAnimation;
+    private final List<DialogItem> items;
 
     public NPCDialogScreen(NPCType npcType, List<DialogItem> items) {
         this.npcType = npcType;
-        for (DialogItem item : items) {
-            this.dialogWidget.addDialogItem(item);
-        }
+        this.items = items;
+
     }
 
     @Override
     protected void init(GameContext context) {
+        dialogWidget = new DialogWidget(40,0,Math.max(40,(getWidth()-40)),30);
+        for (DialogItem item : items) {
+            this.dialogWidget.addDialogItem(item);
+        }
         idleAnimation = new AnimationWidget(0, 0, SkaParser.parse("character/npc/" + npcType.name().toLowerCase() + "/idle.ska"));
         idleAnimation.setLooping(true);
 
@@ -48,6 +52,11 @@ public class NPCDialogScreen extends Screen {
         dialogWidget.setOnComplete(() -> context.setScreen(new MainGameScreen()));
 
         addChild(dialogWidget);
+    }
+
+
+    public boolean getEnteredBoolean(){
+        return dialogWidget.getEnteredBoolean();
     }
 
     @Override

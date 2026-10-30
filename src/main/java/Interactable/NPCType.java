@@ -6,6 +6,7 @@ public enum NPCType {
     ELF,
     BACKPACKER,
     KING,
-    QUEEN
+    QUEEN,
+    SALESMAN
 
 }

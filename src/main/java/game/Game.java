@@ -17,6 +17,8 @@ import main.java.item.Item;
 import main.java.item.Sacrificeable;
 import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
+import main.java.quest.Quest;
+import main.java.quest.QuestReward;
 import main.java.scene.PathScene;
 import main.java.scene.Scene;
 import main.java.scene.SettlementScene;
@@ -48,6 +50,8 @@ public class Game implements GameContext {
     private final List<String> messages = new ArrayList<>();
     private final DrawContext drawContext;
     private Set<Scene> visitedScenes = new HashSet<>();
+
+    private Set<Quest> quests = new HashSet<>();
 
     private final Set<String> interactedIds = new HashSet<>();
 
@@ -221,6 +225,32 @@ public class Game implements GameContext {
         return player.getInventory().getScrolls().stream().map(Scroll::getSpell).filter(Spell::usableOutside).toList();
     }
 
+
+    public Set<Quest> getQuests() {
+        return quests;
+    }
+    public void addQuest(Quest quest){
+        quests.add(quest);
+    }
+
+    @Override
+    public boolean hasQuest(String id) {
+        return quests.stream().anyMatch(quest -> quest.getId().equals(id));
+    }
+
+    @Override
+    public Quest getQuest(String id) {
+        return quests.stream().filter(quest -> quest.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    @Override
+    public void applyQuestReward(QuestReward reward) {
+        addMagicShards(reward.magicShards());
+        for(Item item : reward.items()){
+            addItem(item);
+        }
+    }
+
     // Leaving a battle successfully returns the player to the map
     @Override
     public void fleeFromBattle() {
@@ -273,6 +303,7 @@ public class Game implements GameContext {
         player.getInventory().addItem(item);
         addMessage("You optained the Item "+item.getName()+" and stashed it in your Inventory!");
     }
+
 
     @Override
     public boolean equipItem(Item item) {
@@ -352,6 +383,11 @@ public class Game implements GameContext {
         interactedIds.add(id);
     }
 
+    @Override
+    public void markUnInteracted(String id) {
+        interactedIds.remove(id);
+    }
+
     // Rebuilt every keystroke by the verb input widget: global verbs,
     // scene exits (when a scene is active) and inventory equip/unequip verbs
     @Override
@@ -396,7 +432,7 @@ public class Game implements GameContext {
 
         verbs.add(Verb.builder("open").aliases("show", "display")
                 .variant()
-                .choice("type", "map", "inventory", "ascension")
+                .choice("type", "map", "inventory", "ascension", "quests")
                 .build()
                 .build()
                 .build(((executionContext, context) -> {
@@ -408,6 +444,9 @@ public class Game implements GameContext {
                         setScreen(new InventoryScreenOpenTransition());
                     if(type.equals("ascension")){
                         setScreen(new UpgradeScreen());
+                    }
+                    if(type.equals("quests")){
+                        setScreen(new QuestsScreen());
                     }
                 })));
 

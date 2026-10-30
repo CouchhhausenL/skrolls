@@ -8,6 +8,8 @@ import main.java.entity.player.Player;
 import main.java.item.Inventory;
 import main.java.item.Item;
 import main.java.item.items.Potion;
+import main.java.quest.Quest;
+import main.java.quest.QuestReward;
 import main.java.scene.Scene;
 import main.java.screen.Screen;
 import main.java.spell.Spell;
@@ -77,4 +79,14 @@ public interface GameContext extends VerbSupplier {
 
     boolean hasInteracted(String id);
     void markInteracted(String id);
+
+    void markUnInteracted(String id);
+
+    Set<Quest> getQuests();
+    void addQuest(Quest quest);
+
+    boolean hasQuest(String id);
+    Quest getQuest(String id);
+
+    void applyQuestReward(QuestReward reward);
 }
