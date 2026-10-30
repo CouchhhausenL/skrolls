@@ -21,10 +21,11 @@ public abstract class Quest {
         this.npc = npc;
     }
 
-    public abstract void handleEvent(QuestEvent event);
+    public abstract boolean handleEvent(QuestEvent event);
 
-    protected void addProgress(int amount){
+    protected boolean addProgress(int amount){
         progress = Math.min(required, progress + amount);
+        return progress == required;
     }
     public boolean isComplete(){
         return progress >= required;

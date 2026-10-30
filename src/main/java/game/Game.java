@@ -18,6 +18,7 @@ import main.java.item.Sacrificeable;
 import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
 import main.java.quest.Quest;
+import main.java.quest.QuestEvent.QuestEvent;
 import main.java.quest.QuestReward;
 import main.java.scene.PathScene;
 import main.java.scene.Scene;
@@ -248,6 +249,15 @@ public class Game implements GameContext {
         addMagicShards(reward.magicShards());
         for(Item item : reward.items()){
             addItem(item);
+        }
+    }
+
+    @Override
+    public void triggerQuestEvent(QuestEvent questEvent) {
+        for(Quest quest : quests){
+        if(quest.handleEvent(questEvent)){
+            quests.remove(quest);
+        };
         }
     }
 

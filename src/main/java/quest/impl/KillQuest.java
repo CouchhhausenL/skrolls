@@ -16,10 +16,10 @@ public class KillQuest extends Quest {
 
 
     @Override
-    public void handleEvent(QuestEvent event) {
+    public boolean handleEvent(QuestEvent event) {
         if(event instanceof KillEvent(MonsterType type) && type == monsterType){
-            addProgress(1);
+            return addProgress(1);
         }
-
+        return false;
     }
 }

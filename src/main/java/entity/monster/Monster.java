@@ -6,7 +6,6 @@ import main.java.MagicType;
 import main.java.entity.Entity;
 import main.java.item.Item;
 import main.java.item.ItemType;
-import main.java.item.Quality;
 
 // A single monster instance. The same MagicType is used for both attacking
 // and defending because monsters only have one affinity.
@@ -16,6 +15,7 @@ public class Monster extends Entity {
     private final int attack;
     private final int defense;
     private final DifficultyLevel difficulty;
+    private MonsterType monsterType;
 
     public Monster(String name, String description, int maxHealth, int speed, int attack, int defense, DifficultyLevel difficulty, MagicType magicType) {
         super(name, maxHealth, speed);
@@ -25,12 +25,6 @@ public class Monster extends Entity {
         this.defense = defense;
         this.difficulty = difficulty;
     }
-
-    // Placeholder: attacks are currently driven by Battle.damagePlayer()
-    public void attack() {
-
-    }
-
 
     public DifficultyLevel getDifficulty() {
         return difficulty;
@@ -50,6 +44,14 @@ public class Monster extends Entity {
         return attack;
     }
 
+    public MonsterType getMonsterType() {
+        return monsterType;
+    }
+
+    // Called by MonsterType.create() right after construction
+    public void setMonsterType(MonsterType monsterType) {
+        this.monsterType = monsterType;
+    }
 
     @Override
     public MagicType getDefendingMagicType() {
@@ -61,7 +63,7 @@ public class Monster extends Entity {
         return magicType;
     }
 
-    public Item getMobDrop(){
+    public Item getMobDrop() {
         return ItemType.getItemByQuality(Converter.DifficultyLevelToQuality(this.difficulty));
     }
 }

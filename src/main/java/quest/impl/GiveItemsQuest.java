@@ -18,10 +18,10 @@ public class GiveItemsQuest extends Quest {
 
 
     @Override
-    public void handleEvent(QuestEvent event) {
+    public boolean handleEvent(QuestEvent event) {
         if(event instanceof GiveItemsEvent(Item givenItem) && givenItem == item){
-            addProgress(1);
+            return addProgress(1);
         }
-
+        return false;
     }
 }

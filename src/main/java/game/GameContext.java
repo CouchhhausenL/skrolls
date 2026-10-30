@@ -9,6 +9,7 @@ import main.java.item.Inventory;
 import main.java.item.Item;
 import main.java.item.items.Potion;
 import main.java.quest.Quest;
+import main.java.quest.QuestEvent.QuestEvent;
 import main.java.quest.QuestReward;
 import main.java.scene.Scene;
 import main.java.screen.Screen;
@@ -87,6 +88,8 @@ public interface GameContext extends VerbSupplier {
 
     boolean hasQuest(String id);
     Quest getQuest(String id);
+
+    void triggerQuestEvent(QuestEvent questEvent);
 
     void applyQuestReward(QuestReward reward);
 }

@@ -1,9 +1,11 @@
 package main.java.battle;
 
 import main.java.MagicType;
+import main.java.entity.monster.MonsterType;
 import main.java.item.Item;
 import main.java.item.effects.CombatEffect;
 import main.java.item.items.Potion;
+import main.java.quest.QuestEvent.QuestEvent;
 
 import java.util.List;
 
@@ -58,4 +60,5 @@ public interface BattleContext {
     boolean spendMana(int amount);
 
 
+    MonsterType getMonsterType();
 }

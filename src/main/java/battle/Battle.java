@@ -3,6 +3,7 @@ package main.java.battle;
 import main.java.MagicType;
 import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
+import main.java.entity.monster.MonsterType;
 import main.java.entity.player.Player;
 import main.java.item.Item;
 import main.java.item.effects.CombatEffect;
@@ -117,6 +118,11 @@ public class Battle implements BattleContext {
         Item item = enemy.getMobDrop();
         player.getInventory().addItem(item);
         return item;
+    }
+
+    @Override
+    public MonsterType getMonsterType() {
+        return enemy.getMonsterType();
     }
 
     @Override

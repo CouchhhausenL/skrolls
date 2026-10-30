@@ -10,6 +10,8 @@ import main.java.game.GameContext;
 import main.java.item.Item;
 import main.java.item.ItemHelper;
 import main.java.item.items.Potion;
+import main.java.quest.QuestEvent.KillEvent;
+import main.java.quest.QuestEvent.QuestEvent;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.BattleStatusWidget;
@@ -146,7 +148,9 @@ public class BattleScreen extends Screen {
                 Item item = battle.MobDrop();
                 int reward = battle.getMagicShards();
                 context.addMagicShards(reward);
+                context.triggerQuestEvent(new KillEvent(battle.getMonsterType()));
                 context.setScreen(new MainGameScreen());
+
 
             });
             addChild(winAnimation);

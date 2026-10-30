@@ -35,8 +35,11 @@ public enum MonsterType {
         this.supplier = supplier;
     }
 
+    // Creates a fresh Monster and injects this MonsterType afterwards
     public Monster create() {
-        return supplier.get();
+        Monster monster = supplier.get();
+        monster.setMonsterType(this);
+        return monster;
     }
 
     // Picks a random monster from the pool matching the requested difficulty
@@ -45,7 +48,7 @@ public enum MonsterType {
             case NONE -> List.of(AXE_ROGUE, GIANT_SPIDER);
             case LOW -> List.of(ZOMBIE, ORK, ABSTRAY_ANGEL);
             case INTERMEDIATE -> List.of(BLADE_BRUTE, FIRE_SPRITE, SKELETON, FROST_JACKALOPE);
-            case MEDIUM -> List.of( GRIM_REAPER, HALF_BLOOD_DEMON, TONGUE_CRAWLER, PURE_GRYPHON);
+            case MEDIUM -> List.of(GRIM_REAPER, HALF_BLOOD_DEMON, TONGUE_CRAWLER, PURE_GRYPHON);
             case HIGH -> List.of(CHAOS_ABOMINATION, LESSER_WYVERN, FELID_SPELLWEAVER);
             case EXTREME -> List.of(INFINITY_DRAGON);
         };
