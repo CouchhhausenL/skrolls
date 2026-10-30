@@ -1,13 +1,26 @@
 package main.java.scene.scenes;
 
 import main.java.DifficultyLevel;
+import main.java.Interactable.Chest;
+import main.java.Interactable.Interactable;
 import main.java.game.GameContext;
+import main.java.item.Quality;
 import main.java.scene.Direction;
 import main.java.scene.LocationScene;
 
+import java.util.List;
+
 public class RoughRidgeSpire extends LocationScene {
-    protected RoughRidgeSpire(GameContext gameContext) {
+    private final Chest chest;
+
+    public RoughRidgeSpire(GameContext gameContext) {
         super(gameContext);
+        chest = new Chest("rough_ridge_chest_1", "Windswept Spire Chest", Quality.RARE);
+    }
+
+    @Override
+    public List<Interactable> getInteractables() {
+        return List.of(chest);
     }
 
     @Override
@@ -26,5 +39,4 @@ public class RoughRidgeSpire extends LocationScene {
     public DifficultyLevel getDifficulty() {
         return DifficultyLevel.MEDIUM;
     }
-
 }
