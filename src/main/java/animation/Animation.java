@@ -1,6 +1,7 @@
 package main.java.animation;
 
 import main.java.console.CellBuffer;
+import main.java.util.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class Animation {
     // Resets the playback buffer to fully transparent so that pixels not
     // explicitly set by any frame are invisible (terminal background shows through).
     public void initBuffer(CellBuffer buffer) {
-        buffer.fill(CellBuffer.EMPTY_CELL, 0xFFFFFF, CellBuffer.TRANSPARENT_BACKGROUND);
+        buffer.fill(CellBuffer.EMPTY_CELL, Color.WHITE, CellBuffer.TRANSPARENT_BACKGROUND);
     }
 
     // Mutable builder used by SkaParser while frames are read

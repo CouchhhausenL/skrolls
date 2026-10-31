@@ -47,13 +47,13 @@ public class QuestsScreen extends Screen {
         options = new OptionsWidget(0, 0, 40, getHeight() - 1);
 
         if (context.getQuests().isEmpty()) {
-            options.addOption(new Option("----- No Active Quests -----", 0x909090, null));
+            options.addOption(new Option("----- No Active Quests -----", Color.BG5, null));
         } else {
             for (Quest quest : context.getQuests()) {
                 String title = quest.getTitle() + " (" + quest.getProgress() + "/" + quest.getRequired() + ")";
                 options.addOption(new QuestOption(
                         title,
-                        quest.isComplete() ? Color.GREEN : 0xf3cf83,
+                        quest.isComplete() ? Color.GREEN : Color.BEIGE,
                         quest,
                         () -> showdetails(quest)
                 ));
@@ -66,7 +66,7 @@ public class QuestsScreen extends Screen {
     public void showdetails(Quest quest) {
         details.clearChildren();
 
-        details.addChild(new LabelWidget(quest.getTitle(), 0xf3cf83));
+        details.addChild(new LabelWidget(quest.getTitle(), Color.BEIGE));
         details.addChild(new LabelWidget("-".repeat(Math.max(1, quest.getTitle().length()))));
         details.addChild(new LabelWidget("Status: " + (quest.isComplete() ? "Completed" : "In Progress"), quest.isComplete() ? Color.GREEN : Color.YELLOW));
         details.addChild(new LabelWidget("Progress: " + quest.getProgress() + " / " + quest.getRequired()));
@@ -76,9 +76,9 @@ public class QuestsScreen extends Screen {
 
         if (quest.getReward() != null) {
             details.addChild(new LabelWidget(""));
-            details.addChild(new LabelWidget("--- Rewards ---", 0x9e57b));
+            details.addChild(new LabelWidget("--- Rewards ---", Color.GREEN));
             if (quest.getReward().magicShards() > 0) {
-                details.addChild(new LabelWidget("Magic Shards: " + quest.getReward().magicShards(), 0x00FFFF));
+                details.addChild(new LabelWidget("Magic Shards: " + quest.getReward().magicShards(), Color.LIGHT_BLUE));
             }
             for (Item item : quest.getReward().items()) {
                 details.addChild(new LabelWidget("Item: " + item.getName(), Color.WHITE));

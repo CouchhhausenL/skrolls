@@ -5,6 +5,7 @@ import main.java.scene.Scene;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.OptionsWidget;
 import main.java.screen.widget.impl.options.Option;
+import main.java.util.Color;
 
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class TeleportScreen extends Screen {
         } else {
             String question = "Where do you want to teleport to?";
             int maxLength = question.length();
-            optionsWidget.addOption(new Option(question, 0xf3cf83, null ));
+            optionsWidget.addOption(new Option(question, Color.BEIGE, null ));
 
             for (Scene scene : visitedScenes) {
                 String name = scene.getName();

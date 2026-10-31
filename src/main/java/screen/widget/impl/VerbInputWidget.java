@@ -28,16 +28,16 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
     private Consumer<GameContext> executionConsumer = null;
 
     public static final Colors DEFAULT_COLORS = new Colors(
-            0x101010,
-            0x202020,
-            0x404040,
+            Color.BG0,
+            Color.BG1,
+            Color.BG3,
             Color.WHITE,
-            0xA0FFA0,
-            0xD0D0D0,
-            0x909090,
-            0x505050,
-            0x303030,
-            0xA0A0FF
+            Color.GREEN,
+            Color.BG7,
+            Color.BG5,
+            Color.BG4,
+            Color.BG2,
+            Color.VIOLETT
     );
 
     public VerbInputWidget(GameContext context, int x, int y, int width, int height, String content, Colors colors) {

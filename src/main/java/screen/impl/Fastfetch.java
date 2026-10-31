@@ -61,7 +61,7 @@ public class Fastfetch extends Screen {
 
 
     private void addModule(String keyString, String entryString ){
-        LabelWidget key = new LabelWidget(keyString, 0xf3cf83);
+        LabelWidget key = new LabelWidget(keyString, Color.GREEN);
         LabelWidget entry = new LabelWidget(entryString, Color.WHITE);
         BasicContainerWidget module = new KeyValueWidget(0,0,key, entry);
         container.addChild(module);

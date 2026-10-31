@@ -1,6 +1,6 @@
 package main.java.entity.monster;
 
-import main.java.Converter;
+import main.java.util.Converter;
 import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.entity.Entity;

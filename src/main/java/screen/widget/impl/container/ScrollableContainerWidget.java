@@ -5,6 +5,7 @@ import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
 import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
+import main.java.util.Color;
 
 // Vertically stacked container with a scroll range.
 // scroll is <= 0; 0 shows the top, more negative values move down.
@@ -37,7 +38,7 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
             return;
         }
         // Draw the scrollbar track
-        context.fill(getWidth() - 1, 0, getWidth(), getHeight(), 0x202020);
+        context.fill(getWidth() - 1, 0, getWidth(), getHeight(), Color.BG1);
         // Map the scroll position onto the track height
         int divide = -allHeight + 1;
         if (divide == 0 || allHeight == 0) return;
@@ -57,7 +58,7 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
             endY -= diff;
         }
 
-        context.fill(getWidth() - 1, startY, getWidth(), endY, '│', 0xA0A0A0, CellBuffer.TRANSPARENT_BACKGROUND);
+        context.fill(getWidth() - 1, startY, getWidth(), endY, '│', Color.BG6, CellBuffer.TRANSPARENT_BACKGROUND);
     }
 
     @Override

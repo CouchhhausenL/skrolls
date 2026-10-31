@@ -10,9 +10,9 @@ public class TextFieldWidget extends AbstractTextFieldWidget {
 
     // background, cursor, placeholder, content
     public static final Colors DEFAULT_COLORS = new Colors(
-            0x101010,
-            0x404040,
-            0x909090,
+            Color.BG0,
+            Color.BG3,
+            Color.BG5,
             Color.WHITE
     );
 

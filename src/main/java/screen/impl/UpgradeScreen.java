@@ -8,6 +8,7 @@ import main.java.screen.widget.impl.OptionsWidget;
 import main.java.screen.widget.impl.container.KeyValueWidget;
 import main.java.screen.widget.impl.container.VerticalContainerWidget;
 import main.java.screen.widget.impl.options.Option;
+import main.java.util.Color;
 import main.java.util.SplashText;
 
 public class UpgradeScreen extends Screen {
@@ -17,7 +18,7 @@ public class UpgradeScreen extends Screen {
     protected void init(GameContext context) {
         container = new VerticalContainerWidget(0,0,50,20,0);
 
-        container.addChild(new KeyValueWidget("Current Mana Shards: ", 0x8eaff0, String.valueOf(context.getMagicShards())));
+        container.addChild(new KeyValueWidget("Current Mana Shards: ", Color.LIGHT_BLUE, String.valueOf(context.getMagicShards())));
         PlayerLevel playerLevel = context.getPlayerLevel();
         PlayerLevel nextLevel;
         if(playerLevel.ordinal() >= PlayerLevel.values().length){
@@ -25,7 +26,7 @@ public class UpgradeScreen extends Screen {
         }else{
             nextLevel = PlayerLevel.values()[playerLevel.ordinal() + 1];
         }
-        int keyColor = 0xf3cf83;
+        int keyColor = Color.BEIGE;
 
         container.addChild(new KeyValueWidget("Your current Level: ", keyColor, playerLevel.toString()));
         container.addChild(new KeyValueWidget("Next Level: ", keyColor, nextLevel.toString()));
@@ -38,7 +39,7 @@ public class UpgradeScreen extends Screen {
         container.addChild(new KeyValueWidget("Defense: ", keyColor, formatStatUpgrade(playerLevel.getBaseDefense(), nextLevel.getBaseDefense())));
         container.addChild(new KeyValueWidget("Speed: ", keyColor, formatStatUpgrade(playerLevel.getBaseSpeed(), nextLevel.getBaseSpeed())));
         container.addChild(new LabelWidget("----------------"));
-        container.addChild(new KeyValueWidget("Upgrade Cost: ", 0x8eaff0, String.valueOf(nextLevel.getCost())));
+        container.addChild(new KeyValueWidget("Upgrade Cost: ", Color.LIGHT_BLUE, String.valueOf(nextLevel.getCost())));
         container.addChild(new LabelWidget(0,0,"Do you want to upgrade?"));
         OptionsWidget optionsWidget = new OptionsWidget(0,0,getWidth(),3);
         optionsWidget.addOption(new Option("YES",() -> {

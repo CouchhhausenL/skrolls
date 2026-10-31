@@ -1,6 +1,8 @@
-package main.java;
+package main.java.util;
 
 
+import main.java.DifficultyLevel;
+import main.java.PlayerLevel;
 import main.java.item.Quality;
 
 public class Converter {

@@ -1,13 +1,12 @@
 package main.java.entity.player;
 
-import main.java.Converter;
+import main.java.util.Converter;
 import main.java.DifficultyLevel;
 import main.java.MagicType;
 import main.java.PlayerLevel;
 import main.java.entity.Entity;
 import main.java.item.Inventory;
 import main.java.item.effects.CombatEffect;
-import main.java.item.effects.ItemEffect;
 import main.java.item.effects.ItemEffectType;
 import main.java.item.items.Potion;
 
