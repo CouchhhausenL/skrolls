@@ -7,11 +7,12 @@ import main.java.battle.BattleContext;
 import main.java.battle.BattleState;
 import main.java.console.input.KeyInputEvent;
 import main.java.game.GameContext;
+import main.java.item.Inventory;
 import main.java.item.Item;
 import main.java.item.ItemHelper;
 import main.java.item.items.Potion;
+import main.java.item.items.Scroll;
 import main.java.quest.QuestEvent.KillEvent;
-import main.java.quest.QuestEvent.QuestEvent;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.BattleStatusWidget;
@@ -36,22 +37,30 @@ public class BattleScreen extends Screen {
     private BattleStatusWidget playerBox;
     private BattleStatusWidget enemyBox;
     private OptionsWidget optionsWidget;
-    private OptionsWidget attackOptionsWidget;
-    private OptionsWidget potionOptionsWidget;
+    private OptionWidgetType currentOptionWidgetType;
+
+
     private LabelWidget manaBar;
 
     private Battle.BattleStateOrder battleStateOrder;
 
     private GameContext context;
     private BattleContext battle;
+    private ScrollableContainerWidget infoContainer;
 
-
+    private enum OptionWidgetType{
+        MAIN,
+        ATTACK,
+        POTIONS
+    }
 
 
     private ScrollableContainerWidget messagesHistoryWidget;
 
     @Override
     protected void init(GameContext context) {
+        infoContainer = new ScrollableContainerWidget(getWidth()/2, getHeight()/2, 40, 20, 0);
+        addChild(infoContainer);
         this.context = context;
 
         this.battle = context.getCurrentBattle();
@@ -61,7 +70,7 @@ public class BattleScreen extends Screen {
 
         manaBar = new LabelWidget(0,30,
                 "Mana: ",
-                0x8eaff0);
+                Color.LIGHT_BLUE);
         updateManaBar();
         addChild(manaBar);
 
@@ -77,35 +86,13 @@ public class BattleScreen extends Screen {
 
 
 
-        // 1. Main menu
+
         optionsWidget = new OptionsWidget(0, 31, 40, 10);
-        optionsWidget.addOption(new Option("Attack", () -> switchMenu(attackOptionsWidget)));
-        optionsWidget.addOption(new Option("Drink Potion", () -> switchMenu(potionOptionsWidget)));
-        optionsWidget.addOption(new Option("Flee", () -> {context.fleeFromBattle();
-        switchState();}));
+
 
         // 2. Attack menu: one entry per spell from equipped scrolls
-        attackOptionsWidget = new OptionsWidget(0, 31, 40, 10);
-        for(Spell spell : context.getSpells()){
-            attackOptionsWidget.addOption(new Option(spell.getMagicType().getSymbol()+ spell.getName() + spell.getManaCost(),
-                    spell.getMagicType().getColor(), () -> {
-                if(battle.spendMana(spell.getManaCost())) {
-                    playerAttack(context, spell);
-                    updateManaBar();
-                }else {
-                    battle.sendMessage("You don't have enough Mana for this spell!");
-                    updateMessagesWidget();
-                }
-            }));
-        }
-        attackOptionsWidget.addOption(new Option("Back", () -> switchMenu(optionsWidget)));
 
-        // 3. Potion menu
-        potionOptionsWidget = new OptionsWidget(0, 31, 40, 10);
-        for (Potion potion : context.getPotions()) {
-            potionOptionsWidget.addOption(new ItemOption(potion.getName(), ItemHelper.getItemColor(potion), potion, () -> {playerDrinkPotion(context, potion);}));
-        }
-        potionOptionsWidget.addOption(new Option("Back", () -> switchMenu(optionsWidget)));
+
 
         // 4. Battle messages
         messagesHistoryWidget = new ScrollableContainerWidget(0, 40, 40, 10, 0);
@@ -125,14 +112,49 @@ public class BattleScreen extends Screen {
     }
 
     // Removes all option widgets and shows only the requested one
-    public void switchMenu(OptionsWidget newMenu) {
+    public void switchMenu(OptionWidgetType optionWidgetType) {
         removeChild(optionsWidget);
-        removeChild(attackOptionsWidget);
-        removeChild(potionOptionsWidget);
-
-        if (newMenu != null) {
-            addChild(newMenu);
+        optionsWidget = new OptionsWidget(0,31,40,10);
+        addChild(optionsWidget);
+        currentOptionWidgetType = optionWidgetType;
+        switch (optionWidgetType){
+            case MAIN:
+                optionsWidget.addOption(new Option("Attack", () -> switchMenu(OptionWidgetType.ATTACK)));
+                optionsWidget.addOption(new Option("Drink Potion", () -> switchMenu(OptionWidgetType.POTIONS)));
+                optionsWidget.addOption(new Option("Flee", () -> {context.fleeFromBattle();
+                    switchState();}));
+                break;
+            case ATTACK:
+                for(Scroll scroll: context.getInventory().getScrolls()){
+                    Spell spell = scroll.getSpell();
+                    optionsWidget.addOption(new ItemOption( spell.getMagicType().getSymbol()+" " +spell.getName() +" " + spell.getManaCost(),
+                            spell.getMagicType().getColor(),
+                            scroll,
+                            () -> {
+                                if(battle.spendMana(spell.getManaCost())) {
+                                    playerAttack(context, spell);
+                                    updateManaBar();
+                                }else {
+                                    battle.sendMessage("You don't have enough Mana for this spell!");
+                                    updateMessagesWidget();
+                                }
+                            }));
+                }
+                optionsWidget.addOption(new Option("Back", () -> switchMenu(OptionWidgetType.MAIN)));
+                break;
+            case POTIONS:
+                // 3. Potion menu
+                for (Potion potion : context.getPotions()) {
+                    optionsWidget.addOption(new ItemOption(potion.getName(), ItemHelper.getItemColor(potion), potion, () -> {playerDrinkPotion(context, potion);}));
+                }
+                optionsWidget.addOption(new Option("Back", () -> switchMenu(OptionWidgetType.MAIN)));
+                break;
+            case null:
+                removeChild(optionsWidget);
+                break;
         }
+
+
     }
 
     private void updateManaBar(){
@@ -145,9 +167,8 @@ public class BattleScreen extends Screen {
 
             AnimationWidget winAnimation = new AnimationWidget(0,0, 80, 30, SkaParser.parse("utility/win.ska"));
             winAnimation.onDone(() -> {
-                Item item = battle.MobDrop();
-                int reward = battle.getMagicShards();
-                context.addMagicShards(reward);
+                context.addItem(battle.getMobDrop());
+                context.addMagicShards(battle.getMagicShards());
                 context.triggerQuestEvent(new KillEvent(battle.getMonsterType()));
                 context.setScreen(new MainGameScreen());
 
@@ -200,7 +221,7 @@ public class BattleScreen extends Screen {
 
 
         switch(battleState){
-            case PLAYER_TURN -> switchMenu(optionsWidget);
+            case PLAYER_TURN -> switchMenu(OptionWidgetType.MAIN);
             case ENEMY_TURN -> {
                 switchMenu(null);
                 enemyAttack(battle);
@@ -254,7 +275,7 @@ public class BattleScreen extends Screen {
         BattleContext battle = context.getCurrentBattle();
 
         switchMenu(null);
-        potionOptionsWidget.removeByItem(potion);
+        optionsWidget.removeByItem(potion);
 
         removeChild(playerAnimationWidget); //remove old widget
         Animation playerAttackAnimation = SkaParser.parse("character/wizard/drink_potion.ska");
@@ -292,10 +313,34 @@ public class BattleScreen extends Screen {
         addChild(enemyAttackWidget);
     }
 
+    public void showInfo(Item item){
+        infoContainer.clearChildren();
+        if(item != null){
+        InventoryScreen.showDetails(item, infoContainer);
+        }
+    }
+
+
+
     @Override
     public void onKeyEvent(KeyInputEvent event) {
+        if(event.isChar('i')){
 
-        super.onKeyEvent(event);
+         if( optionsWidget.getSelectedOption() != null && optionsWidget.getSelectedOption() instanceof ItemOption itemoption && currentOptionWidgetType == OptionWidgetType.ATTACK) {
+             showInfo(itemoption.getItem());
+
+
+         }
+         if(optionsWidget.getSelectedOption() != null && optionsWidget.getSelectedOption() instanceof ItemOption itemOption && currentOptionWidgetType == OptionWidgetType.POTIONS){
+             showInfo(itemOption.getItem());
+         }
+
+
+        }
+        if(event.isEscape()){
+            showInfo(null);
+        }
+
     }
 
     @Override

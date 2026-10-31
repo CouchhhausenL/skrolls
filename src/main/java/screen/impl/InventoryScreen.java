@@ -30,11 +30,8 @@ public class InventoryScreen extends Screen {
     private GameContext context;
     private OptionsWidget itemList;
 
-    private ScrollableContainerWidget detailContainer;
-    private LabelWidget detailedName;
+    private ScrollableContainerWidget detailContainer = new ScrollableContainerWidget(41,0,40,30,0);
 
-    private LabelWidget detailedSeperator;
-    private ChatMessageWidget detailedDescription;
     private LabelWidget detailedMagicType;
 
     private LabelWidget hintWidget;
@@ -45,18 +42,14 @@ public class InventoryScreen extends Screen {
     @Override
     protected void init(GameContext context) {
         this.context = context;
-        detailContainer = new ScrollableContainerWidget(41,0,40,30,0);
         detailContainer.setKeyboardInput(false);
         detailContainer.setOnlyScrollOnOverflow(true);
 
-        detailedName = new LabelWidget(41, 0, "Select Something to see details!");
-        detailedDescription = new ChatMessageWidget(41, 2, 40,"You can press [Space] to select an item!");
-        detailedSeperator = new LabelWidget(41, 1, "---------------");
+        detailContainer.addChild( new LabelWidget(41, 0, "Select Something to see details!"));
+        detailContainer.addChild( new ChatMessageWidget(41, 2, 40,"You can press [Space] to select an item!"));
+        detailContainer.addChild( new LabelWidget(41, 1, "---------------"));
 
         addChild(detailContainer);
-        detailContainer.addChild(detailedName);
-        detailContainer.addChild(detailedSeperator);
-        detailContainer.addChild(detailedDescription);
 
         hintWidget = new LabelWidget(0,getHeight() - 1,"Press [e] to equip, [u] to unequip, and [s] to sacrifice!");
         addChild(hintWidget);
@@ -71,28 +64,28 @@ public class InventoryScreen extends Screen {
         }
 
         itemList = new OptionsWidget(0, 0, 40, getHeight() - 1);
-        itemList.addOption(new Option("----- Staff -----", 0x9e57b, null));
+        itemList.addOption(new Option("----- Staff -----", Color.BEIGE, null));
 
         ItemOption staffOption = renderItem(context.getInventory().getStaff(), () -> showDetails(context.getInventory().getStaff()));
         if (staffOption != null) itemList.addOption(staffOption);
 
-        itemList.addOption(new Option("----- Armor -----", 0x9e57b, null));
+        itemList.addOption(new Option("----- Armor -----", Color.BEIGE, null));
 
         ItemOption armorOption = renderItem(context.getInventory().getArmor(), () -> showDetails(context.getInventory().getArmor()));
         if (armorOption != null) itemList.addOption(armorOption);
 
-        itemList.addOption(new Option("----- Artifacts -----", 0x9e57b, null));
+        itemList.addOption(new Option("----- Artifacts -----", Color.BEIGE, null));
         for (Artifact artifact : context.getInventory().getArtifacts()) {
             ItemOption artifactOption = renderItem(artifact, () -> showDetails(artifact));
             if (artifactOption != null) itemList.addOption(artifactOption);
         }
-        itemList.addOption(new Option("----- Skrolls -----", 0x9e57b, null));
+        itemList.addOption(new Option("----- Skrolls -----", Color.BEIGE, null));
         for (Scroll scroll : context.getInventory().getScrolls()) {
             ItemOption artifactOption = renderItem(scroll, () -> showDetails(scroll));
             if (artifactOption != null) itemList.addOption(artifactOption);
         }
 
-        itemList.addOption(new Option("----- Backpack -----", 0x9e57b, null));
+        itemList.addOption(new Option("----- Backpack -----", Color.BEIGE, null));
         for (Item item : context.getInventory().getBackpackItems()) {
             ItemOption backpackOption = renderItem(item, () -> showDetails(item));
             if (backpackOption != null) itemList.addOption(backpackOption);
@@ -103,31 +96,26 @@ public class InventoryScreen extends Screen {
 
     }
 
+    public void showDetails(Item item){
+        showDetails(item, detailContainer);
+    }
 
-
-    public void showDetails(Item item) {
+    public static void showDetails(Item item, ScrollableContainerWidget detailContainer) {
 
         detailContainer.clearChildren();
-        removeChild(detailContainer);
 
-        detailContainer = new ScrollableContainerWidget(40,0,40, 30, 0);
         detailContainer.setKeyboardInput(false);
         detailContainer.setOnlyScrollOnOverflow(true);
 
 
-        detailedName = new LabelWidget(41, 0, item.getName(), ItemHelper.getItemColor(item));
-        detailedSeperator = new LabelWidget(41, 1, "-".repeat(item.getName().length()));
-        detailedDescription = new ChatMessageWidget(41, 2, 40, item.getDescription());
+        detailContainer.addChild( new LabelWidget(41, 0, item.getName(), ItemHelper.getItemColor(item)));
+        detailContainer.addChild(new LabelWidget(41, 1, "-".repeat(item.getName().length())));
+        detailContainer.addChild( new ChatMessageWidget(41, 2, 40, item.getDescription()));
 
 
-        detailedMagicType = new LabelWidget(41, detailContainer.getY() + detailContainer.getHeight() + 1, "MagicType:" + ItemHelper.getMagicTypeName(item));
+        detailContainer.addChild( new LabelWidget(41, detailContainer.getY() + detailContainer.getHeight() + 1, "MagicType:" + ItemHelper.getMagicTypeName(item)));
 
-        addChild(detailContainer);
 
-        detailContainer.addChild(detailedName);
-        detailContainer.addChild(detailedDescription);
-        detailContainer.addChild(detailedSeperator);
-        detailContainer.addChild(detailedMagicType);
 
 
         if (item instanceof MagicItem) {

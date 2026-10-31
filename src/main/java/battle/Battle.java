@@ -114,10 +114,8 @@ public class Battle implements BattleContext {
         }
     }
      @Override
-    public Item MobDrop(){
-        Item item = enemy.getMobDrop();
-        player.getInventory().addItem(item);
-        return item;
+    public Item getMobDrop(){
+         return enemy.getMobDrop();
     }
 
     @Override

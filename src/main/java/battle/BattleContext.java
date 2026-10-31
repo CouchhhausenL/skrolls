@@ -38,7 +38,7 @@ public interface BattleContext {
 
     boolean isEnemyAlive();
 
-    Item MobDrop();
+    Item getMobDrop();
     int getMagicShards();
 
     boolean tryFlee();
