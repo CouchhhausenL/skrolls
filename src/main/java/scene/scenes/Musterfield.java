@@ -83,7 +83,7 @@ public class Musterfield extends SettlementScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("musterfield_reward_claimed")) {
                             gameContext.markInteracted("musterfield_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "Excellent marksmanship! The roads are safe from frost. Take this Blazing Firestaff as your well-earned reward!";
                         }
                         return "The muster camp salutes your service!";

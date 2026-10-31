@@ -58,7 +58,7 @@ public class FalconedgeFortress extends LocationScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("falconedge_fortress_reward_claimed")) {
                             gameContext.markInteracted("falconedge_fortress_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "A magnificent victory! The skies belong to Falconedge once more. Accept this Archon Scepter as our token of honor!";
                         }
                         return "The skies remain calm under your watchful deeds, wizard.";

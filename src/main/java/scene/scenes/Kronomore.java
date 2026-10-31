@@ -83,7 +83,7 @@ public class Kronomore extends SettlementScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("kronomore_reward_claimed")) {
                             gameContext.markInteracted("kronomore_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "Great work! Kronomore sleeps safer tonight. Take this steel bangle as your reward!";
                         }
                         return "Thanks again for dealing with those zombies!";

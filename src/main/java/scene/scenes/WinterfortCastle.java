@@ -52,8 +52,8 @@ public class WinterfortCastle extends LocationScene {
         queen.addInteractedDialog(new DialogItem(
                 () -> {
                     Quest quest = gameContext.getQuest("winterfort_castle_queen_quest_kill_axe_rogues");
-                    if(quest.isComplete()){
-                        gameContext.applyQuestReward(quest.getReward());
+                    if(quest.isComplete() || quest == null){
+                        gameContext.applyQuestReward(quest);
                         return "Thank you for your help dear aspiring Wizard";
                     }
                     else{

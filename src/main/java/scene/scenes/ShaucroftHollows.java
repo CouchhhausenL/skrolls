@@ -83,7 +83,7 @@ public class ShaucroftHollows extends SettlementScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("shaucroft_reward_claimed")) {
                             gameContext.markInteracted("shaucroft_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "Ha! Nothing beats the sound of splintering bone! Take this Berserker's Crest as your cut of the bounty!";
                         }
                         return "The digging goes smoothly thanks to you, friend!";

@@ -53,7 +53,7 @@ public class TheYggdrasoul extends LocationScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("yggdrasoul_reward_claimed")) {
                             gameContext.markInteracted("yggdrasoul_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "The world tree breathes in peace once more! Accept the Heart of the Void Singularity, bound and purified!";
                         }
                         return "The leaves of Yggdrasoul shimmer with timeless vitality.";

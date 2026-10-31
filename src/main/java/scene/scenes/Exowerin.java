@@ -83,7 +83,7 @@ public class Exowerin extends SettlementScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("exowerin_reward_claimed")) {
                             gameContext.markInteracted("exowerin_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "The ley lines sing in harmony once more! Receive this Staff of the Cosmos as a symbol of our eternal gratitude!";
                         }
                         return "The astral balance is serene thanks to your deeds.";

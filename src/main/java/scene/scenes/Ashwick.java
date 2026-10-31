@@ -83,7 +83,7 @@ public class Ashwick extends SettlementScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("ashwick_reward_claimed")) {
                             gameContext.markInteracted("ashwick_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "By the hammer! You smashed those brutes! Take this Ironclad War Staff fresh off the anvil!";
                         }
                         return "My forge rings clear thanks to your help!";

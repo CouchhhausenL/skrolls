@@ -83,7 +83,7 @@ public class SaplingFord extends SettlementScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("sapling_ford_reward_claimed")) {
                             gameContext.markInteracted("sapling_ford_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "The saplings flourish again! Thank you, kind traveler. Take this Zephyr Charm as our gift!";
                         }
                         return "The river runs clear and quiet thanks to you.";

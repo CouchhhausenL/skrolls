@@ -83,7 +83,7 @@ public class Deepforge extends SettlementScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("deepforge_reward_claimed")) {
                             gameContext.markInteracted("deepforge_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "A titanic feat! The flues are cleared! Take this Dread Titan Bulwark as the highest honor of Deepforge!";
                         }
                         return "Deepforge's flames burn bright in your name, grand wizard!";

@@ -83,7 +83,7 @@ public class Silverhollow extends SettlementScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("silverhollow_reward_claimed")) {
                             gameContext.markInteracted("silverhollow_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "The light triumphs! The groves are cleansed. Bear this Radiant Lightstaff with pride, champion!";
                         }
                         return "The silver sanctuaries remain pure under your protection.";

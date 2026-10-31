@@ -58,7 +58,7 @@ public class ColdwallCastle extends LocationScene {
                     if (quest != null && quest.isComplete()) {
                         if (!gameContext.hasInteracted("coldwall_castle_reward_claimed")) {
                             gameContext.markInteracted("coldwall_castle_reward_claimed");
-                            gameContext.applyQuestReward(quest.getReward());
+                            gameContext.applyQuestReward(quest);
                             return "Splendid bravery! The Grim Reapers are banished. Take this enchanted cuirass and our royal favor!";
                         }
                         return "Coldwall stands strong thanks to your valor, wizard!";
