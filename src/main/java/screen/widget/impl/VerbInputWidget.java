@@ -6,6 +6,7 @@ import main.java.screen.DrawContextView;
 import main.java.util.Color;
 import main.java.verb.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -172,7 +173,13 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
             for (Verb verb : verbs) {
                 // A verb without variants executes as soon as its name matches
                 if (verb.matchesNameOrAlias(content) && verb.hasNoVariants())
-                    executionConsumer = (c) -> verb.execute(null, c);
+                    executionConsumer = (c) -> {
+                        try {
+                            verb.execute(null, c);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    };
 
                 for (String suggestionString : verb.suggest(content)) {
                     VerbSuggestion suggestion = new VerbSuggestion(
@@ -202,7 +209,13 @@ public class VerbInputWidget extends AbstractTextFieldWidget {
             // Exactly one fully valid parse means the command can be executed
             List<VerbVariantAnalysisResult> bestResults = Verbs.findBestResults(analysisResults, false);
             if (bestResults.size() == 1)
-                executionConsumer = (c) -> verb.execute(bestResults.getFirst(), c);
+                executionConsumer = (c) -> {
+                    try {
+                        verb.execute(bestResults.getFirst(), c);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                };
 
             // Suggest continuations from the last parameter of the best
             // partial parses as well

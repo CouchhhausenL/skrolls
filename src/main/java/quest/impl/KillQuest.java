@@ -9,11 +9,11 @@ import main.java.quest.QuestReward;
 
 public class KillQuest extends Quest {
     private final MonsterType monsterType;
+
     public KillQuest(String id, String title, int required, QuestReward reward, NPC npc, MonsterType monsterType){
-        super(id, title,required,reward, npc);
+        super(id, title, required, reward, npc);
         this.monsterType = monsterType;
     }
-
 
     @Override
     public boolean handleEvent(QuestEvent event) {
@@ -21,5 +21,9 @@ public class KillQuest extends Quest {
             return addProgress(1);
         }
         return false;
+    }
+
+    public MonsterType getMonsterType() {
+        return monsterType;
     }
 }

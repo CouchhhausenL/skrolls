@@ -6,6 +6,7 @@ import main.java.game.GameContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.LabelWidget;
+import main.java.util.MusicPlayer;
 import main.java.util.SkaParser;
 
 // Plays the intro animation once, then moves to the main menu.
@@ -17,6 +18,7 @@ public class StartupScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+        MusicPlayer.getInstance().play("/music/theme/theme_opening.wav");
         // Shared completion callback for both natural end and skip
         endStartup = () -> {
             context.setScreen(new MainMenuScreen());

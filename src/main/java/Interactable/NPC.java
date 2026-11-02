@@ -36,6 +36,10 @@ public class NPC extends Interactable{
         return location;
     }
 
+    public NPCType getNpcType() {
+        return npcType;
+    }
+
     public void addInteractedDialog(DialogItem dialogItem){
         interactedDialogItems.add(dialogItem);
     }

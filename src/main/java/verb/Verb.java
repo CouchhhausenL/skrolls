@@ -2,6 +2,7 @@ package main.java.verb;
 
 import main.java.game.GameContext;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,7 +73,7 @@ public class Verb {
         return variants.isEmpty();
     }
 
-    public void execute(VerbVariantAnalysisResult result, GameContext gameContext) {
+    public void execute(VerbVariantAnalysisResult result, GameContext gameContext) throws IOException {
         VerbExecutionContext executionContext = new VerbExecutionContext(this, result);
         onExecute.execute(executionContext, gameContext);
     }
@@ -113,6 +114,6 @@ public class Verb {
     }
 
     public interface OnExecute {
-        void execute(VerbExecutionContext executionContext, GameContext context);
+        void execute(VerbExecutionContext executionContext, GameContext context) throws IOException;
     }
 }

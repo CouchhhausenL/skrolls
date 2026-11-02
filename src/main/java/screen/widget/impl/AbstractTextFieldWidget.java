@@ -4,6 +4,7 @@ import main.java.console.input.KeyInputEvent;
 import main.java.console.input.MouseInputEvent;
 import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
+import main.java.util.SFXPlayer;
 
 import java.util.Objects;
 
@@ -56,6 +57,7 @@ public abstract class AbstractTextFieldWidget extends Widget {
 
         // Delete the character before the cursor and shift it left
         if (event.isBackspace() && cursor > 0) {
+
             String old = getContent();
             setContent(
                     content.substring(0, cursor - 1) +

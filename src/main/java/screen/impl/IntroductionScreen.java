@@ -7,11 +7,11 @@ import main.java.game.GameContext;
 import main.java.item.Inventory;
 import main.java.item.Item;
 import main.java.item.ItemType;
-import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.DialogWidget;
 import main.java.screen.widget.impl.dialog.AnswerType;
 import main.java.screen.widget.impl.dialog.DialogItem;
+import main.java.util.MusicPlayer;
 
 // Opening dialog: welcome message, name input and a choice between the
 // tutorial or starting directly in Winterfort Castle.
@@ -22,6 +22,8 @@ public class IntroductionScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+        MusicPlayer.getInstance().play("/music/theme/tutorial.wav");
+
         dialogWidget = new DialogWidget(0, 0, 80, 30);
         dialogWidget.addDialogItem(new DialogItem("Hello Dear Traveler! \n" +
                 "Thank you for playing this Game,\nit was a hell amount of Work so please sit back and enjoy this:\n\nTEXT ADVENTURE!!",

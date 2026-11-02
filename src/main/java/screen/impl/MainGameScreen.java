@@ -1,6 +1,7 @@
 package main.java.screen.impl;
 
 import main.java.game.GameContext;
+import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.ChatMessageWidget;
@@ -20,6 +21,10 @@ public class MainGameScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+        if(context.getSceneName() == null){
+            context.setScene(new WinterfortCastle(context));
+        }
+
         this.context = context;
         verbInputWidget = new VerbInputWidget(context, 0, 0, 1, 1);
         messageContainerWidget = new ScrollableContainerWidget(0, 0, 1, 1, 2);

@@ -3,6 +3,8 @@ package main.java.quest;
 import main.java.Interactable.NPC;
 import main.java.quest.QuestEvent.QuestEvent;
 
+import java.util.Objects;
+
 public abstract class Quest {
 
     private final String id;
@@ -27,6 +29,11 @@ public abstract class Quest {
         progress = Math.min(required, progress + amount);
         return progress == required;
     }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
     public boolean isComplete(){
         return progress >= required;
     }
@@ -52,5 +59,17 @@ public abstract class Quest {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Quest quest)) return false;
+        return Objects.equals(id, quest.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

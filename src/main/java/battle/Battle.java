@@ -9,6 +9,7 @@ import main.java.item.Item;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.CombatEffectType;
 import main.java.item.items.Potion;
+import main.java.util.SFXPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +33,13 @@ public class Battle implements BattleContext {
 
     @Override
     public void applyCombatEffectEnemy(CombatEffect combatEffect) {
+        SFXPlayer.playSpellBuff();
         enemy.addCombatEffect(combatEffect);
     }
 
     @Override
     public void applyCombatEffectYourself(CombatEffect combatEffect) {
+        SFXPlayer.playSpellBuff();
         player.addCombatEffect(combatEffect);
 
     }
@@ -184,6 +187,7 @@ public class Battle implements BattleContext {
 
 
     public int damagePlayer() {
+        SFXPlayer.playSpellDamage();
         // Enemy attack uses its own difficulty power and neutral item factors
         int baseDamage = enemy.getDifficulty().getBaseDamage();
         int attackValue = AttackHelper.calculateAttackValue(enemy.getAttackStat(), enemy.getStatStage(Stat.ATTACK), 1.0);
@@ -211,6 +215,7 @@ public class Battle implements BattleContext {
 
     @Override
     public int damageEnemy(int attackBaseDamage, MagicType attackType) {
+        SFXPlayer.playSpellDamage();
         // Player power is scaled by staff/artifact damage effects
         double baseDamageItemFactor = player.getBaseDamageItemFactor();
         int baseDamage = AttackHelper.calculateBaseDamage(attackBaseDamage, baseDamageItemFactor);

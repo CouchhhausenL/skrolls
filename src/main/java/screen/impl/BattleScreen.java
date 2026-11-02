@@ -7,7 +7,6 @@ import main.java.battle.BattleContext;
 import main.java.battle.BattleState;
 import main.java.console.input.KeyInputEvent;
 import main.java.game.GameContext;
-import main.java.item.Inventory;
 import main.java.item.Item;
 import main.java.item.ItemHelper;
 import main.java.item.items.Potion;
@@ -22,9 +21,7 @@ import main.java.screen.widget.impl.container.ScrollableContainerWidget;
 import main.java.screen.widget.impl.options.ItemOption;
 import main.java.screen.widget.impl.options.Option;
 import main.java.spell.Spell;
-import main.java.util.Color;
-import main.java.util.SkaParser;
-import main.java.util.SplashText;
+import main.java.util.*;
 
 import java.util.List;
 
@@ -59,6 +56,7 @@ public class BattleScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+        MusicPlayer.getInstance().playRandomBattleTrack();
         infoContainer = new ScrollableContainerWidget(getWidth()/2, getHeight()/2, 40, 20, 0);
         addChild(infoContainer);
         this.context = context;
@@ -264,6 +262,7 @@ public class BattleScreen extends Screen {
             removeChild(attackWidget);
             addChild(playerAnimationWidget);
             switchState();
+
         });
         addChild(attackWidget);
     }

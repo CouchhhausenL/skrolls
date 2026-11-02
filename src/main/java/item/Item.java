@@ -5,4 +5,8 @@ public interface Item {
     String getName();
 
     String getDescription();
+
+    ItemType getItemType();
+
+    void setItemType(ItemType itemType);
 }

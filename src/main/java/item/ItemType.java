@@ -520,7 +520,9 @@ public enum ItemType {
     }
 
     public Item create() {
-        return supplier.get();
+        Item item = supplier.get();
+        item.setItemType(this);
+        return item;
     }
 
     // Returns a random item type from the pool matching the requested quality

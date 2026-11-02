@@ -6,6 +6,7 @@ import main.java.game.GameContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.LabelWidget;
+import main.java.util.SFXPlayer;
 import main.java.util.SkaParser;
 
 // Plays the transition animation, then enters the battle screen.
@@ -21,7 +22,7 @@ public class InventoryScreenCloseTransition extends Screen {
         endTransition = () -> {
             context.setScreen(new MainGameScreen());
         };
-
+        SFXPlayer.playMenuChange();
         Animation transitionAnimation = SkaParser.parse("utility/backpack_close.ska");
         AnimationWidget widget = new AnimationWidget(0, 0, transitionAnimation);
         autoPositionWidget(widget);

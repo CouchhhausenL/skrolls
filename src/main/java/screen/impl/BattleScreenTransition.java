@@ -20,6 +20,7 @@ public class BattleScreenTransition extends Screen {
         // Fires either when the animation finishes or when the user skips it
         endTransition = () -> {
             context.setScreen(new BattleScreen());
+
         };
 
         Animation transitionAnimation = SkaParser.parse("utility/battle_transition.ska");

@@ -20,15 +20,15 @@ import main.java.item.items.Scroll;
 import main.java.quest.Quest;
 import main.java.quest.QuestEvent.QuestEvent;
 import main.java.quest.QuestReward;
-import main.java.scene.PathScene;
-import main.java.scene.Scene;
-import main.java.scene.SettlementScene;
+import main.java.scene.*;
 import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.impl.*;
 import main.java.spell.Spell;
 import main.java.util.Color;
+import main.java.util.MusicPlayer;
+import main.java.util.SFXPlayer;
 import main.java.util.SplashText;
 import main.java.verb.Verb;
 import main.java.verb.VerbVariant;
@@ -46,13 +46,15 @@ public class Game implements GameContext {
     private Screen screen = null;
 
     private Battle battle = null;
-    private Player player = null;
-    private Scene scene = new WinterfortCastle(this);
-    private final List<String> messages = new ArrayList<>();
+    Player player = null;
+    Scene scene;
+    private float volume = 20;
+    final List<String> messages = new ArrayList<>();
     private final DrawContext drawContext;
     private Set<Scene> visitedScenes = new HashSet<>();
 
     private Set<Quest> quests = new HashSet<>();
+
 
     private final Set<String> interactedIds = new HashSet<>();
 
@@ -129,6 +131,7 @@ public class Game implements GameContext {
     @Override
     public void setBattle(Monster monster) {
         this.battle = new Battle(player, monster);
+        MusicPlayer.getInstance().playRandomBattleIntro();
         setScreen(new BattleScreenTransition());
     }
 
@@ -197,9 +200,25 @@ public class Game implements GameContext {
     }
 
     @Override
-    public void setScene(Scene scene) {
+    public void setScene(Scene newScene) {
+        SFXPlayer.playInteraction();
+        if(scene == null){
+            scene = new WinterfortCastle(this);
+        }
+
         if(player.getDifficultyLevel().ordinal() >= scene.getDifficulty().ordinal()){
-            this.scene = scene;
+            if(newScene instanceof SettlementScene){
+                MusicPlayer.getInstance().playRandomSettlementScene();
+            }else if(newScene instanceof LocationScene){
+                MusicPlayer.getInstance().playRandomLocationScene();
+            } else if ((newScene instanceof PathScene || newScene instanceof CrossroadScene)
+                    && !(scene instanceof PathScene || scene instanceof CrossroadScene)) {
+                MusicPlayer.getInstance().playRandomPathScene();
+            }
+
+
+            visitScene(newScene);
+            this.scene = newScene;
         }
         else {
 
@@ -210,7 +229,10 @@ public class Game implements GameContext {
 
     @Override
     public String getSceneName(){
-        return scene.getName();
+        if(scene != null){
+        return scene.getName();}else{
+            return null;
+        }
     }
 
     @Override
@@ -234,6 +256,10 @@ public class Game implements GameContext {
         quests.add(quest);
     }
 
+    public void clearQuests() {
+        quests.clear();
+    }
+
     @Override
     public boolean hasQuest(String id) {
         return quests.stream().anyMatch(quest -> quest.getId().equals(id));
@@ -245,7 +271,9 @@ public class Game implements GameContext {
     }
 
     @Override
-    public void applyQuestReward(QuestReward reward) {
+    public void applyQuestReward(Quest quest) {
+        QuestReward reward = quest.getReward();
+        quests.remove(quest);
         addMagicShards(reward.magicShards());
         for(Item item : reward.items()){
             addItem(item);
@@ -255,10 +283,9 @@ public class Game implements GameContext {
     @Override
     public void triggerQuestEvent(QuestEvent questEvent) {
         for(Quest quest : quests){
-        if(quest.handleEvent(questEvent)){
-            quests.remove(quest);
+            quest.handleEvent(questEvent);
         };
-        }
+
     }
 
     // Leaving a battle successfully returns the player to the map
@@ -377,10 +404,15 @@ public class Game implements GameContext {
     public Set<Scene> getVisitedScenes() {
         return visitedScenes;
     }
+
     public void visitScene(Scene targetScene){
         if(visitedScenes.stream().noneMatch(scene -> scene.getName().equals(targetScene.getName()))){
             visitedScenes.add(targetScene);
         }
+    }
+
+    public void clearVisitedScenes() {
+        visitedScenes.clear();
     }
 
     @Override
@@ -396,6 +428,15 @@ public class Game implements GameContext {
     @Override
     public void markUnInteracted(String id) {
         interactedIds.remove(id);
+    }
+
+    public Set<String> getInteractedIds() {
+        return Collections.unmodifiableSet(interactedIds);
+    }
+
+    public void setInteractedIds(Set<String> ids) {
+        interactedIds.clear();
+        interactedIds.addAll(ids);
     }
 
     // Rebuilt every keystroke by the verb input widget: global verbs,
@@ -440,9 +481,23 @@ public class Game implements GameContext {
                         }));
             });
 
+
+
+                verbs.add(Verb.builder("set").variant().choice("type", "volume").build()
+                        .integer("value", 0, 101).build()
+                        .build().build((executionContext, context) -> {
+                            int value = executionContext.getInteger("value");
+                            MusicPlayer.getInstance().setVolume(value);
+                            volume = MusicPlayer.getInstance().getVolume();
+                            context.addMessage("Volume set to "+value+ "%");
+
+                        })
+
+                );
+
         verbs.add(Verb.builder("open").aliases("show", "display")
                 .variant()
-                .choice("type", "map", "inventory", "ascension", "quests")
+                .choice("type", "map", "inventory", "ascension", "quests", "credits")
                 .build()
                 .build()
                 .build(((executionContext, context) -> {
@@ -458,7 +513,18 @@ public class Game implements GameContext {
                     if(type.equals("quests")){
                         setScreen(new QuestsScreen());
                     }
+                    if(type.equals("credits")){
+                        setScreen(new CreditsScreen());
+                    }
                 })));
+
+        verbs.add(Verb.builder("load").build((executionContext, context) -> {
+            GameStateManager.loadInto(this);
+        }));
+        verbs.add(Verb.builder("save").build((executionContext, context) -> {
+            GameStateManager.save(this);
+        }));
+
 
 
         // One "go <exit>" verb per exit of the current scene
@@ -471,8 +537,9 @@ public class Game implements GameContext {
                                 .variant().choice("direction", name).build().build()
                         .build((executionContext, context) -> {
                             context.addMessage("Moved to " + name);
-                            visitScene(exit.resolve(context));
-                            context.setScene(exit.resolve(context));
+                            Scene newScene = exit.resolve(context);
+                            context.setScene(newScene);
+
                         }));
             });
 
@@ -505,6 +572,11 @@ public class Game implements GameContext {
     @Override
     public List<String> getMessages() {
         return Collections.unmodifiableList(messages);
+    }
+
+    public void setMessages(List<String> newMessages) {
+        messages.clear();
+        messages.addAll(newMessages);
     }
 
     @Override

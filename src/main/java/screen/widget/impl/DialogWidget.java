@@ -6,6 +6,7 @@ import main.java.screen.widget.impl.dialog.AnswerType;
 import main.java.screen.widget.impl.dialog.DialogItem;
 import main.java.screen.widget.impl.options.Option;
 import main.java.util.Color;
+import main.java.util.SFXPlayer;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -112,6 +113,7 @@ public class DialogWidget extends AbstractContainerWidget {
 
     // Moves to the next item, or finishes the dialog (running onComplete)
     public void advanceToNext() {
+        SFXPlayer.playMenuSelect();
         if (index < dialogItems.size() - 1) {
             index++;
             setupCurrentItem();

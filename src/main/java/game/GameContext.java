@@ -91,5 +91,5 @@ public interface GameContext extends VerbSupplier {
 
     void triggerQuestEvent(QuestEvent questEvent);
 
-    void applyQuestReward(QuestReward reward);
+    void applyQuestReward(Quest quest);
 }

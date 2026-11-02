@@ -9,11 +9,8 @@ import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.screen.widget.impl.OptionsWidget;
 import main.java.screen.widget.impl.options.Option;
-import main.java.util.Color;
 import main.java.util.SkaParser;
-import main.java.util.SplashText;
-
-import java.util.LinkedHashMap;
+import main.java.util.MusicPlayer;
 
 // Title screen with the animated logo and Start/Exit options
 public class MainMenuScreen extends Screen {
@@ -21,6 +18,7 @@ public class MainMenuScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+        MusicPlayer.getInstance().play("/music/theme/theme_full.wav");
 
         Animation animation = SkaParser.parse("title.ska");
         addChild(new AnimationWidget(3, 2, animation));

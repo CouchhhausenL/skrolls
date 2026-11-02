@@ -42,4 +42,7 @@ public final class SplashText {
     public static String[] getCredits(){
         return readFile("/assets/splash_text/credits.txt").split("\\r?\\n");
     }
+
+
+
 }

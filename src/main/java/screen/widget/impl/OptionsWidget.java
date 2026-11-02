@@ -7,7 +7,9 @@ import main.java.screen.DrawContextView;
 import main.java.screen.widget.Widget;
 import main.java.screen.widget.impl.options.ItemOption;
 import main.java.screen.widget.impl.options.Option;
+import main.java.util.SFXPlayer;
 
+import javax.xml.validation.SchemaFactoryConfigurationError;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,11 +105,16 @@ public class OptionsWidget extends Widget {
         if (selectedOption == null) return;
         if (event.isArrow(KeyInputEvent.Direction.UP) || event.isChar(KeyInputEvent.Letter.W)) offsetSelection(-1);
         if (event.isArrow(KeyInputEvent.Direction.DOWN) || event.isChar(KeyInputEvent.Letter.S)) offsetSelection(1);
-        if (event.isSpace() && selectedOption.getRunnable() != null) selectedOption.getRunnable().run();
+        if (event.isSpace() && selectedOption.getRunnable() != null){
+            SFXPlayer.playMenuSelect();
+            selectedOption.getRunnable().run();
+
+        };
     }
 
     // Rebuilds the marker prefix of every option to show the selection
     private void setSelectedOption(Option option) {
+        SFXPlayer.playMenuMove();
         for (Option currentOption : options) {
             LabelWidget optionWidget = currentOption.getLabelWidget();
             if (currentOption == option) {

@@ -19,7 +19,6 @@ public abstract class MagicItem extends AbstractItem implements Sacrificeable {
         this.itemEffects = itemEffects;
     }
 
-
     public MagicType getMagicType() {
         return magicType;
     }
@@ -38,7 +37,6 @@ public abstract class MagicItem extends AbstractItem implements Sacrificeable {
         }
         return itemEffectStrength;
     }
-
 
     public Quality getQuality() {
         return quality;
