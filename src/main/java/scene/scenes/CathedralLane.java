@@ -24,7 +24,7 @@ public class CathedralLane extends PathScene {
 
     @Override
     public DifficultyLevel getDifficulty() {
-        return DifficultyLevel.LOW;
+        return DifficultyLevel.INTERMEDIATE;
     }
 
 }

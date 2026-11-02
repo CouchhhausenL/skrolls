@@ -23,7 +23,7 @@ public class CelestialRill extends PathScene {
 
     @Override
     public DifficultyLevel getDifficulty() {
-        return DifficultyLevel.MEDIUM;
+        return DifficultyLevel.INTERMEDIATE;
     }
 
 }

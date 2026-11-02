@@ -48,6 +48,6 @@ public class TheChillyCliffPub extends LocationScene {
 
     @Override
     public DifficultyLevel getDifficulty() {
-        return DifficultyLevel.LOW;
+        return DifficultyLevel.INTERMEDIATE;
     }
 }

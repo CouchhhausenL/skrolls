@@ -14,6 +14,7 @@ public class IvoryPass extends PathScene {
     protected void setupExits() {
         exits.addExit(Direction.NORTH, "Silverhollow", Silverhollow::new);
         exits.addExit(Direction.SOUTH, "Lumberhighs-Deepforge Crossing", LumberhighsDeepforgeCrossing::new);
+        exits.addExit("Glimount Highlands", "Enter Glimount Highlands", GlimountHighlands::new);
     }
 
     @Override
