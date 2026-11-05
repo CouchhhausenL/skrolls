@@ -7,7 +7,10 @@ public interface AutoCloseableByCloser extends AutoCloseable {
 
     @Override
     default void close() throws Exception {
-        getCloser().close();
+        Closer closer = getCloser();
+        if (closer != null) {
+            closer.close();
+        }
         closeSelf();
     }
 
