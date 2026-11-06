@@ -10,8 +10,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) throws Exception {
         List<String> argsList = List.of(args);
-        // Passing "window" launches the Swing terminal instead of using the host console
-        boolean guiFlag = argsList.contains("window");
+        // Passing "--window" launches the Swing terminal instead of using the host console
+        boolean guiFlag = argsList.contains("--window");
 
         Console console = new Console(guiFlag ? TerminalType.WINDOW : TerminalType.CONSOLE);
         Game game = new Game(console);
