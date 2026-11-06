@@ -1,14 +1,15 @@
 # Classes
+
 - Game
-- Character - maxHealth, health, name, damage(), initative
-    - Monster - description, attack() 
-    - Player - cast(), move(), crystalizedMagic, DifficultyLevel
+- Character - maxHealth, health, name, damage (), initative
+    - Monster - description, attack ()
+    - Player - cast (), move (), crystalizedMagic, DifficultyLevel
 - Battle
     - BossBattle
 - Story
 - Scene - getExits: SceneExits, getDifficulty: Difficulty
 - SceneExits - EnumMap<Direction, Function<Player, Scene>>
-- Direction - enum 
+- Direction - enum
 - Difficulty - enum: NONE, LOW, MEDIUM, HIGH, EXTREME
 - MagicType - enum
 
@@ -19,20 +20,20 @@
     - Potion
     - Armor
     - Equipable (Interface)
-	- Armor
-	- Staff - MagicType
+    - Armor
+    - Staff - MagicType
 - Inventory
 
 
 - Screen - eigenes String
 - ScreenHost - interface -> changeScreen
-- Widgets mit Z - Index 
+- Widgets mit Z - Index
 - Ascii Widget
 - Label Widget
 - Input Widget
 - VerbInputWidget
 - ContainerWidget
-	- ScrollableContainerWidget
+    - ScrollableContainerWidget
 
 - Console - Cell buffer
 - Cell
