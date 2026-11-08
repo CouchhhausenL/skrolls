@@ -1,14 +1,12 @@
 package main.java.scene.scenes;
 
 import main.java.DifficultyLevel;
-import main.java.Interactable.Chest;
 import main.java.Interactable.Interactable;
 import main.java.Interactable.NPC;
 import main.java.Interactable.NPCType;
 import main.java.entity.monster.MonsterType;
 import main.java.game.GameContext;
 import main.java.item.ItemType;
-import main.java.item.Quality;
 import main.java.quest.Quest;
 import main.java.quest.QuestReward;
 import main.java.quest.impl.KillQuest;
@@ -20,41 +18,13 @@ import main.java.screen.widget.impl.dialog.DialogItem;
 import java.util.List;
 
 public class ShaucroftHollows extends SettlementScene {
-    private final Chest chest;
-    private final NPC salesman;
+
+
     private final NPC brog;
 
     public ShaucroftHollows(GameContext gameContext) {
         super(gameContext);
-        chest = new Chest("shaucroft_chest_1", "Hollows Runed Chest", Quality.RARE);
 
-        salesman = new NPC("shaucroft_salesman", "Hollows Trinket Trader", NPCType.SALESMAN, this);
-        salesman.addDialogItem(new DialogItem("Psst! Step out of the mist into the hollows."));
-        salesman.addDialogItem(new DialogItem("I've unearthed a Gravebinder Gem that repels necrotic curses. Do you want to buy it for 50 Magic Crystals?", AnswerType.BOOLEAN, () -> {
-            if (salesman.getEnteredBoolean()) {
-                if (gameContext.spendMagicShards(50)) {
-                    gameContext.addItem(ItemType.RARE_SOUL_GEM.create());
-                } else {
-                    gameContext.markUnInteracted("shaucroft_salesman");
-                }
-            } else {
-                gameContext.markUnInteracted("shaucroft_salesman");
-            }
-        }));
-        salesman.addDialogItem(new DialogItem(
-                () -> {
-                    if (!salesman.getEnteredBoolean()) {
-                        return "Watch the shadows then.";
-                    }
-                    if (!gameContext.hasInteracted("shaucroft_salesman")) {
-                        return "You don't have enough Magic Crystals! Come back when you have 50.";
-                    }
-                    return "Keep it close when the mists thicken. Good fortune!";
-                },
-                AnswerType.NONE,
-                () -> {}
-        ));
-        salesman.addInteractedDialog(new DialogItem("Come back if you need more obscure artifacts!"));
 
         brog = new NPC("shaucroft_brog", "Brog the Excavator", NPCType.DWARF, this);
         brog.addDialogItem(new DialogItem("Bah! Can't dig two feet in these hollows without hearing rattling bones!"));
@@ -99,13 +69,14 @@ public class ShaucroftHollows extends SettlementScene {
 
     @Override
     public List<Interactable> getInteractables() {
-        return List.of(chest, salesman, brog);
+        return List.of(brog);
     }
 
     @Override
     protected void setupExits() {
         exits.addExit(Direction.SOUTH_WEST, "Meadow Trace", MeadowTrace::new);
         exits.addExit(Direction.EAST, "Meadow Trodden Path", MeadowTroddenPath::new);
+        exits.addExit("Enter Shaucraft Hollows Hole", "Enter Shaucroft Hollows Hole", ShaucroftHollowsHole::new);
     }
 
     @Override

@@ -12,7 +12,7 @@ public class GopherByway extends PathScene {
 
     @Override
     protected void setupExits() {
-        exits.addExit(Direction.NORTH_EAST, "Gopher-Summit-Rowan Cross", GopherSummitRowanCross::new);
+        exits.addExit(Direction.NORTH_EAST, "The Score Gopher", TheScoreGopher::new);
         exits.addExit(Direction.SOUTH_WEST, "Winterfort", Winterfort::new);
     }
 

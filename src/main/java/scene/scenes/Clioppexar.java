@@ -25,7 +25,7 @@ public class Clioppexar extends LocationScene {
 
     @Override
     protected void setupExits() {
-        exits.addExit(Direction.SOUTH_WEST, "Saphire Way", SaphireWay::new);
+        exits.addExit(Direction.SOUTH_WEST, "Ditchgate", Ditchgate::new);
         exits.addExit(Direction.WEST, "Meadow Trodden Path", MeadowTroddenPath::new);
     }
 

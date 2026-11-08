@@ -12,7 +12,7 @@ public class SummitRibbon extends PathScene {
 
     @Override
     protected void setupExits() {
-        exits.addExit(Direction.EAST, "Gopher-Summit-Rowan Cross", GopherSummitRowanCross::new);
+        exits.addExit(Direction.EAST, "The Score Gopher", TheScoreGopher::new);
         exits.addExit(Direction.WEST, "Peakwatch Tower", PeakwatchTower::new);
     }
 

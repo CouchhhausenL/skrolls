@@ -9,7 +9,7 @@ import main.java.screen.widget.Widget;
 
 // Widget that plays an animation and optionally notifies when it finishes
 public class AnimationWidget extends Widget {
-    private final AnimationPlayer player;
+    private AnimationPlayer player;
     private OnDone onDone = null;
 
     public AnimationWidget(int x, int y, int width, int height, Animation animation) {
@@ -19,6 +19,11 @@ public class AnimationWidget extends Widget {
 
     public AnimationWidget(int x, int y, Animation animation) {
         this(x, y, animation.getWidth(), animation.getHeight(), animation);
+    }
+
+    public void setAnimation(Animation animation) {
+        this.player = new AnimationPlayer(animation);
+        setDimensions(animation.getWidth(), animation.getHeight());
     }
 
     public AnimationWidget onDone(OnDone onDone) {

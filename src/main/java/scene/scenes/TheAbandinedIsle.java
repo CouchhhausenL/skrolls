@@ -55,7 +55,7 @@ public class TheAbandinedIsle extends SettlementScene {
 
     @Override
     protected void setupExits() {
-        exits.addExit("Faywater", "Ship back to Faywater", Faywater::new);
+        exits.addExit("Sail the Searnist Shores", "Sail the Searnist Shores", SearnistShores::new);
     }
 
     @Override

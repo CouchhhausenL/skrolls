@@ -79,6 +79,6 @@ public class JuniperVale extends SettlementScene {
 
     @Override
     public String getName() {
-        return "JuniperVale";
+        return "Juniper Vale";
     }
 }

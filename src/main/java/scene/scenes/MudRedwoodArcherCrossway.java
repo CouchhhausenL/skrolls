@@ -28,6 +28,6 @@ public class MudRedwoodArcherCrossway extends CrossroadScene {
 
     @Override
     public String getName() {
-        return "Gopher-Summit-Rowan Cross";
+        return "Mud-Redwood Crossway";
     }
 }

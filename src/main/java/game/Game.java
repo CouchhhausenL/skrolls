@@ -206,7 +206,7 @@ public class Game implements GameContext {
             scene = new WinterfortCastle(this);
         }
 
-        if(player.getDifficultyLevel().ordinal() >= scene.getDifficulty().ordinal()){
+        if (player.getDifficultyLevel().ordinal() >= newScene.getDifficulty().ordinal()) {
             if(newScene instanceof SettlementScene){
                 MusicPlayer.getInstance().playRandomSettlementScene();
             }else if(newScene instanceof LocationScene){
@@ -216,6 +216,9 @@ public class Game implements GameContext {
                 MusicPlayer.getInstance().playRandomPathScene();
             }
 
+            if (screen instanceof MainGameScreen mainGameScreen) {
+                mainGameScreen.setSceneAnimation(newScene.getName());
+            }
 
             visitScene(newScene);
             this.scene = newScene;
@@ -223,7 +226,7 @@ public class Game implements GameContext {
         else {
 
             addMessage(SplashText.getNo());
-            addMessage("This Scene is to difficult for you! " +"[" + scene.getDifficulty() + "]");
+            addMessage("This Scene is to difficult for you! " + "[" + newScene.getDifficulty() + "]");
         }
     }
 

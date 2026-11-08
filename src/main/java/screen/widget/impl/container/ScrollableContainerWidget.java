@@ -17,9 +17,49 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
     private boolean keyboardInput = true;
     private boolean onlyScrollOnOverflow = false;
     private boolean overflow = false;
+    private boolean autoScroll = false;
 
     public ScrollableContainerWidget(int x, int y, int width, int height, int gap) {
         super(x, y, width, height, gap);
+    }
+
+    public boolean isAutoScroll() {
+        return autoScroll;
+    }
+
+    public void setAutoScroll(boolean autoScroll) {
+        this.autoScroll = autoScroll;
+        if (autoScroll) {
+            scrollToBottom();
+        }
+    }
+
+    public void scrollToBottom() {
+        allHeight = 0;
+        for (Widget widget : widgets) allHeight += widget.getHeight() + gap;
+        if (allHeight > 0) allHeight -= gap;
+
+        if (allHeight > getHeight()) {
+            scroll = getHeight() - allHeight;
+        } else {
+            scroll = 0;
+        }
+    }
+
+    @Override
+    public void addChild(Widget widget) {
+        super.addChild(widget);
+        if (autoScroll) {
+            scrollToBottom();
+        }
+    }
+
+    @Override
+    public void clearChildren() {
+        super.clearChildren();
+        if (autoScroll) {
+            scroll = 0;
+        }
     }
 
     @Override
@@ -40,8 +80,8 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
         // Draw the scrollbar track
         context.fill(getWidth() - 1, 0, getWidth(), getHeight(), Color.BG1);
         // Map the scroll position onto the track height
-        int divide = -allHeight + 1;
-        if (divide == 0 || allHeight == 0) return;
+        int divide = getHeight() - allHeight;
+        if (divide >= 0 || allHeight == 0) return;
         int scrollerY = scroll * getHeight() / divide;
 
         // Thumb is 3 cells tall; keep it fully inside the track at the edges
@@ -104,9 +144,11 @@ public class ScrollableContainerWidget extends VerticalContainerWidget {
         for (Widget widget : widgets) allHeight += widget.getHeight() + gap;
         if (allHeight > 0) allHeight -= gap; // no gap after the last widget
 
-        // Clamp scroll to [-(contentHeight - 1), 0]
+        int minScroll = allHeight > getHeight() ? getHeight() - allHeight : 0;
+
+        // Clamp scroll
         if (scroll > 0) scroll = 0;
-        if (scroll < -allHeight + 1) scroll = -allHeight + 1;
+        if (scroll < minScroll) scroll = minScroll;
 
         int y = scroll;
         for (Widget widget : widgets) {

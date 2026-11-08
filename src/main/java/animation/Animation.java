@@ -9,6 +9,8 @@ import java.util.List;
 // Immutable animation loaded from a .ska file: shared canvas size,
 // background color, playback speed and per-frame pixel changes.
 public class Animation {
+
+
     private final int width;
     private final int height;
     private final int background;

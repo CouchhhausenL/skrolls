@@ -13,7 +13,6 @@ import main.java.quest.Quest;
 import main.java.quest.QuestReward;
 import main.java.quest.impl.KillQuest;
 import main.java.scene.LocationScene;
-import main.java.screen.widget.impl.DialogWidget;
 import main.java.screen.widget.impl.dialog.AnswerType;
 import main.java.screen.widget.impl.dialog.DialogItem;
 
@@ -81,7 +80,7 @@ public class WinterfortCastle extends LocationScene {
 
     @Override
     public String getName() {
-        return "Winterforst Castle";
+        return "Winterfort Castle";
     }
 
     @Override

@@ -12,7 +12,7 @@ public class SaphireWay extends PathScene {
 
     @Override
     protected void setupExits() {
-        exits.addExit(Direction.NORTH_EAST, "Clioppexar", Clioppexar::new);
+        exits.addExit(Direction.NORTH_EAST, "Ditchgate", Ditchgate::new);
         exits.addExit(Direction.SOUTH_WEST, "Rough Ridge Spire", RoughRidgeSpire::new);
     }
 
