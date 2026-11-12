@@ -6,26 +6,31 @@ import main.java.Interactable.NPCType;
 import main.java.PlayerLevel;
 import main.java.entity.monster.MonsterType;
 import main.java.entity.player.Player;
-import main.java.item.*;
-import main.java.item.items.*;
+import main.java.item.AbstractItem;
+import main.java.item.Inventory;
+import main.java.item.Item;
+import main.java.item.ItemType;
+import main.java.item.items.Artifact;
+import main.java.item.items.Scroll;
 import main.java.quest.Quest;
 import main.java.quest.QuestReward;
 import main.java.quest.impl.GiveItemsQuest;
 import main.java.quest.impl.KillQuest;
 import main.java.scene.Scene;
-import main.java.util.AudioPlayer;
 import main.java.util.MusicPlayer;
 
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class GameState {
 
     // --- Player Data ---
     public String playerName;
     public PlayerLevel playerLevel;
-    public int health;
-    public int mana;
+
     public int magicShards;
 
     // --- Inventory ---
@@ -47,6 +52,7 @@ public class GameState {
     public List<QuestData> quests = new ArrayList<>();
 
     public float volume;
+    public long playtimeMillis;
 
     public static class QuestData {
         public String questType; // "KILL" or "GIVE_ITEMS"
@@ -72,13 +78,13 @@ public class GameState {
 
     public GameState(Game game) {
         volume = MusicPlayer.getInstance().getVolume();
+        playtimeMillis = game.getPlaytimeMillis();
+
         // 1. Player & Inventory
         Player player = game.player;
         if (player != null) {
             this.playerName = player.getName();
             this.playerLevel = player.getPlayerLevel();
-            this.health = player.getHealth();
-            this.mana = player.getMana();
             this.magicShards = player.getMagicShards();
 
             Inventory inv = player.getInventory();
@@ -165,6 +171,8 @@ public class GameState {
 
     public void applyTo(Game game) {
         MusicPlayer.getInstance().setVolume(volume);
+        game.setPlaytimeMillis(playtimeMillis);
+
         // 1. Recreate Inventory
         Inventory inventory = new Inventory();
 
@@ -210,14 +218,6 @@ public class GameState {
         Player restoredPlayer = new Player(playerName, playerLevel, inventory);
         restoredPlayer.setMagicShards(magicShards);
 
-        int missingHealth = restoredPlayer.getMaxHealth() - health;
-        if (missingHealth > 0) {
-            restoredPlayer.takeDamage(missingHealth);
-        }
-        int missingMana = restoredPlayer.getMaxMana() - mana;
-        if (missingMana > 0) {
-            restoredPlayer.spendMana(missingMana);
-        }
 
         game.setPlayer(restoredPlayer);
 

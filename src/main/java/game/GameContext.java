@@ -93,4 +93,6 @@ public interface GameContext extends VerbSupplier {
     void applyQuestReward(Quest quest);
 
     public void initGame();
+
+    long getPlaytimeMillis();
 }

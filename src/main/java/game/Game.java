@@ -58,12 +58,24 @@ public class Game implements GameContext {
 
     private Set<Quest> quests = new HashSet<>();
 
-
     private final Set<String> interactedIds = new HashSet<>();
+
+    private long basePlaytimeMillis = 0L;
+    private long sessionStartTime = System.currentTimeMillis();
 
     public Game(Console console) {
         this.console = console;
         drawContext = new DrawContext(console.getWidth(), console.getHeight());
+    }
+
+    @Override
+    public long getPlaytimeMillis() {
+        return basePlaytimeMillis + (System.currentTimeMillis() - sessionStartTime);
+    }
+
+    public void setPlaytimeMillis(long millis) {
+        this.basePlaytimeMillis = Math.max(0L, millis);
+        this.sessionStartTime = System.currentTimeMillis();
     }
 
     // Switching screens re-initializes only if the screen was not initialized yet
@@ -256,6 +268,9 @@ public class Game implements GameContext {
     }
 
     public void initGame() {
+        basePlaytimeMillis = 0L;
+        sessionStartTime = System.currentTimeMillis();
+
         Item commonStaff = ItemType.COMMON_STAFF.create();
         Item commonArmour = ItemType.COMMON_ARMOUR.create();
         Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
@@ -489,12 +504,12 @@ public class Game implements GameContext {
                         setBattle(pathScene.spawnMonster());
                         setScreen(new BattleScreenTransition());
                     }));
-            verbs.add(Verb.builder("fastfetch").aliases("neofetch")
-                    .build((executionContext, context) -> {
-                        setScreen(new Fastfetch());
-                    })
-            );
         }
+        verbs.add(Verb.builder("fastfetch").aliases("neofetch")
+                .build((executionContext, context) -> {
+                    setScreen(new Fastfetch());
+                })
+        );
             getOutsideSpells().forEach(spell -> {
                 verbs.add(Verb.builder("cast")
                         .aliases("spell")
@@ -543,7 +558,7 @@ public class Game implements GameContext {
                 })));
 
         verbs.add(Verb.builder("load").build((executionContext, context) -> {
-            GameStateManager.loadInto(this);
+            setScreen(new LoadGameScreen(this));
         }));
         verbs.add(Verb.builder("save").build((executionContext, context) -> {
             GameStateManager.save(this);

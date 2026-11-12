@@ -9,17 +9,18 @@ import main.java.screen.widget.impl.options.ItemOption;
 import main.java.screen.widget.impl.options.Option;
 import main.java.util.SFXPlayer;
 
-import javax.xml.validation.SchemaFactoryConfigurationError;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 // Vertical list of selectable options. The selection is highlighted and
-// activated with SPACE; one option (the first) is selected by default.
+// activated with SPACE or ENTER; one option (the first) is selected by default.
 public class OptionsWidget extends Widget {
 
     private List<Option> options = new ArrayList<Option>();
 
     private Option selectedOption;
+    private Consumer<Option> onSelectionChanged;
 
     public OptionsWidget(int x, int y, int width, int height){
         super(x,y,width,height);
@@ -27,6 +28,13 @@ public class OptionsWidget extends Widget {
 
     public int getVisibleLines() {
         return getHeight() / 2 + 1;
+    }
+
+    public void setOnSelectionChanged(Consumer<Option> onSelectionChanged) {
+        this.onSelectionChanged = onSelectionChanged;
+        if (selectedOption != null && onSelectionChanged != null) {
+            onSelectionChanged.accept(selectedOption);
+        }
     }
 
     public void addOption(Option option){
@@ -76,8 +84,6 @@ public class OptionsWidget extends Widget {
         }
     }
 
-
-
     @Override
     public void onDraw(DrawContextView context) {
         if (options.isEmpty()) return;
@@ -105,11 +111,10 @@ public class OptionsWidget extends Widget {
         if (selectedOption == null) return;
         if (event.isArrow(KeyInputEvent.Direction.UP) || event.isChar(KeyInputEvent.Letter.W)) offsetSelection(-1);
         if (event.isArrow(KeyInputEvent.Direction.DOWN) || event.isChar(KeyInputEvent.Letter.S)) offsetSelection(1);
-        if (event.isSpace() && selectedOption.getRunnable() != null){
+        if ((event.isSpace() || event.isEnter()) && selectedOption.getRunnable() != null) {
             SFXPlayer.playMenuSelect();
             selectedOption.getRunnable().run();
-
-        };
+        }
     }
 
     // Rebuilds the marker prefix of every option to show the selection
@@ -125,6 +130,9 @@ public class OptionsWidget extends Widget {
             optionWidget.setWidth(optionWidget.getContent().length());
         }
         selectedOption = option;
+        if (onSelectionChanged != null) {
+            onSelectionChanged.accept(selectedOption);
+        }
     }
 
     public Option getSelectedOption(){
