@@ -1,9 +1,6 @@
 package main.java.util;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,10 +20,21 @@ import java.util.stream.Stream;
  */
 public abstract class AudioPlayer {
 
+    public static final boolean IS_CHEERPJ = "true".equalsIgnoreCase(System.getProperty("cheerpj"))
+            || (new java.io.File("/app").isDirectory() && new java.io.File("/files").isDirectory());
+
+    // Native CheerpJ bridge methods implemented via JavaScript in index.html
+    public static native void playWebAudio(String path, byte[] audioData, float volume, boolean loop);
+
+    public static native void stopWebAudio(String path);
+
+    public static native void setWebAudioVolume(float volume);
+
     protected final Random RANDOM = new Random();
     protected final ExecutorService EXECUTOR;
     private final Map<String, List<String>> categories = new ConcurrentHashMap<>();
     private final Map<String, Clip> clipCache = new ConcurrentHashMap<>();
+    private final Map<String, byte[]> resourceDataCache = new ConcurrentHashMap<>();
 
     private Clip currentClip;
     private float volume;
@@ -66,7 +74,26 @@ public abstract class AudioPlayer {
     public void preloadCategory(String folder) {
         EXECUTOR.submit(() -> {
             for (String file : getCategory(folder)) {
-                getOrCreateClip(file);
+                if (IS_CHEERPJ) {
+                    getOrCreateResourceData(file);
+                } else {
+                    getOrCreateClip(file);
+                }
+            }
+        });
+    }
+
+    private byte[] getOrCreateResourceData(String path) {
+        return resourceDataCache.computeIfAbsent(path, p -> {
+            try (var in = getClass().getResourceAsStream(p)) {
+                if (in == null) {
+                    System.err.println("Audio resource not found: " + p);
+                    return null;
+                }
+                return in.readAllBytes();
+            } catch (Exception e) {
+                System.err.println("Failed to read audio resource " + p + ": " + e.getMessage());
+                return null;
             }
         });
     }
@@ -80,8 +107,53 @@ public abstract class AudioPlayer {
                     return null;
                 }
                 AudioInputStream in = AudioSystem.getAudioInputStream(resource);
-                Clip clip = AudioSystem.getClip();
-                clip.open(in);
+                AudioFormat base = in.getFormat();
+                AudioFormat target = new AudioFormat(
+                        AudioFormat.Encoding.PCM_SIGNED,
+                        44100.0f,
+                        16,
+                        2,
+                        4,
+                        44100.0f,
+                        false
+                );
+
+                AudioInputStream stream1 = AudioSystem.getAudioInputStream(
+                        new AudioFormat(
+                                AudioFormat.Encoding.PCM_SIGNED,
+                                base.getSampleRate(),
+                                16,
+                                base.getChannels(),
+                                base.getChannels() * 2,
+                                base.getSampleRate(),
+                                false
+                        ),
+                        in
+                );
+                AudioInputStream pcmStream = AudioSystem.getAudioInputStream(target, stream1);
+                DataLine.Info info = new DataLine.Info(Clip.class, target);
+
+                Clip clip = null;
+                if (AudioSystem.isLineSupported(info)) {
+                    clip = (Clip) AudioSystem.getLine(info);
+                } else {
+                    for (Mixer.Info mixerInfo : AudioSystem.getMixerInfo()) {
+                        try {
+                            Mixer mixer = AudioSystem.getMixer(mixerInfo);
+                            if (mixer.isLineSupported(info)) {
+                                clip = (Clip) mixer.getLine(info);
+                                break;
+                            }
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                }
+                if (clip == null) {
+                    clip = AudioSystem.getClip();
+                }
+
+                clip.open(pcmStream);
+                pcmStream.close();
                 in.close();
                 applyVolume(clip);
                 return clip;
@@ -141,6 +213,12 @@ public abstract class AudioPlayer {
 
     public synchronized void setVolume(float newVolume) {
         volume = Math.clamp(newVolume, 0.0f, 1.0f);
+        if (IS_CHEERPJ) {
+            try {
+                setWebAudioVolume(volume);
+            } catch (Throwable ignored) {
+            }
+        }
         for (Clip clip : clipCache.values()) {
             applyVolume(clip);
         }
@@ -173,6 +251,12 @@ public abstract class AudioPlayer {
     // -------------------------------------------------------------------------
 
     public synchronized void stop() {
+        if (IS_CHEERPJ) {
+            try {
+                stopWebAudio(null);
+            } catch (Throwable ignored) {
+            }
+        }
         if (currentClip != null && currentClip.isRunning()) {
             currentClip.stop();
         }
@@ -189,6 +273,20 @@ public abstract class AudioPlayer {
 
     public void play(String path, boolean loop) {
         if (path == null) return;
+
+        if (IS_CHEERPJ) {
+            EXECUTOR.submit(() -> {
+                try {
+                    byte[] data = getOrCreateResourceData(path);
+                    if (data != null) {
+                        playWebAudio(path, data, volume, loop);
+                    }
+                } catch (Throwable t) {
+                    System.err.println("WebAudio bridge failed: " + t.getMessage());
+                }
+            });
+            return;
+        }
 
         Clip cached = clipCache.get(path);
         if (cached != null) {

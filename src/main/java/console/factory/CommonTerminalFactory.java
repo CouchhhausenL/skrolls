@@ -27,10 +27,19 @@ public final class CommonTerminalFactory {
         terminal.puts(InfoCmp.Capability.enter_ca_mode); // Alternate screen mode
 
         // Raw mode disables line buffering / echo so every key arrives immediately
-        terminal.enterRawMode();
-        if (terminal.hasMouseSupport()) {
-            terminal.trackMouse(Terminal.MouseTracking.Any);
-            terminal.writer().write(ANSI.ENABLE_SGR);
+        try {
+            terminal.enterRawMode();
+        } catch (Throwable t) {
+            System.err.println("Note: could not enter raw mode: " + t.getMessage());
+        }
+
+        try {
+            if (terminal.hasMouseSupport()) {
+                terminal.trackMouse(Terminal.MouseTracking.Any);
+                terminal.writer().write(ANSI.ENABLE_SGR);
+            }
+        } catch (Throwable t) {
+            System.err.println("Note: mouse tracking setup skipped: " + t.getMessage());
         }
 
         terminal.flush();
@@ -38,7 +47,10 @@ public final class CommonTerminalFactory {
 
     // Undo every change made by commonInit() before the terminal is closed
     public static void commonBeforeClose(Terminal terminal) {
-        terminal.trackMouse(Terminal.MouseTracking.Off);
+        try {
+            terminal.trackMouse(Terminal.MouseTracking.Off);
+        } catch (Throwable ignored) {
+        }
         terminal.writer().write(ANSI.DISABLE_SGR);
 
         terminal.puts(InfoCmp.Capability.exit_ca_mode);

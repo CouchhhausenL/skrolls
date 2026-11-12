@@ -1,5 +1,7 @@
 # AI Disclosure
 
+Any Commit or Edit written by or assisted by AI is labeled as such!
+
 ### AI was used for:
 
 - Generating a html/css/js based .ska animation editor
@@ -14,6 +16,7 @@
 - Adding NPCs all over the map based on hand designed examples
 - Understanding Error Messages and Debug
 - Help with Javas Sound Libary with cacheing and using different threads
+- Porting the Game to web with CheerpJ
 
 ### AI was _not_ used for:
 

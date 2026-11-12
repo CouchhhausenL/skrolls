@@ -9,8 +9,8 @@ import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.screen.widget.impl.OptionsWidget;
 import main.java.screen.widget.impl.options.Option;
-import main.java.util.SkaParser;
 import main.java.util.MusicPlayer;
+import main.java.util.SkaParser;
 
 // Title screen with the animated logo and Start/Exit options
 public class MainMenuScreen extends Screen {
@@ -24,7 +24,8 @@ public class MainMenuScreen extends Screen {
         addChild(new AnimationWidget(3, 2, animation));
 
         optionsWidget = new OptionsWidget(2, animation.getHeight() + 4, 80, 20);
-        optionsWidget.addOption(new Option("Start Game", () -> context.setScreen(new IntroductionScreen())));
+        optionsWidget.addOption(new Option("Start New Game", () -> context.setScreen(new IntroductionScreen())));
+        optionsWidget.addOption(new Option("Load Game", () -> context.setScreen(new LoadGameScreen())));
         optionsWidget.addOption(new Option("Exit Game", context::stop));
 
 

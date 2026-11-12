@@ -3,6 +3,7 @@ package main.java.console.factory;
 import main.java.game.Game;
 import org.jline.builtins.SwingTerminal;
 import org.jline.terminal.Size;
+import org.jline.utils.InfoCmp;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,16 @@ public final class WindowTerminalFactory {
     }
 
     public static TerminalHolder create() throws IOException {
+        // Pre-populate JLine terminal capabilities from bundled defaults so JLine
+        // does NOT attempt to execute the external 'infocmp' command via ProcessBuilder,
+        // which would fail under browser/WebAssembly (CheerpJ) with __syscall_pipe2.
+        for (String term : new String[]{"screen-256color", "ansi", "xterm", "xterm-256color"}) {
+            String caps = InfoCmp.getDefaultInfoCmp(term);
+            if (caps != null) {
+                InfoCmp.setLoadedInfoCmp(term, caps);
+            }
+        }
+
         SwingTerminal terminal = new SwingTerminal(Game.MIN_WIDTH, Game.MIN_HEIGHT);
         CommonTerminalFactory.commonInit(terminal);
 
@@ -28,8 +39,8 @@ public final class WindowTerminalFactory {
 
         try {
             setCursorInvisible(component);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Throwable t) {
+            System.err.println("Note: could not hide cursor via reflection: " + t.getMessage());
         }
 
         // Cell size is needed to convert Swing pixel coordinates to terminal cells.
@@ -155,8 +166,22 @@ public final class WindowTerminalFactory {
             }
         });
 
-        JFrame frame = terminal.createFrame("Terminal");
+        boolean isCheerpJ = "true".equalsIgnoreCase(System.getProperty("cheerpj"))
+                || (new java.io.File("/app").isDirectory() && new java.io.File("/files").isDirectory());
+
+        JFrame frame = new JFrame("Skrolls");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(component);
+        if (isCheerpJ) {
+            frame.setUndecorated(true);
+            frame.setLocation(0, 0);
+            frame.setSize(800, 1100);
+        } else {
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+        }
         frame.setVisible(true);
+        component.requestFocusInWindow();
 
         component.repaint();
         return new TerminalHolder(terminal, () -> {
@@ -177,13 +202,17 @@ public final class WindowTerminalFactory {
         timerField.setAccessible(true);
 
         Timer timer = (Timer) timerField.get(component);
-        timer.stop();
+        if (timer != null) {
+            timer.stop();
+        }
 
         Field cursorVisibleField = clazz.getDeclaredField("cursorVisible");
         cursorVisibleField.setAccessible(true);
 
         AtomicBoolean cursorVisible = (AtomicBoolean) cursorVisibleField.get(component);
-        cursorVisible.set(false);
+        if (cursorVisible != null) {
+            cursorVisible.set(false);
+        }
 
         component.repaint();
     }
@@ -193,14 +222,15 @@ public final class WindowTerminalFactory {
                 "/assets/font/JetBrainsMono-Regular.ttf")) {
 
             if (in == null) {
-                throw new IOException("JetBrains Mono font resource not found");
+                return new Font(Font.MONOSPACED, Font.PLAIN, 16);
             }
 
             try {
                 return Font.createFont(Font.TRUETYPE_FONT, in)
                         .deriveFont(Font.PLAIN, 16);
-            } catch (FontFormatException e) {
-                throw new RuntimeException(e);
+            } catch (Throwable e) {
+                System.err.println("Could not load TTF font, falling back to MONOSPACED: " + e.getMessage());
+                return new Font(Font.MONOSPACED, Font.PLAIN, 16);
             }
         }
     }

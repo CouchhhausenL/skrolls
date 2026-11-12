@@ -42,7 +42,7 @@ import java.util.*;
 // player, scene and the message log, and pumps input/render each tick.
 public class Game implements GameContext {
     public static final int MIN_WIDTH = 80;
-    public static final int MIN_HEIGHT = 30;
+    public static final int MIN_HEIGHT = 50;
 
     private boolean running = false;
     private final Console console;
