@@ -1,27 +1,29 @@
 package main.java.screen.impl;
 
 
-import main.java.MagicType;
 import main.java.console.input.KeyInputEvent;
 import main.java.game.GameContext;
-import main.java.item.*;
+import main.java.item.Equippable;
+import main.java.item.Item;
+import main.java.item.ItemHelper;
+import main.java.item.MagicItem;
 import main.java.item.effects.CombatEffect;
 import main.java.item.effects.ItemEffect;
-import main.java.item.items.*;
+import main.java.item.items.Artifact;
+import main.java.item.items.Potion;
+import main.java.item.items.Scroll;
 import main.java.screen.Screen;
+import main.java.screen.impl.Transitions.InventoryScreenCloseTransition;
 import main.java.screen.widget.impl.ChatMessageWidget;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.screen.widget.impl.OptionsWidget;
 import main.java.screen.widget.impl.container.ScrollableContainerWidget;
-import main.java.screen.widget.impl.container.VerticalContainerWidget;
 import main.java.screen.widget.impl.options.ItemOption;
 import main.java.screen.widget.impl.options.Option;
 import main.java.spell.Spell;
 import main.java.util.Color;
-import main.java.util.SplashText;
+import main.java.util.SFXPlayer;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 // Placeholder inventory screen; closing returns to the main game screen
@@ -181,7 +183,10 @@ public class InventoryScreen extends Screen {
             if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
                 if (itemOption.getItem() instanceof Equippable equippable) {
                     context.equipItem(equippable);
+                    SFXPlayer.playCoin();
                     drawInventory();
+                } else {
+                    SFXPlayer.playNegative();
                 }
             }
         }
@@ -190,6 +195,7 @@ public class InventoryScreen extends Screen {
         if (event.isChar('s')) {
             if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
                     context.sacrificeItem(itemOption.getItem());
+                SFXPlayer.playNeutral();
                     drawInventory();
 
             }
@@ -198,7 +204,10 @@ public class InventoryScreen extends Screen {
             if (itemList.getSelectedOption() instanceof ItemOption itemOption) {
                 if (itemOption.getItem() instanceof Equippable equippable) {
                     context.unequipItem(equippable);
+                    SFXPlayer.playNeutral();
                     drawInventory();
+                } else {
+                    SFXPlayer.playNegative();
                 }
             }
         }

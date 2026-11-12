@@ -1,15 +1,16 @@
 package main.java.screen.impl;
 
 import main.java.Interactable.NPCType;
-import main.java.animation.Animation;
 import main.java.game.GameContext;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.DialogWidget;
 import main.java.screen.widget.impl.dialog.DialogItem;
+import main.java.util.SFXPlayer;
 import main.java.util.SkaParser;
 
 import java.util.List;
+
 public class NPCDialogScreen extends Screen {
 
     private DialogWidget dialogWidget;
@@ -30,6 +31,7 @@ public class NPCDialogScreen extends Screen {
         for (DialogItem item : items) {
             this.dialogWidget.addDialogItem(item);
         }
+        SFXPlayer.playNpc();
         idleAnimation = new AnimationWidget(0, 0, SkaParser.parse("character/npc/" + npcType.name().toLowerCase() + "/idle.ska"));
         idleAnimation.setLooping(true);
 
@@ -42,6 +44,7 @@ public class NPCDialogScreen extends Screen {
 
         dialogWidget.setOnEachAnswer(() -> {
             removeChild(idleAnimation);
+            SFXPlayer.playNpc();
             talkAnimation.reset();
             addChild(talkAnimation);
             talkAnimation.onDone(() -> {

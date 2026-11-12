@@ -10,6 +10,7 @@ public class SFXPlayer extends AudioPlayer {
         INSTANCE.preloadCategory("/sfx/Menu Sounds/select");
         INSTANCE.preloadCategory("/sfx/General Sounds/Buttons");
         INSTANCE.preloadCategory("/sfx/General Sounds/Interactions");
+        INSTANCE.preloadCategory("/sfx/Npc");
     }
 
     private SFXPlayer() {
@@ -38,4 +39,9 @@ public class SFXPlayer extends AudioPlayer {
     public static void playMove()        { playSfx("/sfx/Movement/Move"); }
     public static void playTeleport()    { playSfx("/sfx/Movement/Teleport"); }
     public static void playMenuChange()  {playSfx("/sfx/General Sounds/Fanfares");}
+
+    public static void playNpc() {
+        playSfx("/sfx/Npc");
+    }
+
 }

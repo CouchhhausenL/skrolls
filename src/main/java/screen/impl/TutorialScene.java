@@ -3,8 +3,6 @@ package main.java.screen.impl;
 
 import main.java.entity.monster.MonsterType;
 import main.java.game.GameContext;
-import main.java.item.Item;
-import main.java.item.ItemType;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.DialogWidget;
 import main.java.screen.widget.impl.dialog.AnswerType;
@@ -36,10 +34,6 @@ public class TutorialScene extends Screen {
                 () -> {
                     // "No" sends the dialog back so the question repeats
                     if (dialogWidget.getEnteredBoolean()) {
-
-                        Item commonStaff = ItemType.COMMON_STAFF.create();
-                        context.addItem(commonStaff);
-                        context.equipItem(commonStaff);
                     } else {
                         MessageScreen messageScreen = new MessageScreen();
                         messageScreen.setMessage("Good try, but you need to have an Staff! Lets try it again...");
@@ -52,21 +46,14 @@ public class TutorialScene extends Screen {
                     }
                 }
         ));
-        dialogWidget.addDialogItem(new DialogItem("I also have an Old Armour and an Old Amulette for you", AnswerType.NONE, () -> {
-            Item commonArmour = ItemType.COMMON_ARMOUR.create();
-            Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
-            Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
-            Item potion = ItemType.COMMON_HEALTH_POTION.create();
-            context.addItem(commonArmour);
-            context.addItem(commonHealthAmulett);
-            context.addItem(commonScroll);
-            context.addItem(potion);
-            context.equipItem(commonArmour);
-            context.equipItem(commonHealthAmulett);
-            context.equipItem(commonScroll);
+        dialogWidget.addDialogItem(new DialogItem("I'll also hand you some starter equipment\n" +
+                "You can always use the inventory (show inventory) or verbs like 'equip' or 'unequip'", AnswerType.NONE, () -> {
+            context.initGame();
 
 
         }));
+        dialogWidget.addDialogItem(new DialogItem("Everything is "));
+
         // Last step sets up the battle; completing the dialog enters the fight
         dialogWidget.addDialogItem(new DialogItem("On every Path you can fight Monsters by typing \"fight\"! Lets try fighting your first Battle",
                 AnswerType.NONE, () -> context.setBattle(MonsterType.AXE_ROGUE.create())));

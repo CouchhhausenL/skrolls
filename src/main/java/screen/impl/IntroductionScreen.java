@@ -5,8 +5,6 @@ import main.java.PlayerLevel;
 import main.java.entity.player.Player;
 import main.java.game.GameContext;
 import main.java.item.Inventory;
-import main.java.item.Item;
-import main.java.item.ItemType;
 import main.java.screen.Screen;
 import main.java.screen.widget.impl.DialogWidget;
 import main.java.screen.widget.impl.dialog.AnswerType;
@@ -52,27 +50,7 @@ public class IntroductionScreen extends Screen {
                 context.setScreen(new TutorialScene());
             } else {
                 // Give the player a basic weapon to start with
-                Item commonStaff = ItemType.COMMON_STAFF.create();
-                Item commonArmour = ItemType.COMMON_ARMOUR.create();
-                Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
-                Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
-                Item healScroll = ItemType.SCROLL_IRON_FORTRESS.create();
-                Item teleportScroll = ItemType.SCROLL_TELEPORT.create();
-                Item potion = ItemType.COMMON_HEALTH_POTION.create();
-                context.addItem(commonArmour);
-                context.addItem(commonHealthAmulett);
-                context.addItem(commonScroll);
-                context.addItem(potion);
-                context.addItem(commonStaff);
-                context.addItem(healScroll);
-                context.addItem(teleportScroll);
-                context.equipItem(commonArmour);
-                context.equipItem(commonHealthAmulett);
-                context.equipItem(commonScroll);
-                context.equipItem(commonStaff);
-                context.equipItem(healScroll);
-                context.equipItem(teleportScroll);
-
+                context.initGame();
                 context.setScreen(new MainGameScreen());
             }
 

@@ -14,6 +14,7 @@ import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
 import main.java.item.Inventory;
 import main.java.item.Item;
+import main.java.item.ItemType;
 import main.java.item.Sacrificeable;
 import main.java.item.items.Potion;
 import main.java.item.items.Scroll;
@@ -25,6 +26,8 @@ import main.java.scene.scenes.WinterfortCastle;
 import main.java.screen.DrawContext;
 import main.java.screen.Screen;
 import main.java.screen.impl.*;
+import main.java.screen.impl.Transitions.BattleScreenTransition;
+import main.java.screen.impl.Transitions.InventoryScreenOpenTransition;
 import main.java.spell.Spell;
 import main.java.util.Color;
 import main.java.util.MusicPlayer;
@@ -201,12 +204,13 @@ public class Game implements GameContext {
 
     @Override
     public void setScene(Scene newScene) {
-        SFXPlayer.playInteraction();
+
         if(scene == null){
             scene = new WinterfortCastle(this);
         }
 
         if (player.getDifficultyLevel().ordinal() >= newScene.getDifficulty().ordinal()) {
+            SFXPlayer.playMove();
             if(newScene instanceof SettlementScene){
                 MusicPlayer.getInstance().playRandomSettlementScene();
             }else if(newScene instanceof LocationScene){
@@ -224,7 +228,7 @@ public class Game implements GameContext {
             this.scene = newScene;
         }
         else {
-
+            SFXPlayer.playNegative();
             addMessage(SplashText.getNo());
             addMessage("This Scene is to difficult for you! " + "[" + newScene.getDifficulty() + "]");
         }
@@ -251,6 +255,28 @@ public class Game implements GameContext {
         return player.getInventory().getScrolls().stream().map(Scroll::getSpell).filter(Spell::usableOutside).toList();
     }
 
+    public void initGame() {
+        Item commonStaff = ItemType.COMMON_STAFF.create();
+        Item commonArmour = ItemType.COMMON_ARMOUR.create();
+        Item commonHealthAmulett = ItemType.COMMON_HEALTH_AMULET.create();
+        Item commonScroll = ItemType.SCROLL_HARD_SHOVE.create();
+        Item healScroll = ItemType.SCROLL_IRON_FORTRESS.create();
+        Item teleportScroll = ItemType.SCROLL_TELEPORT.create();
+        Item potion = ItemType.COMMON_HEALTH_POTION.create();
+        addItem(commonArmour);
+        addItem(commonHealthAmulett);
+        addItem(commonScroll);
+        addItem(potion);
+        addItem(commonStaff);
+        addItem(healScroll);
+        addItem(teleportScroll);
+        equipItem(commonArmour);
+        equipItem(commonHealthAmulett);
+        equipItem(commonScroll);
+        equipItem(commonStaff);
+        equipItem(healScroll);
+        equipItem(teleportScroll);
+    }
 
     public Set<Quest> getQuests() {
         return quests;
@@ -457,23 +483,18 @@ public class Game implements GameContext {
                 .build((executionContext, context) -> {
                     context.stop();
                 }));
-
-        verbs.add(Verb.builder("fight").aliases("battle", "engage")
-                        .build((executionContext, context) -> {
-                            if(scene instanceof PathScene){
-                                setBattle(((PathScene) scene).spawnMonster());
-                                setScreen(new BattleScreenTransition());
-                            }else{
-                                context.addMessage("This is not a Path scene!");
-                                context.addMessage(SplashText.getNo());
-                            }
-                        }));
-        verbs.add(Verb.builder("fastfetch").aliases("neofetch")
-                .build((executionContext, context) -> {
-                    setScreen(new Fastfetch());
-                })
-        );
-
+        if (scene instanceof PathScene pathScene) {
+            verbs.add(Verb.builder("fight").aliases("battle", "engage")
+                    .build((executionContext, context) -> {
+                        setBattle(pathScene.spawnMonster());
+                        setScreen(new BattleScreenTransition());
+                    }));
+            verbs.add(Verb.builder("fastfetch").aliases("neofetch")
+                    .build((executionContext, context) -> {
+                        setScreen(new Fastfetch());
+                    })
+            );
+        }
             getOutsideSpells().forEach(spell -> {
                 verbs.add(Verb.builder("cast")
                         .aliases("spell")

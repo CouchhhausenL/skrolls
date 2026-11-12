@@ -10,7 +10,6 @@ import main.java.item.Item;
 import main.java.item.items.Potion;
 import main.java.quest.Quest;
 import main.java.quest.QuestEvent.QuestEvent;
-import main.java.quest.QuestReward;
 import main.java.scene.Scene;
 import main.java.screen.Screen;
 import main.java.spell.Spell;
@@ -92,4 +91,6 @@ public interface GameContext extends VerbSupplier {
     void triggerQuestEvent(QuestEvent questEvent);
 
     void applyQuestReward(Quest quest);
+
+    public void initGame();
 }

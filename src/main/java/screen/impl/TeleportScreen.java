@@ -6,8 +6,8 @@ import main.java.screen.Screen;
 import main.java.screen.widget.impl.OptionsWidget;
 import main.java.screen.widget.impl.options.Option;
 import main.java.util.Color;
+import main.java.util.SFXPlayer;
 
-import java.util.List;
 import java.util.Set;
 
 public class TeleportScreen extends Screen {
@@ -39,6 +39,7 @@ public class TeleportScreen extends Screen {
                 }
                 optionsWidget.addOption(new Option(name, () -> {
                     context.setScene(scene);
+                    SFXPlayer.playTeleport();
                     context.setScreen(new MainGameScreen());
                     context.addMessage("You teleported to "+name);
                 }));

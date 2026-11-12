@@ -1,9 +1,10 @@
-package main.java.screen.impl;
+package main.java.screen.impl.Transitions;
 
 import main.java.animation.Animation;
 import main.java.console.input.KeyInputEvent;
 import main.java.game.GameContext;
 import main.java.screen.Screen;
+import main.java.screen.impl.InventoryScreen;
 import main.java.screen.widget.impl.AnimationWidget;
 import main.java.screen.widget.impl.LabelWidget;
 import main.java.util.SFXPlayer;

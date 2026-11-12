@@ -9,6 +9,7 @@ import main.java.screen.widget.impl.container.KeyValueWidget;
 import main.java.screen.widget.impl.container.VerticalContainerWidget;
 import main.java.screen.widget.impl.options.Option;
 import main.java.util.Color;
+import main.java.util.SFXPlayer;
 import main.java.util.SplashText;
 
 public class UpgradeScreen extends Screen {
@@ -48,12 +49,13 @@ public class UpgradeScreen extends Screen {
 
             if(context.spendMagicShards(nextLevel.getCost())) {
 
-
+                SFXPlayer.playCoin();
                 messageScreen.setMessage("You successfully ascended from " + playerLevel + " to " + nextLevel);
                 context.upgradePlayerLevel();
                 context.setScreen(messageScreen);
                 messageScreen.setOnComplete(() -> context.setScreen(new MainGameScreen()));
             }else{
+                SFXPlayer.playNegative();
                 messageScreen.setMessage(SplashText.getNo() +"\n"+"You don't have enough Magic Shards! Go earn some by fighting monsters or sacrificing items!");
                 context.setScreen(messageScreen);
                 messageScreen.setOnComplete(()->context.setScreen(new UpgradeScreen()));
@@ -61,6 +63,7 @@ public class UpgradeScreen extends Screen {
 
         }));
         optionsWidget.addOption(new Option("NO", ()->{
+            SFXPlayer.playNegative();
             MessageScreen messageScreen = new MessageScreen();
             messageScreen.setMessage("You didn't ascend and are still a "+ playerLevel);
             context.setScreen(messageScreen);

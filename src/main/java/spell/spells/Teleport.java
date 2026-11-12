@@ -1,7 +1,6 @@
 package main.java.spell.spells;
 
 import main.java.MagicType;
-import main.java.battle.BattleContext;
 import main.java.game.GameContext;
 import main.java.screen.impl.TeleportScreen;
 import main.java.spell.Spell;
@@ -24,7 +23,6 @@ public class Teleport extends Spell {
     @Override
     public void cast(GameContext context) {
         if (context.getCurrentBattle() != null) {
-            BattleContext battleContext = context.getCurrentBattle();
             context.fleeFromBattle();
         }else {
             context.setScreen(new TeleportScreen());

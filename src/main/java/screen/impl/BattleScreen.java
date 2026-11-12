@@ -162,7 +162,7 @@ public class BattleScreen extends Screen {
     }
     public boolean checkEnd(){
         if(!battle.isEnemyAlive()){
-
+            SFXPlayer.playDeathScream();
             AnimationWidget winAnimation = new AnimationWidget(0,0, 80, 30, SkaParser.parse("utility/win.ska"));
             winAnimation.onDone(() -> {
                 context.addItem(battle.getMobDrop());
@@ -175,6 +175,7 @@ public class BattleScreen extends Screen {
             addChild(winAnimation);
             return true;
         }else if(!battle.isPlayerAlive()){
+            SFXPlayer.playDeathScream();
             AnimationWidget looseAnimation = new AnimationWidget(0,0,80,30, SkaParser.parse(("utility/loose.ska")));
             looseAnimation.onDone((() -> {
                 MessageScreen messageScreen = new MessageScreen();
