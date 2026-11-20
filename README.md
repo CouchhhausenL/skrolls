@@ -64,6 +64,12 @@ The terminal versions works great in Terminals like Kitty, Alacritty, Ghosty or 
 Mouse Input options. The Windowed Version has some input detection bugs under Linux.  \
 Please note that you need to have java installed!
 
+### Web Play
+
+You can also play the Game in Web, but notice that a keyboard is required.
+You can play the game at [itch.io](https://couchhausenl.itch.io/skrolls) or visit
+the [Github Pages Site](https://couchhhausenl.github.io/skrolls/)
+
 ### Notice
 
 Please mind this game is partially still in development, and it may have some unpolished Artifacts in Gameplay. Music
