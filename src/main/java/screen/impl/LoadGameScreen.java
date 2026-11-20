@@ -32,6 +32,7 @@ public class LoadGameScreen extends Screen {
 
     private Game game;
     private GameContext context;
+    private Screen previousScreen;
     private OptionsWidget optionsWidget;
     private ScrollableContainerWidget details;
     private LabelWidget headerWidget;
@@ -42,6 +43,11 @@ public class LoadGameScreen extends Screen {
 
     public LoadGameScreen(Game game) {
         this.game = game;
+    }
+
+    public LoadGameScreen(Game game, Screen previousScreen) {
+        this.game = game;
+        this.previousScreen = previousScreen;
     }
 
     @Override
@@ -91,11 +97,14 @@ public class LoadGameScreen extends Screen {
 
         if (saveFiles.isEmpty()) {
             optionsWidget.addOption(new Option("----- No Save States Found -----", Color.BG5, null));
+            optionsWidget.addOption(new Option("« Back", Color.YELLOW, this::exitToFallbackScreen));
             details.clearChildren();
             details.addChild(new LabelWidget("No save states found.", Color.BG5));
             details.addChild(new LabelWidget("Save files are searched in:", Color.BG4));
             details.addChild(new LabelWidget("- skrolls-savestates/"));
             details.addChild(new LabelWidget("- " + System.getProperty("user.home") + "/skrolls-savestates/"));
+            details.addChild(new LabelWidget(""));
+            details.addChild(new LabelWidget("Press [Escape] or select [« Back] to return.", Color.BEIGE));
         } else {
             for (int i = 0; i < saveFiles.size(); i++) {
                 Path savePath = saveFiles.get(i);
@@ -110,6 +119,7 @@ public class LoadGameScreen extends Screen {
                         () -> loadSelected(savePath)
                 ));
             }
+            optionsWidget.addOption(new Option("« Cancel", Color.BG5, this::exitToFallbackScreen));
         }
 
         addChild(optionsWidget);
@@ -189,14 +199,26 @@ public class LoadGameScreen extends Screen {
         } catch (Exception e) {
             SFXPlayer.playNegative();
             context.addMessage("Failed to load savegame: " + e.getMessage());
+            exitToFallbackScreen();
+        }
+    }
+
+    private void exitToFallbackScreen() {
+        if (previousScreen != null) {
+            context.setScreen(previousScreen);
+        } else if (context != null && context.getPlayerName() != null) {
+            // A game was already running with an active player
             context.setScreen(new MainGameScreen());
+        } else {
+            // No player exists yet — return to main menu
+            context.setScreen(new MainMenuScreen());
         }
     }
 
     @Override
     public void onKeyEvent(KeyInputEvent event) {
         if (event.isEscape()) {
-            context.setScreen(new MainGameScreen());
+            exitToFallbackScreen();
         }
     }
 

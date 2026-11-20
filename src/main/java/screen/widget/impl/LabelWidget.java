@@ -57,6 +57,7 @@ public class LabelWidget extends Widget {
         this.content = content;
         setDimensions(calculateWidth(content), calculateHeight(content));
         this.displayedCharCount = 0;
+        this.lastTime = 0;
     }
 
     public int getColor() {
@@ -66,16 +67,24 @@ public class LabelWidget extends Widget {
     public void setFancyMode(boolean fancyMode, int fancyCharDelayTime) {
         this.fancyMode = fancyMode;
         this.fancyCharDelayTime = fancyCharDelayTime;
+        this.lastTime = 0;
     }
 
     @Override
     public void onDraw(DrawContextView context) {
-        // Reveal at most one extra character once the delay has elapsed
+        // Time-based character reveal: advances displayedCharCount based on elapsed time,
+        // so typing speed is independent of the game loop FPS.
         if (fancyMode) {
             long now = System.currentTimeMillis();
-            if (now - lastTime > fancyCharDelayTime && displayedCharCount < content.length()) {
-                displayedCharCount++;
+            if (lastTime == 0) {
                 lastTime = now;
+            } else if (displayedCharCount < content.length() && fancyCharDelayTime > 0) {
+                long elapsed = now - lastTime;
+                int charsToAdd = (int) (elapsed / fancyCharDelayTime);
+                if (charsToAdd > 0) {
+                    displayedCharCount = Math.min(content.length(), displayedCharCount + charsToAdd);
+                    lastTime += (long) charsToAdd * fancyCharDelayTime;
+                }
             }
         }
 

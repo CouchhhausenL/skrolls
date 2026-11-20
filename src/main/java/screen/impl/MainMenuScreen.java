@@ -25,7 +25,7 @@ public class MainMenuScreen extends Screen {
 
         optionsWidget = new OptionsWidget(2, animation.getHeight() + 4, 80, 20);
         optionsWidget.addOption(new Option("Start New Game", () -> context.setScreen(new IntroductionScreen())));
-        optionsWidget.addOption(new Option("Load Game", () -> context.setScreen(new LoadGameScreen())));
+        optionsWidget.addOption(new Option("Load Game", () -> context.setScreen(new LoadGameScreen(null, this))));
         optionsWidget.addOption(new Option("Exit Game", context::stop));
 
 

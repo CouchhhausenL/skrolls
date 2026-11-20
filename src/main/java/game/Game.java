@@ -9,6 +9,7 @@ import main.java.battle.BattleContext;
 import main.java.console.Console;
 import main.java.console.input.InputEvent;
 import main.java.console.input.KeyInputEvent;
+import main.java.console.input.MouseInputEvent;
 import main.java.entity.Stat;
 import main.java.entity.monster.Monster;
 import main.java.entity.player.Player;
@@ -42,7 +43,10 @@ import java.util.*;
 // player, scene and the message log, and pumps input/render each tick.
 public class Game implements GameContext {
     public static final int MIN_WIDTH = 80;
-    public static final int MIN_HEIGHT = 50;
+    public static final int MIN_HEIGHT = 40;
+
+    public static final boolean IS_CHEERPJ = "true".equalsIgnoreCase(System.getProperty("cheerpj"))
+            || (new java.io.File("/app").isDirectory() && new java.io.File("/files").isDirectory());
 
     private boolean running = false;
     private final Console console;
@@ -88,7 +92,12 @@ public class Game implements GameContext {
     // Main loop: handle resize, drain input, draw, then present to the console
     public void run() {
         running = true;
+        // Target 12 FPS on Web (83 ms) to drastically reduce CPU load in CheerpJ, 60 FPS on Desktop (16 ms)
+        final long targetFrameTimeMs = IS_CHEERPJ ? 83 : 16;
+
         while (running) {
+            long frameStartMs = System.currentTimeMillis();
+
             if (console.areDimensionsDirty()) {
                 console.updateDimensions();
                 drawContext.resize(console.getWidth(), console.getHeight());
@@ -104,15 +113,25 @@ public class Game implements GameContext {
 
             // Drain all pending input before drawing so the frame reflects it
             if (screen != null && !isTooSmall) {
-                while (true) {
-                    InputEvent event = console.drainEvent();
-                    if (event == null) break;
+                InputEvent nextEvent = console.drainEvent();
+                while (nextEvent != null) {
+                    InputEvent current = nextEvent;
+                    nextEvent = console.drainEvent();
+
+                    // Coalesce consecutive mouse MOVE events: if both current and next are mouse MOVE,
+                    // skip the intermediate one since only the latest cursor position matters for this frame
+                    if (current instanceof MouseInputEvent mCurrent &&
+                            mCurrent.type() == MouseInputEvent.Type.MOVE &&
+                            nextEvent instanceof MouseInputEvent mNext &&
+                            mNext.type() == MouseInputEvent.Type.MOVE) {
+                        continue;
+                    }
 
                     // Ctrl+Q is a global quit shortcut
-                    if (event instanceof KeyInputEvent key && key.isCtrl(KeyInputEvent.Letter.Q))
+                    if (current instanceof KeyInputEvent key && key.isCtrl(KeyInputEvent.Letter.Q))
                         stop();
 
-                    screen.onInputEvent(event);
+                    screen.onInputEvent(current);
                 }
                 screen.draw(drawContext);
             }
@@ -129,11 +148,14 @@ public class Game implements GameContext {
             console.render();
             drawContext.clear();
 
-            // Small sleep caps the loop at roughly 200 FPS
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            long elapsedMs = System.currentTimeMillis() - frameStartMs;
+            long sleepMs = targetFrameTimeMs - elapsedMs;
+            if (sleepMs > 0) {
+                try {
+                    Thread.sleep(sleepMs);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -536,7 +558,7 @@ public class Game implements GameContext {
 
         verbs.add(Verb.builder("open").aliases("show", "display")
                 .variant()
-                .choice("type", "map", "inventory", "ascension", "quests", "credits")
+                .choice("type", "map", "inventory", "ascension", "quests", "credits", "cover")
                 .build()
                 .build()
                 .build(((executionContext, context) -> {
@@ -554,6 +576,10 @@ public class Game implements GameContext {
                     }
                     if(type.equals("credits")){
                         setScreen(new CreditsScreen());
+                    }
+
+                    if (type.equals("cover")) {
+                        setScreen(new CoverScreen());
                     }
                 })));
 

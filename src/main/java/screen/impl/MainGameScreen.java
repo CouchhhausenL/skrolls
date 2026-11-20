@@ -25,6 +25,12 @@ public class MainGameScreen extends Screen {
 
     @Override
     protected void init(GameContext context) {
+        if (context.getPlayerName() == null) {
+            // Guard: If entered accidentally without an active player, return to main menu
+            context.setScreen(new MainMenuScreen());
+            return;
+        }
+
         if(context.getSceneName() == null){
             context.setScene(new WinterfortCastle(context));
         }
@@ -44,6 +50,7 @@ public class MainGameScreen extends Screen {
 
     // Input bar is pinned to the bottom; the log fills the remaining space
     private void positionWidgets() {
+        if (verbInputWidget == null || messageContainerWidget == null) return;
 
         verbInputWidget.setPosition(0, getHeight() - VERB_INPUT_HEIGHT);
         verbInputWidget.setDimensions(getWidth(), VERB_INPUT_HEIGHT);
@@ -84,6 +91,7 @@ public class MainGameScreen extends Screen {
     // Only rebuild the log when the message list actually changed
     @Override
     protected void onPreDraw(DrawContext context) {
+        if (this.context == null) return;
         int newHashCode = this.context.getMessagesHashCode();
         if (lastMessagesCode != newHashCode) {
             lastMessagesCode = newHashCode;

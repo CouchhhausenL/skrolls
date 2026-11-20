@@ -70,36 +70,39 @@ public final class WindowTerminalFactory {
         // Swing does not emit terminal input, so mouse events are re-encoded as
         // SGR mouse sequences and fed back into the terminal's input stream
         MouseAdapter mouseAdapter = new MouseAdapter() {
+            private int lastMoveCellX = -1;
+            private int lastMoveCellY = -1;
+
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 // 64/65 are the SGR wheel up/down button codes
                 int button = e.getWheelRotation() < 0 ? 64 : 65;
-                sendSgrMouse(button, 'M', e.getX(), e.getY());
+                sendSgrMouse(button, 'M', e.getX(), e.getY(), true);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                sendSgrMouse(buttonCode(e.getButton()), 'm', e.getX(), e.getY());
+                sendSgrMouse(buttonCode(e.getButton()), 'm', e.getX(), e.getY(), true);
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                sendSgrMouse(buttonCode(e.getButton()), 'M', e.getX(), e.getY());
+                sendSgrMouse(buttonCode(e.getButton()), 'M', e.getX(), e.getY(), true);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
                 // 35 = motion flag (32) + "no button" (3)
-                sendSgrMouse(35, 'M', e.getX(), e.getY());
+                sendSgrMouse(35, 'M', e.getX(), e.getY(), false);
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
                 // Motion flag (32) combined with the held button
-                sendSgrMouse(32 | buttonCode(e.getModifiersEx()), 'M', e.getX(), e.getY());
+                sendSgrMouse(32 | buttonCode(e.getModifiersEx()), 'M', e.getX(), e.getY(), false);
             }
 
-            private void sendSgrMouse(int button, char terminator, int pixelX, int pixelY) {
+            private void sendSgrMouse(int button, char terminator, int pixelX, int pixelY, boolean force) {
                 if (cellWidth <= 0 || cellHeight <= 0) {
                     return;
                 }
@@ -107,6 +110,13 @@ public final class WindowTerminalFactory {
                 // SGR coordinates are 1-based cell positions
                 int x = pixelX / cellWidth + 1;
                 int y = pixelY / cellHeight + 1;
+
+                // When moving without clicks, don't spam terminal if mouse is in the same cell
+                if (!force && x == lastMoveCellX && y == lastMoveCellY) {
+                    return;
+                }
+                lastMoveCellX = x;
+                lastMoveCellY = y;
 
                 String sequence = "\033[<" + button + ";" + x + ";" + y + terminator;
                 try {
@@ -166,8 +176,7 @@ public final class WindowTerminalFactory {
             }
         });
 
-        boolean isCheerpJ = "true".equalsIgnoreCase(System.getProperty("cheerpj"))
-                || (new java.io.File("/app").isDirectory() && new java.io.File("/files").isDirectory());
+        boolean isCheerpJ = Game.IS_CHEERPJ;
 
         JFrame frame = new JFrame("Skrolls");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
